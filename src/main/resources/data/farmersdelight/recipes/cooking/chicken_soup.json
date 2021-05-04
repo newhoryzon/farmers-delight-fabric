@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:raw_chicken"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "tag": "fabric:salad_ingredients"
+    },
+    {
+      "tag": "fabric:vegetables"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:chicken_soup"
+  },
+  "cookingtime": 200
+}

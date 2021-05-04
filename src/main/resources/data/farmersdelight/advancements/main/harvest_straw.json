@@ -1,0 +1,35 @@
+{
+  "parent": "farmersdelight:main/craft_knife",
+  "display": {
+    "icon": {
+      "item": "farmersdelight:straw"
+    },
+    "title": {
+      "translate": "farmersdelight.advancement.harvest_straw"
+    },
+    "description": {
+      "translate": "farmersdelight.advancement.harvest_straw.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "harvest_straw": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "farmersdelight:straw"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "harvest_straw"
+    ]
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "fabric:salad_ingredients"
+    },
+    {
+      "tag": "fabric:crops/tomato"
+    },
+    {
+      "tag": "fabric:crops/onion"
+    },
+    {
+      "item": "minecraft:beetroot"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:mixed_salad"
+  }
+}

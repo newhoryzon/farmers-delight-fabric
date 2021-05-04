@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "item": "farmersdelight:pumpkin_slice"
+    },
+    {
+      "tag": "fabric:salad_ingredients"
+    },
+    {
+      "tag": "fabric:raw_pork"
+    },
+    {
+      "tag": "fabric:milk"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:pumpkin_soup"
+  },
+  "cookingtime": 200
+}

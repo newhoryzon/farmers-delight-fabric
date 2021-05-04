@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "fabric:bread"
+    },
+    {
+      "tag": "fabric:cooked_mutton"
+    },
+    {
+      "tag": "fabric:salad_ingredients"
+    },
+    {
+      "tag": "fabric:crops/tomato"
+    },
+    {
+      "tag": "fabric:milk"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:mutton_wrap"
+  }
+}

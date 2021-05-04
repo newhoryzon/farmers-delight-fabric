@@ -1,0 +1,18 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:raw_fishes"
+    },
+    {
+      "item": "farmersdelight:tomato_sauce"
+    },
+    {
+      "tag": "fabric:crops/onion"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:fish_stew"
+  },
+  "cookingtime": 200
+}

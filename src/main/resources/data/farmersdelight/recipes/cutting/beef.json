@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:beef"
+    }
+  ],
+  "tool": {
+    "tag": "fabric:tools/knives"
+  },
+  "result": [
+    {
+      "item": "farmersdelight:minced_beef",
+      "count": 2
+    }
+  ]
+}

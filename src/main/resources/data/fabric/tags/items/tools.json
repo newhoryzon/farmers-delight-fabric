@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:tools/axes",
+    "#fabric:tools/knives",
+    "#fabric:tools/pickaxes",
+    "#fabric:tools/shovels"
+  ]
+}

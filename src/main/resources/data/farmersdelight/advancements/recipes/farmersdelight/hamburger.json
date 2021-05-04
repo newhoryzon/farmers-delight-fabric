@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "farmersdelight:hamburger"
+    ]
+  },
+  "criteria": {
+    "has_beef_patty": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "farmersdelight:beef_patty"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "farmersdelight:hamburger"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_beef_patty",
+      "has_the_recipe"
+    ]
+  ]
+}

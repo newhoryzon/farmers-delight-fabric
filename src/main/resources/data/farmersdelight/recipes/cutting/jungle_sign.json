@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:jungle_sign"
+    }
+  ],
+  "tool": {
+    "type": "farmersdelight:tool",
+    "tag": "fabric:tools/axes"
+  },
+  "result": [
+    {
+      "item": "minecraft:jungle_planks"
+    }
+  ]
+}

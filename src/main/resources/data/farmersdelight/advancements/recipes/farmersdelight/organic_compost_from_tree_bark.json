@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "farmersdelight:organic_compost_from_tree_bark"
+    ]
+  },
+  "criteria": {
+    "has_tree_bark": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "farmersdelight:tree_bark"
+          }
+        ]
+      }
+    },
+    "has_straw": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "farmersdelight:straw"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "farmersdelight:organic_compost_from_tree_bark"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tree_bark",
+      "has_straw",
+      "has_the_recipe"
+    ]
+  ]
+}

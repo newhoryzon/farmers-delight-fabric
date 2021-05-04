@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "fabric:bread"
+    },
+    {
+      "tag": "fabric:cooked_bacon"
+    },
+    {
+      "tag": "fabric:salad_ingredients"
+    },
+    {
+      "tag": "fabric:crops/tomato"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:bacon_sandwich"
+  }
+}

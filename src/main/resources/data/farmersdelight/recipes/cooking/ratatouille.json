@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:crops/tomato"
+    },
+    {
+      "tag": "fabric:crops/onion"
+    },
+    {
+      "item": "minecraft:beetroot"
+    },
+    {
+      "tag": "fabric:vegetables"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:ratatouille"
+  },
+  "cookingtime": 200
+}

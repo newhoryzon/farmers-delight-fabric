@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:warped_sign"
+    }
+  ],
+  "tool": {
+    "type": "farmersdelight:tool",
+    "tag": "fabric:tools/axes"
+  },
+  "result": [
+    {
+      "item": "minecraft:warped_planks"
+    }
+  ]
+}

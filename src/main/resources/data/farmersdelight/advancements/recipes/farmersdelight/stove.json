@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "farmersdelight:stove"
+    ]
+  },
+  "criteria": {
+    "has_campfire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:campfire"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "farmersdelight:stove"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_campfire",
+      "has_the_recipe"
+    ]
+  ]
+}

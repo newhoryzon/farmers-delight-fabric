@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:milk/milk",
+    "#fabric:milk/milk_bottle"
+  ]
+}

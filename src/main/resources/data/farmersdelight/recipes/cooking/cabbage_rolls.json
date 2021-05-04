@@ -1,0 +1,44 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:crops/cabbage"
+    },
+    [
+      {
+        "tag": "fabric:raw_mutton"
+      },
+      {
+        "item": "minecraft:carrot"
+      },
+      {
+        "item": "minecraft:potato"
+      },
+      {
+        "item": "minecraft:beetroot"
+      },
+      {
+        "tag": "fabric:raw_fishes"
+      },
+      {
+        "tag": "fabric:mushrooms"
+      },
+      {
+        "tag": "fabric:raw_pork"
+      },
+      {
+        "tag": "fabric:eggs"
+      },
+      {
+        "tag": "fabric:raw_chicken"
+      },
+      {
+        "tag": "fabric:raw_beef"
+      }
+    ]
+  ],
+  "result": {
+    "item": "farmersdelight:cabbage_rolls"
+  },
+  "cookingtime": 100
+}

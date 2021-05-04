@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:raw_fishes/cod",
+    "#fabric:raw_fishes/salmon",
+    "#fabric:raw_fishes/tropical_fish"
+  ]
+}

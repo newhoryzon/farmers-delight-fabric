@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:crimson_trapdoor"
+    }
+  ],
+  "tool": {
+    "type": "farmersdelight:tool",
+    "tag": "fabric:tools/axes"
+  },
+  "result": [
+    {
+      "item": "minecraft:crimson_planks"
+    }
+  ]
+}

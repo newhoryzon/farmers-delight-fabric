@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:grain/wheat",
+    "#fabric:grain/rice"
+  ]
+}

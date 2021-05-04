@@ -1,0 +1,15 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:crops/tomato"
+    },
+    {
+      "tag": "fabric:crops/tomato"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:tomato_sauce"
+  },
+  "cookingtime": 100
+}

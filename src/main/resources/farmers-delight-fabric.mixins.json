@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "com.nhoryzon.mc.farmersdelight.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AttachedStemBlockOnRichSoilFarmlandMixin",
+    "CropBlockOnRichSoilFarmlandMixin",
+    "DeadBushBlockOnRichSoilMixin",
+    "EnchantmentHelperEnhancementMixin",
+    "LivingEntityBackstabbingEnchantmentMixin",
+    "LivingEntityComfortImmunitiesMixin",
+    "LivingEntityKnivesKnockBackMixin",
+    "LivingEntityOnUseItemFinishMixin",
+    "PlantBlockOnRichSoilMixin",
+    "PlayerExhaustionAccessorMixin",
+    "StemBlockOnRichSoilFarmlandMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

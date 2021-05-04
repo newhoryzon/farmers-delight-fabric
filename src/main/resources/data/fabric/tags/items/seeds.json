@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:seeds/cabbage",
+    "#fabric:seeds/rice",
+    "#fabric:seeds/tomato"
+  ]
+}

@@ -1,0 +1,46 @@
+package com.nhoryzon.mc.farmersdelight.item;
+
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
+import net.minecraft.world.World;
+
+import java.util.Collection;
+
+public class MilkBottleItem extends ConsumableItem {
+
+    public MilkBottleItem(Settings settings) {
+        super(settings);
+    }
+
+    @Override
+    public void affectConsumer(ItemStack stack, World world, LivingEntity user) {
+        Collection<StatusEffect> activeStatusEffectList = user.getActiveStatusEffects().keySet();
+
+        if (activeStatusEffectList.size() > 0) {
+            activeStatusEffectList.stream().skip(world.getRandom().nextInt(activeStatusEffectList.size())).findFirst().ifPresent(user::removeStatusEffect);
+        }
+    }
+
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return 32;
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.DRINK;
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        user.setCurrentHand(hand);
+
+        return TypedActionResult.consume(user.getStackInHand(hand));
+    }
+
+}

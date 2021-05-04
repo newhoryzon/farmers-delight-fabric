@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#fabric:vegetables/beetroot",
+    "#fabric:vegetables/carrot",
+    "#fabric:vegetables/onion",
+    "#fabric:vegetables/potato",
+    "#fabric:vegetables/tomato"
+  ]
+}

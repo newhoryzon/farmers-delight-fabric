@@ -1,0 +1,92 @@
+plugins {
+	id 'maven-publish'
+	id 'fabric-loom' version '0.7.9'
+	id 'net.researchgate.release' version '2.8.1'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.version
+group = project.maven_group
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	if (JavaVersion.current().isJava9Compatible()) {
+		 it.options.release = 8
+	}
+}
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+jar {
+	from("LICENSE")
+}
+
+release {
+	if (project.hasProperty('release_commit_prefix')) {
+		preTagCommitMessage = project.release_commit_prefix
+	}
+	if (project.hasProperty('development_commit_prefix')) {
+		newVersionCommitMessage = project.development_commit_prefix
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = "${group}"
+			artifactId = "${archivesBaseName}"
+			version = "${version}"
+			artifact(jar.archivePath) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+			    builtBy remapSourcesJar
+			}
+			pom {
+				name = "${project.pretty_name}"
+				url = "${project.website_url}"
+				if (project.hasProperty('scm_connection_url') && project.hasProperty('scm_project_url')) {
+					scm {
+						connection = "scm:git:${project.scm_connection_url}"
+						url = project.scm_project_url
+					}
+				}
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			def snapshotsUrl = 'https://nexus.beaucoralk.fr/repository/maven-snapshots/'
+			def releasesUrl = 'https://nexus.beaucoralk.fr/repository/maven-releases/'
+			url = version.endsWith('-SNAPSHOT') ? snapshotsUrl : releasesUrl
+			if (project.hasProperty("publish_maven_repo_username") && project.hasProperty("publish_maven_repo_password")) {
+				credentials {
+					username = project.publish_maven_repo_username
+					password = project.publish_maven_repo_password
+				}
+			}
+		}
+	}
+}

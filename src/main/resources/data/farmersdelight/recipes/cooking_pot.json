@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bSb",
+    "iWi",
+    "iii"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:brick"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:wooden_shovel"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "item": "farmersdelight:cooking_pot"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "farmersdelight:cooking",
+  "ingredients": [
+    {
+      "tag": "fabric:crops/rice"
+    },
+    {
+      "tag": "fabric:eggs"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "tag": "fabric:crops/onion"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:fried_rice"
+  },
+  "cookingtime": 200
+}
