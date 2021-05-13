@@ -1,7 +1,8 @@
 image: gradle:6.8.3
 
 pipelines:
-  default:
+  branches:
+    develop:
     - parallel:
       - step:
           name: Build and Test
