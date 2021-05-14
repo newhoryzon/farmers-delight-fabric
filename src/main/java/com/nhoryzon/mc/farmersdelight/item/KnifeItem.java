@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 
 import java.util.Set;
 
-// TODO
 public class KnifeItem extends MiningToolItem {
 
     private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
