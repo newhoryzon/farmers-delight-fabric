@@ -23,6 +23,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -58,6 +59,18 @@ public class PieBlock extends Block {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(FACING, BITES);
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+
+        if (Tags.KNIVES.contains(player.getMainHandStack().getItem())) {
+            PieBlock pieBlock = (PieBlock) state.getBlock();
+            ItemStack pieSlices = pieBlock.getPieSliceStack();
+            pieSlices.setCount(pieBlock.getMaxBites() - state.get(PieBlock.BITES));
+            ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, pieSlices));
+        }
     }
 
     @Override
