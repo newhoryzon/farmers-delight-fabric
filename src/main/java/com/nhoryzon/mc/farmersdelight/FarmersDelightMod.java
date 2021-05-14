@@ -167,19 +167,20 @@ public class FarmersDelightMod implements ModInitializer {
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack itemStack = player.getStackInHand(hand);
 
-            if (entityIn instanceof LivingEntity && (Tags.DOG_FOOD_USERS.contains(entityIn.getType()) || Tags.HORSE_FEED_USERS.contains(
-                    entityIn.getType()))) {
-                LivingEntity livingEntity = (LivingEntity) entityIn;
+            if (entity instanceof LivingEntity && (Tags.DOG_FOOD_USERS.contains(entity.getType()) || Tags.HORSE_FEED_USERS.contains(
+                    entity.getType()))) {
+                LivingEntity livingEntity = (LivingEntity) entity;
                 boolean isTameable = livingEntity instanceof TameableEntity;
 
                 if (livingEntity.isAlive() && (!isTameable || ((TameableEntity) livingEntity).isTamed()) &&
-                        itemStack.getItem() instanceof LivingEntityFeedItem) {
+                        itemStack.getItem() instanceof LivingEntityFeedItem &&
+                        ((LivingEntityFeedItem) itemStack.getItem()).canFeed(itemStack, player, livingEntity, hand)) {
                     LivingEntityFeedItem livingEntityFeedItem = (LivingEntityFeedItem) itemStack.getItem();
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                     for (StatusEffectInstance effect : livingEntityFeedItem.getStatusEffectApplied()) {
                         livingEntity.addStatusEffect(new StatusEffectInstance(effect));
                     }
-                    livingEntity.getEntityWorld().playSound(null, entityIn.getBlockPos(), SoundEvents.ENTITY_GENERIC_EAT,
+                    livingEntity.getEntityWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EAT,
                             SoundCategory.PLAYERS, .8f, .8f);
 
                     for (int i = 0; i < 5; ++i) {
