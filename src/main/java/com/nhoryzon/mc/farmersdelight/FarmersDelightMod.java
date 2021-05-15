@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight;
 
 import com.google.common.collect.Sets;
+import com.nhoryzon.mc.farmersdelight.block.PieBlock;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.item.LivingEntityFeedItem;
@@ -21,13 +22,19 @@ import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CakeBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.TameableEntity;
@@ -45,6 +52,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
@@ -53,6 +62,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Set;
 
 /**
@@ -106,6 +116,13 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerEventListeners() {
+        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+            ItemStack heldItem = player.getMainHandStack();
+            if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
+                ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
+            }
+        });
+
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             BlockPos pos = hitResult.getBlockPos();
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -113,12 +130,10 @@ public class FarmersDelightMod implements ModInitializer {
             if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()) {
                 if (heldItem.getItem() instanceof ToolItem || heldItem.getItem() instanceof TridentItem ||
                         heldItem.getItem() instanceof ShearsItem) {
-                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(
-                            player.abilities.creativeMode ? heldItem.copy() : heldItem);
+                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.abilities.creativeMode ? heldItem.copy() : heldItem);
 
                     if (success) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
-                                .8f);
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
 
                         return ActionResult.SUCCESS;
                     }
@@ -128,22 +143,44 @@ public class FarmersDelightMod implements ModInitializer {
             return ActionResult.PASS;
         });
 
-        UseEntityCallback.EVENT.register((player, world, hand, entityIn, hitResult) -> {
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            BlockPos pos = hitResult.getBlockPos();
+            BlockState state = world.getBlockState(pos);
+            ItemStack heldItem = player.getStackInHand(hand);
+
+            if (state.getBlock() instanceof CakeBlock && Tags.KNIVES.contains(heldItem.getItem())) {
+                int bites = state.get(CakeBlock.BITES);
+                if (bites < 6) {
+                    world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), 3);
+                } else {
+                    world.removeBlock(pos, false);
+                }
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
+                world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, .8f, .8f);
+
+                return ActionResult.SUCCESS;
+            }
+
+            return ActionResult.PASS;
+        });
+
+        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack itemStack = player.getStackInHand(hand);
 
-            if (entityIn instanceof LivingEntity && (Tags.DOG_FOOD_USERS.contains(entityIn.getType()) || Tags.HORSE_FEED_USERS.contains(
-                    entityIn.getType()))) {
-                LivingEntity livingEntity = (LivingEntity) entityIn;
+            if (entity instanceof LivingEntity && (Tags.DOG_FOOD_USERS.contains(entity.getType()) || Tags.HORSE_FEED_USERS.contains(
+                    entity.getType()))) {
+                LivingEntity livingEntity = (LivingEntity) entity;
                 boolean isTameable = livingEntity instanceof TameableEntity;
 
                 if (livingEntity.isAlive() && (!isTameable || ((TameableEntity) livingEntity).isTamed()) &&
-                        itemStack.getItem() instanceof LivingEntityFeedItem) {
+                        itemStack.getItem() instanceof LivingEntityFeedItem &&
+                        ((LivingEntityFeedItem) itemStack.getItem()).canFeed(itemStack, player, livingEntity, hand)) {
                     LivingEntityFeedItem livingEntityFeedItem = (LivingEntityFeedItem) itemStack.getItem();
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                     for (StatusEffectInstance effect : livingEntityFeedItem.getStatusEffectApplied()) {
                         livingEntity.addStatusEffect(new StatusEffectInstance(effect));
                     }
-                    livingEntity.getEntityWorld().playSound(null, entityIn.getBlockPos(), SoundEvents.ENTITY_GENERIC_EAT,
+                    livingEntity.getEntityWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EAT,
                             SoundCategory.PLAYERS, .8f, .8f);
 
                     for (int i = 0; i < 5; ++i) {
@@ -248,10 +285,19 @@ public class FarmersDelightMod implements ModInitializer {
                 EntityType.SHULKER.getLootTableId(),
                 EntityType.SPIDER.getLootTableId()
         );
+        Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(
+                Blocks.GRASS.getLootTableId(),
+                Blocks.TALL_GRASS.getLootTableId(),
+                Blocks.WHEAT.getLootTableId()
+        );
 
         LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());
             if (scavengingEntityIdList.contains(id)) {
+                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
+            }
+
+            if (addItemLootBlockIdList.contains(id)) {
                 supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 

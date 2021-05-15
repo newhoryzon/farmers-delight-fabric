@@ -25,6 +25,8 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
@@ -34,6 +36,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
@@ -153,6 +156,16 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     }
 
     @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
+            BlockPos posFrom) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+    }
+
+    @Override
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
@@ -180,6 +193,21 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
     private void updateState(World world, BlockPos pos, BlockState state) {
