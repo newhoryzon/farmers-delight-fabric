@@ -1,6 +1,7 @@
 # Farmer's Delight
 
 [![Curseforge Downloads](https://cf.way2muchnoise.eu/full_farmers-delight_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/farmers-delight) [![Curseforge Downloads](https://img.shields.io/discord/734511833947439156?color=brightgreen&label=Discord)](https://discord.gg/eFsz5SK)
+
 ![fd-logo](https://i.imgur.com/aDELzhM.png)
 
 ### Overview
