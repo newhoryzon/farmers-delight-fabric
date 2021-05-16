@@ -50,6 +50,10 @@ release {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
 	tagTemplate = "${project.minecraft_version}-$version"
+	pushReleaseVersionBranch = 'master'
+    git {
+        requireBranch = /master|develop/
+    }
 }
 
 publishing {
