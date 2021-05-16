@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import java.util.Collection;
 
 public class MilkBottleItem extends ConsumableItem {
-
     public MilkBottleItem(Settings settings) {
         super(settings);
     }
@@ -42,5 +41,4 @@ public class MilkBottleItem extends ConsumableItem {
 
         return TypedActionResult.consume(user.getStackInHand(hand));
     }
-
 }

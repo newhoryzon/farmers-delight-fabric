@@ -10,7 +10,6 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemStackHandler implements ItemHandler {
-
     protected DefaultedList<ItemStack> inventory;
 
     public ItemStackHandler() {
@@ -236,5 +235,4 @@ public class ItemStackHandler implements ItemHandler {
 
         onInventoryLoaded();
     }
-
 }

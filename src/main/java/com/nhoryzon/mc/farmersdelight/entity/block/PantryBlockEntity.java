@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public class PantryBlockEntity extends LootableContainerBlockEntity {
-
     private static final int MAX_INVENTORY_SIZE = 27;
 
     private DefaultedList<ItemStack> content;
@@ -150,5 +149,4 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
         World world = Objects.requireNonNull(getWorld());
         world.playSound(null, dX, dT, dZ, sound, SoundCategory.BLOCKS, .5f, world.getRandom().nextFloat() * .1f + .9f);
     }
-
 }

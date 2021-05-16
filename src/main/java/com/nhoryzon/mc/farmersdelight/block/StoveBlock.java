@@ -49,7 +49,6 @@ import java.util.Optional;
 import java.util.Random;
 
 public class StoveBlock extends BlockWithEntity {
-
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = Properties.LIT;
 
@@ -184,5 +183,4 @@ public class StoveBlock extends BlockWithEntity {
         double dz = (double) pos.getZ() + .5d;
         world.playSound(dx, dy, dz, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, .5f, 2.6f, false);
     }
-
 }

@@ -6,7 +6,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
 public interface Basket extends Hopper {
-
     VoxelShape[] COLLECTION_AREA_SHAPES = {
             Block.createCuboidShape(.0d, -16.d, .0d, 16.d, 16.d, 16.d),    // down
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 32.d, 16.d),       // up
@@ -43,5 +42,4 @@ public interface Basket extends Hopper {
      */
     @Override
     double getHopperZ();
-
 }

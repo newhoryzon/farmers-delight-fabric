@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BasketBlock extends InventoryBlockWithEntity implements Waterloggable {
-
     public static final DirectionProperty FACING = Properties.FACING;
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -217,5 +216,4 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
         }
     }
-
 }

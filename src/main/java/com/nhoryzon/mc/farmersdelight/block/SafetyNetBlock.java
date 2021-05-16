@@ -25,7 +25,6 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class SafetyNetBlock extends Block implements Waterloggable {
-
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(.0d, 8.d, .0d, 16.d, 9.d, 16.d);
 
@@ -93,5 +92,4 @@ public class SafetyNetBlock extends Block implements Waterloggable {
             entityIn.setVelocity(vec3d.x, -vec3d.y * d0, vec3d.z);
         }
     }
-
 }

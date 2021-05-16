@@ -87,5 +87,4 @@ public class WorldEventUtils {
 
     private WorldEventUtils() {
     }
-
 }

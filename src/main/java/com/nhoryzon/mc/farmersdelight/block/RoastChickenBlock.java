@@ -13,7 +13,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class RoastChickenBlock extends FeastBlock {
-
     protected static final VoxelShape PLATE_SHAPE = Block.createCuboidShape(1.d, .0d, 1.d, 15.d, 2.d, 15.d);
     protected static final VoxelShape ROAST_SHAPE = VoxelShapes.combine(PLATE_SHAPE,
             Block.createCuboidShape(4.d, 2.d, 4.d, 12.d, 9.d, 12.d), BooleanBiFunction.OR);
@@ -26,5 +25,4 @@ public class RoastChickenBlock extends FeastBlock {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return state.get(SERVINGS) == 0 ? PLATE_SHAPE : ROAST_SHAPE;
     }
-
 }

@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public abstract class LivingEntityOnUseItemFinishMixin {
-
     @Inject(method = "finishUsing", at = @At("HEAD"))
     private void canHaveStatusEffect(World world, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir) {
         Item food = entity.getActiveItem().getItem();
@@ -22,5 +21,4 @@ public abstract class LivingEntityOnUseItemFinishMixin {
             entity.addStatusEffect(new StatusEffectInstance(EffectsRegistry.COMFORT.get(), 6000, 0));
         }
     }
-
 }

@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(value= EnvType.CLIENT)
 public class StarParticle extends SpriteBillboardParticle {
-
     protected StarParticle(ClientWorld world, double posX, double posY, double posZ) {
         super(world, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
         this.velocityX *= .01f;
@@ -81,5 +80,4 @@ public class StarParticle extends SpriteBillboardParticle {
         }
 
     }
-
 }

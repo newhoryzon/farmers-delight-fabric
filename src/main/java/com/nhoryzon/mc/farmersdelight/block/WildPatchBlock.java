@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.Set;
 
 public class WildPatchBlock extends PlantBlock implements Fertilizable {
-
     public static final Set<Block> PLANT_ON_LIST = ImmutableSet.of(Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.SAND, Blocks.RED_SAND);
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.d, .0d, 2.d, 14.d, 13.d, 14.d);
@@ -88,5 +87,4 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
-
 }

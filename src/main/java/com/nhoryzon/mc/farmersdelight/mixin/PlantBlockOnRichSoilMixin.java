@@ -12,10 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlantBlock.class)
 public class PlantBlockOnRichSoilMixin {
-
     @Inject(at = @At("TAIL"), method = "canPlantOnTop", cancellable = true)
     private void plantBlockCanPlantOnTopOfRichSoil(BlockState floor, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValue() || floor.isOf(BlocksRegistry.RICH_SOIL.get()));
     }
-
 }

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CookingPotRecipe implements Recipe<Inventory> {
-
     public static final int INPUT_SLOTS = 6;
 
     private final Identifier id;
@@ -113,5 +112,4 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     public int getCookTime() {
         return cookTime;
     }
-
 }

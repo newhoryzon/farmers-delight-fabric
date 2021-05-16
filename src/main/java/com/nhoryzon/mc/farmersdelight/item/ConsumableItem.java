@@ -10,7 +10,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.world.World;
 
 public class ConsumableItem extends Item {
-
     public ConsumableItem(Settings settings) {
         super(settings);
     }
@@ -54,5 +53,4 @@ public class ConsumableItem extends Item {
 
     public void affectConsumer(ItemStack stack, World world, LivingEntity user) {
     }
-
 }

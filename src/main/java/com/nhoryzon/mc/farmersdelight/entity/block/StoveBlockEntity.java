@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.Random;
 
 public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable, Tickable {
-
     private static final VoxelShape GRILLING_AREA = Block.createCuboidShape(3.f, .0f, 3.f, 13.f, 1.f, 13.f);
     private static final int MAX_STACK_SIZE = 6;
 
@@ -221,5 +220,4 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
 
         return false;
     }
-
 }

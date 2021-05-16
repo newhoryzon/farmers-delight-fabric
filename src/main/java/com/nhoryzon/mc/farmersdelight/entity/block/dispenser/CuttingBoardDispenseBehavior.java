@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 
 public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior {
-
     private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
     private static final HashMap<Item, DispenserBehavior> DISPENSE_ITEM_BEHAVIOR_HASH_MAP = new HashMap<>();
 
@@ -71,5 +70,4 @@ public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior 
         }
 
     }
-
 }

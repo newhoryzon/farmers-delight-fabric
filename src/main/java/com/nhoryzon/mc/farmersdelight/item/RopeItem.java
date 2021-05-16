@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class RopeItem extends ModBlockItem {
-
     public RopeItem() {
         super(BlocksRegistry.ROPE.get());
     }
@@ -61,5 +60,4 @@ public class RopeItem extends ModBlockItem {
     protected boolean checkStatePlacement() {
         return false;
     }
-
 }

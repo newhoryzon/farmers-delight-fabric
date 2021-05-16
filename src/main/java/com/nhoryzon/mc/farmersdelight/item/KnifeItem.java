@@ -28,7 +28,6 @@ import net.minecraft.world.World;
 import java.util.Set;
 
 public class KnifeItem extends MiningToolItem {
-
     private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Sets.newHashSet(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
     private static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Sets.newHashSet(Enchantments.SHARPNESS, Enchantments.SMITE,
@@ -87,5 +86,4 @@ public class KnifeItem extends MiningToolItem {
             return ActionResult.PASS;
         }
     }
-
 }

@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
 public class RecipeWrapper implements Inventory {
-
     protected final ItemHandler inventory;
 
     public RecipeWrapper(ItemHandler inventory) {
@@ -88,5 +87,4 @@ public class RecipeWrapper implements Inventory {
     public void onOpen(PlayerEntity player) {}
     @Override
     public void onClose(PlayerEntity player) {}
-
 }

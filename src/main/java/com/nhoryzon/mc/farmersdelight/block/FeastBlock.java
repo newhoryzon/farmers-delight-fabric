@@ -29,7 +29,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class FeastBlock extends Block {
-
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty SERVINGS = IntProperty.of("servings", 0, 4);
 
@@ -143,5 +142,4 @@ public class FeastBlock extends Block {
         }
         return ActionResult.PASS;
     }
-
 }

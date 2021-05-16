@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BasketBlockEntity extends LootableContainerBlockEntity implements Basket, Tickable {
-
     private static final int MAX_INVENTORY_SIZE = 27;
     private DefaultedList<ItemStack> content;
     private int transferCooldown = -1;
@@ -260,5 +259,4 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
 
         return true;
     }
-
 }

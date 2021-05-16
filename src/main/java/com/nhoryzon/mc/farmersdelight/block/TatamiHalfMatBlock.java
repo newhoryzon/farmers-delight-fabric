@@ -17,7 +17,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class TatamiHalfMatBlock extends HorizontalFacingBlock {
-
     protected static final VoxelShape SHAPE = Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d);
 
     public TatamiHalfMatBlock() {
@@ -52,5 +51,4 @@ public class TatamiHalfMatBlock extends HorizontalFacingBlock {
         super.appendProperties(builder);
         builder.add(FACING);
     }
-
 }

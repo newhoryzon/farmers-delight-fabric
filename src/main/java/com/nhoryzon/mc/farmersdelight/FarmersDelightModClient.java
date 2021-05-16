@@ -19,7 +19,6 @@ import net.minecraft.screen.PlayerScreenHandler;
 
 @Environment(value= EnvType.CLIENT)
 public class FarmersDelightModClient implements ClientModInitializer {
-
 	@Override
 	public void onInitializeClient() {
 		// BlockEntityRenderer register
@@ -36,5 +35,4 @@ public class FarmersDelightModClient implements ClientModInitializer {
 		ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
 				(atlasTexture, registry) -> registry.register(CookingPotScreenHandler.EMPTY_CONTAINER_SLOT_BOWL));
 	}
-
 }

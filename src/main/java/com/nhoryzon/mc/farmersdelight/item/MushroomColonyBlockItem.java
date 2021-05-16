@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 // TODO
 public class MushroomColonyBlockItem extends ModBlockItem {
-
     public MushroomColonyBlockItem(Block block) {
         super(block);
     }
@@ -24,5 +23,4 @@ public class MushroomColonyBlockItem extends ModBlockItem {
 
         return null;
     }
-
 }

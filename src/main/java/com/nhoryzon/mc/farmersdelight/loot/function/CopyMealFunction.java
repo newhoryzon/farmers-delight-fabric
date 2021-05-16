@@ -12,7 +12,6 @@ import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.nbt.CompoundTag;
 
 public class CopyMealFunction extends ConditionalLootFunction {
-
     public static ConditionalLootFunction.Builder<?> builder() {
         return builder(CopyMealFunction::new);
     }
@@ -38,5 +37,4 @@ public class CopyMealFunction extends ConditionalLootFunction {
     public LootFunctionType getType() {
         return LootFunctionsRegistry.COPY_MEAL.type();
     }
-
 }

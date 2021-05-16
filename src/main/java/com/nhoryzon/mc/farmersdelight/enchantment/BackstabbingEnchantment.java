@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 public class BackstabbingEnchantment extends Enchantment {
-
     public BackstabbingEnchantment() {
         super(Rarity.COMMON, EnchantmentTarget.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
@@ -56,5 +55,4 @@ public class BackstabbingEnchantment extends Enchantment {
         float multiplier = ((level * .4f) + 1.f);
         return amount * multiplier;
     }
-
 }

@@ -17,7 +17,6 @@ import java.util.List;
 
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperEnhancementMixin {
-
     @Inject(method = "getPossibleEntries", at = @At("HEAD"), cancellable = true)
     private static void getPossibleEntriesEnhanced(int power, ItemStack stack, boolean treasureAllowed,
             CallbackInfoReturnable<List<EnchantmentLevelEntry>> returnCallback) {
@@ -37,5 +36,4 @@ public class EnchantmentHelperEnhancementMixin {
             returnCallback.setReturnValue(list);
         }
     }
-
 }

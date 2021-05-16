@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityKnivesKnockBackMixin {
-
     @Shadow @Nullable public abstract LivingEntity getAttacker();
 
     @ModifyVariable(at = @At("HEAD"), method = "takeKnockback(FDD)V", ordinal = 0, argsOnly = true)
@@ -25,5 +24,4 @@ public abstract class LivingEntityKnivesKnockBackMixin {
             return strength;
         }
     }
-
 }
