@@ -28,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 public class RopeBlock extends PaneBlock {
-
     private static final BooleanProperty TIED_TO_BELL = BooleanProperty.of("tied_to_bell");
 
     public RopeBlock() {
@@ -105,5 +104,4 @@ public class RopeBlock extends PaneBlock {
                 connectsTo(newState, newState.isSideSolidFullSquare(world, posFrom, direction.getOpposite())))
                 : super.getStateForNeighborUpdate(state.with(TIED_TO_BELL, tiedToBell), direction, newState, world, pos, posFrom));
     }
-
 }

@@ -8,7 +8,6 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 public enum ToolMaterials implements ToolMaterial {
-
     FLINT(1, 131, 4.f, 1.f, 5, () -> Ingredient.ofItems(Items.FLINT));
 
     private final int miningLevel;
@@ -50,5 +49,4 @@ public enum ToolMaterials implements ToolMaterial {
     public Ingredient getRepairIngredient() {
         return this.repairIngredient.get();
     }
-
 }

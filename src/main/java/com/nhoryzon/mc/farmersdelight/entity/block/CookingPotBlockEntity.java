@@ -41,9 +41,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class CookingPotBlockEntity extends BlockEntity
-        implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable, Nameable {
-
+public class CookingPotBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable, Nameable {
     public static final int MEAL_DISPLAY_SLOT = 6;
     public static final int CONTAINER_SLOT = 7;
     public static final int OUTPUT_SLOT = 8;
@@ -503,5 +501,4 @@ public class CookingPotBlockEntity extends BlockEntity
         }
 
     }
-
 }

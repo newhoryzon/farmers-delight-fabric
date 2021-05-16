@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class RiceBaleBlock extends FacingBlock {
-
     public RiceBaleBlock() {
         super(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP));
@@ -49,5 +48,4 @@ public class RiceBaleBlock extends FacingBlock {
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
-
 }

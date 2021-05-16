@@ -1,22 +1,10 @@
 package com.nhoryzon.mc.farmersdelight;
 
 import com.google.common.collect.Sets;
-import com.nhoryzon.mc.farmersdelight.block.PieBlock;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.item.LivingEntityFeedItem;
-import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ConfiguredFeaturesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.LootFunctionsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.*;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.ModInitializer;
@@ -25,7 +13,6 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
@@ -34,16 +21,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.TridentItem;
+import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
@@ -62,13 +43,11 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Set;
 
 /**
  * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
  * <ul>
- *     <li>the "Nourished Hunger" overlay</li>
  *     <li>the possibility to disable vanilla "Crops Crates"</li>
  *     <li>the integrations of others mods like : CraftTweaker, JEI, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
  * </ul>
@@ -337,5 +316,4 @@ public class FarmersDelightMod implements ModInitializer {
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
     }
-
 }

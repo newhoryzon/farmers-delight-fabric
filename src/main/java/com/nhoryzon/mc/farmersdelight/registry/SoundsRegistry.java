@@ -6,7 +6,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum SoundsRegistry {
-
     BLOCK_COOKING_POT_BOIL("block.cooking_pot.boil"),
     BLOCK_CUTTING_BOARD_KNIFE("block.cutting_board.knife"),
     BLOCK_STOVE_CRACKLE("block.stove.crackle"),
@@ -29,5 +28,4 @@ public enum SoundsRegistry {
     public SoundEvent get() {
         return soundEvent;
     }
-
 }

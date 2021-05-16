@@ -13,7 +13,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
 public class CabbageCropBlock extends CropBlock {
-
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[] {
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d),
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 3.d, 16.d),
@@ -38,5 +37,4 @@ public class CabbageCropBlock extends CropBlock {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE_BY_AGE[state.get(getAgeProperty())];
     }
-
 }

@@ -19,7 +19,6 @@ import java.util.List;
 
 @Environment(value= EnvType.CLIENT)
 public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
-
     private static final Identifier BACKGROUND_TEXTURE = new Identifier(FarmersDelightMod.MOD_ID, "textures/gui/cooking_pot.png");
 
     public CookingPotScreen(CookingPotScreenHandler screenContainer, PlayerInventory inv, Text titleIn) {
@@ -87,5 +86,4 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         int l = handler.getCookProgressionScaled();
         drawTexture(ms, x + 89, y + 25, 176, 15, l + 1, 17);
     }
-
 }

@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public enum ConfiguredFeaturesRegistry {
-
     PATCH_WILD_CABBAGES("patch_wild_cabbages", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP, 10,
             () -> buildFeatureConfig(BlocksRegistry.WILD_CABBAGES.get(), 64, 2, 2, Blocks.SAND),
             "cabbages", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
@@ -116,5 +115,4 @@ public enum ConfiguredFeaturesRegistry {
 
         return configuredFeature;
     }
-
 }

@@ -19,7 +19,6 @@ import net.minecraft.util.math.Direction;
 
 @Environment(value= EnvType.CLIENT)
 public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<CuttingBoardBlockEntity> {
-
     public CuttingBoardBlockEntityRenderer(BlockEntityRenderDispatcher renderDispatcher) {
         super(renderDispatcher);
     }
@@ -92,5 +91,4 @@ public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<Cutting
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);
     }
-
 }

@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum ExtendedScreenTypesRegistry {
-
     COOKING_POT("cooking_pot", CookingPotScreenHandler.class, CookingPotScreenHandler::new);
 
     private final String pathName;

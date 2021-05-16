@@ -10,7 +10,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import java.util.Set;
 
 public class ComfortEffect extends StatusEffect {
-
     public static final Set<StatusEffect> COMFORT_IMMUNITIES = Sets.newHashSet(StatusEffects.SLOWNESS, StatusEffects.WEAKNESS, StatusEffects.HUNGER);
 
     public ComfortEffect() {
@@ -28,5 +27,4 @@ public class ComfortEffect extends StatusEffect {
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
         return true;
     }
-
 }

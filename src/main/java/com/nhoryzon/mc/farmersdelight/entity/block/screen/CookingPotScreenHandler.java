@@ -28,7 +28,6 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class CookingPotScreenHandler extends ScreenHandler {
-
     public static final Identifier EMPTY_CONTAINER_SLOT_BOWL = new Identifier(FarmersDelightMod.MOD_ID, "item/empty_container_slot_bowl");
 
     public final CookingPotBlockEntity tileEntity;
@@ -163,5 +162,4 @@ public class CookingPotScreenHandler extends ScreenHandler {
     public boolean isHeated() {
         return tileEntity.isAboveLitHeatSource();
     }
-
 }

@@ -32,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class PantryBlock extends InventoryBlockWithEntity implements Waterloggable {
-
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = Properties.OPEN;
 
@@ -113,5 +112,4 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
-
 }

@@ -5,7 +5,6 @@ import com.nhoryzon.mc.farmersdelight.item.inventory.SlotItemHandler;
 import net.minecraft.item.ItemStack;
 
 public class CookingPotResultSlot extends SlotItemHandler {
-
     public CookingPotResultSlot(ItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
     }
@@ -14,5 +13,4 @@ public class CookingPotResultSlot extends SlotItemHandler {
     public boolean canInsert(ItemStack stack) {
         return false;
     }
-
 }

@@ -16,7 +16,6 @@ import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
 import java.util.Random;
 
 public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
-
     public RiceCropFeature(Codec<RandomPatchFeatureConfig> configCodec) {
         super(configCodec);
     }
@@ -46,5 +45,4 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
 
         return i > 0;
     }
-
 }

@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
 public class SlotItemHandler extends Slot {
-
     private static final Inventory EMPTY_INVENTORY = new SimpleInventory(0);
     private final ItemHandler itemHandler;
     private final int index;
@@ -76,5 +75,4 @@ public class SlotItemHandler extends Slot {
     public ItemHandler getItemHandler() {
         return itemHandler;
     }
-
 }

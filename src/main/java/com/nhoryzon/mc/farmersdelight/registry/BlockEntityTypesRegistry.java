@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 public enum BlockEntityTypesRegistry {
-
     STOVE("stove", StoveBlockEntity.class, StoveBlockEntity::new, BlocksRegistry.STOVE),
     COOKING_POT("cooking_pot", CookingPotBlockEntity.class, CookingPotBlockEntity::new, BlocksRegistry.COOKING_POT),
     BASKET("basket", BasketBlockEntity.class, BasketBlockEntity::new, BlocksRegistry.BASKET),
@@ -56,5 +55,4 @@ public enum BlockEntityTypesRegistry {
 
         return (BlockEntityType<T>) blockEntityType;
     }
-
 }

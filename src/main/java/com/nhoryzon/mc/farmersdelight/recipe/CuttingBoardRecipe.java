@@ -1,6 +1,5 @@
 package com.nhoryzon.mc.farmersdelight.recipe;
 
-
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -13,7 +12,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 public class CuttingBoardRecipe implements Recipe<Inventory> {
-
     private final Identifier id;
     private final String group;
     private final Ingredient input;
@@ -93,5 +91,4 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     public String getSoundEvent() {
         return soundEvent;
     }
-
 }

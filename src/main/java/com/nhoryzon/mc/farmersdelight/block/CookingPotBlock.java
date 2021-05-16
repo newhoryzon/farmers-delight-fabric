@@ -59,7 +59,6 @@ import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class CookingPotBlock extends BlockWithEntity implements InventoryProvider, Waterloggable {
-
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty SUPPORTED = Properties.DOWN;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -270,5 +269,4 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     private boolean needsTrayForHeatSource(BlockState state) {
         return state.getBlock().isIn(Tags.TRAY_HEAT_SOURCES);
     }
-
 }

@@ -9,7 +9,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public enum EnchantmentsRegistry {
-
     BACKSTABBING("backstabbing", BackstabbingEnchantment::new);
 
     private final String pathName;
@@ -34,5 +33,4 @@ public enum EnchantmentsRegistry {
 
         return enchantment;
     }
-
 }

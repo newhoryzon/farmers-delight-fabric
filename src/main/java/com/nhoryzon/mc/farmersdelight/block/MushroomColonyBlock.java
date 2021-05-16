@@ -30,7 +30,6 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
-
     public static final int GROWING_LIGHT_LEVEL = 12;
     public static final int PLACING_LIGHT_LEVEL = 13;
 
@@ -130,5 +129,4 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
     public int getMaxAge() {
         return 3;
     }
-
 }

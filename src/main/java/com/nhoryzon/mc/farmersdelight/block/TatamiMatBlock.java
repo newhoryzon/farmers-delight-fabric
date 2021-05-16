@@ -28,7 +28,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class TatamiMatBlock extends HorizontalFacingBlock {
-
     public static final EnumProperty<BedPart> PART = Properties.BED_PART;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d);
 
@@ -116,5 +115,4 @@ public class TatamiMatBlock extends HorizontalFacingBlock {
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
-
 }

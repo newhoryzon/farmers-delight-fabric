@@ -12,7 +12,6 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRecipe> {
-
     @Override
     public CookingPotRecipe read(Identifier id, JsonObject json) {
         final String groupIn = JsonHelper.getString(json, "group", "");
@@ -81,5 +80,4 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
         buf.writeFloat(recipe.getExperience());
         buf.writeVarInt(recipe.getCookTime());
     }
-
 }

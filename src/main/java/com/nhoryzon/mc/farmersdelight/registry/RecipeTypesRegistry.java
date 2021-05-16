@@ -15,7 +15,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public enum RecipeTypesRegistry {
-
     COOKING_RECIPE_SERIALIZER("cooking", CookingPotRecipe.class, CookingPotRecipeSerializer::new),
     CUTTING_RECIPE_SERIALIZER("cutting", CuttingBoardRecipe.class, CuttingBoardRecipeSerializer::new);
 
@@ -59,5 +58,4 @@ public enum RecipeTypesRegistry {
         }
         return (RecipeType<T>) type;
     }
-
 }

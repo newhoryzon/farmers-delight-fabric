@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-
     private boolean isItemCarvingBoard;
     private final ItemStackHandler itemHandler = new ItemStackHandler() {
         @Override
@@ -219,5 +218,4 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
         markDirty();
         Objects.requireNonNull(world).updateListeners(getPos(), getCachedState(), getCachedState(), 3);
     }
-
 }

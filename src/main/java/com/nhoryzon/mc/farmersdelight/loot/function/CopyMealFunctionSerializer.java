@@ -6,10 +6,8 @@ import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.function.ConditionalLootFunction;
 
 public class CopyMealFunctionSerializer extends ConditionalLootFunction.Serializer<CopyMealFunction> {
-
     @Override
     public CopyMealFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
         return new CopyMealFunction(conditions);
     }
-
 }

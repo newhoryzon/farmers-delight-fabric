@@ -26,7 +26,6 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 public class RichSoilFarmlandBlock extends FarmlandBlock {
-
     public RichSoilFarmlandBlock() {
         super(FabricBlockSettings.copyOf(Blocks.FARMLAND).breakByTool(FabricToolTags.SHOVELS));
     }
@@ -100,5 +99,4 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
     public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
         // Rich Soil is immune to trampling
     }
-
 }
