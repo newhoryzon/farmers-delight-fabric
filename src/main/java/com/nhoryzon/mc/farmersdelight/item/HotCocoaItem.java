@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HotCocoaItem extends MilkBottleItem {
-
     public HotCocoaItem(Settings settings) {
         super(settings);
     }
@@ -30,5 +29,4 @@ public class HotCocoaItem extends MilkBottleItem {
     private boolean canEffectInstanceBeRemovedByMilk(StatusEffectInstance effectInstance) {
         return effectInstance.getEffectType().getType() == StatusEffectType.HARMFUL;
     }
-
 }

@@ -35,7 +35,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class PieBlock extends Block {
-
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty BITES = IntProperty.of("bites", 0, 3);
 
@@ -176,5 +175,4 @@ public class PieBlock extends Block {
 
         return ActionResult.SUCCESS;
     }
-
 }

@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.util;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class BlockStateUtils {
-
     /**
      * Calls
      * {@link net.minecraft.block.Block#neighborUpdate(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.Block, net.minecraft.util.math.BlockPos, boolean)}
@@ -49,5 +48,4 @@ public class BlockStateUtils {
 
     private BlockStateUtils() {
     }
-
 }

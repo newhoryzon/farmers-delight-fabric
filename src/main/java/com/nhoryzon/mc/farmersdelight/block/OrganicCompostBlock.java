@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class OrganicCompostBlock extends Block {
-
     public static final int MAX_COMPOSTING_STAGE = 7;
     public static final IntProperty COMPOSTING = IntProperty.of("composting", 0, MAX_COMPOSTING_STAGE);
 
@@ -99,5 +98,4 @@ public class OrganicCompostBlock extends Block {
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return (MAX_COMPOSTING_STAGE + 1 - state.get(COMPOSTING));
     }
-
 }

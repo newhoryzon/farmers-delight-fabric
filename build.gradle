@@ -19,10 +19,10 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "version", "${project.minecraft_version}-${project.version}"
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": "${project.minecraft_version}-${project.version}"
 	}
 }
 
@@ -49,6 +49,11 @@ release {
 	if (project.hasProperty('development_commit_prefix')) {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
+	tagTemplate = "${project.minecraft_version}-$version"
+	pushReleaseVersionBranch = 'master'
+    git {
+        requireBranch = /master|develop/
+    }
 }
 
 publishing {
@@ -56,7 +61,7 @@ publishing {
 		mavenJava(MavenPublication) {
 			groupId = "${group}"
 			artifactId = "${archivesBaseName}"
-			version = "${version}"
+			version = "${project.minecraft_version}-${version}"
 			artifact(jar.archivePath) {
 				builtBy remapJar
 			}

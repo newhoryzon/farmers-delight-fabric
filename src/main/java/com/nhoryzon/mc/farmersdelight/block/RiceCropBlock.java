@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFillable {
-
     public static final IntProperty AGE = Properties.AGE_3;
     public static final BooleanProperty SUPPORTING = BooleanProperty.of("supporting");
 
@@ -193,5 +192,4 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     protected int getBonemealAgeIncrease(World world) {
         return MathHelper.nextInt(world.getRandom(), 1, 4);
     }
-
 }

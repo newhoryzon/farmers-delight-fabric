@@ -12,7 +12,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public enum LootFunctionsRegistry {
-
     COPY_MEAL("copy_meal", CopyMealFunctionSerializer::new),
     SMOKER_COOK("smoker_cook", SmokerCookFunctionSerializer::new);
 
@@ -47,5 +46,4 @@ public enum LootFunctionsRegistry {
 
         return serializer;
     }
-
 }

@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum ParticleTypesRegistry {
-
     STAR("star");
 
     private final String pathName;
@@ -26,5 +25,4 @@ public enum ParticleTypesRegistry {
     public DefaultParticleType get() {
         return particleType;
     }
-
 }

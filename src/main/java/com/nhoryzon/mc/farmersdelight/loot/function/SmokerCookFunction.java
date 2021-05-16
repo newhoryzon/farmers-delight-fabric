@@ -12,7 +12,6 @@ import net.minecraft.recipe.SmokingRecipe;
 import java.util.Optional;
 
 public class SmokerCookFunction extends ConditionalLootFunction {
-
     public SmokerCookFunction(LootCondition[] conditions) {
         super(conditions);
     }
@@ -39,5 +38,4 @@ public class SmokerCookFunction extends ConditionalLootFunction {
     public LootFunctionType getType() {
         return LootFunctionsRegistry.SMOKER_COOK.type();
     }
-
 }

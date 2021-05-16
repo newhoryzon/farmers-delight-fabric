@@ -20,7 +20,6 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class TatamiBlock extends Block {
-
     public static final DirectionProperty FACING = Properties.FACING;
     public static final BooleanProperty PAIRED = BooleanProperty.of("paired");
 
@@ -84,5 +83,4 @@ public class TatamiBlock extends Block {
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
-
 }

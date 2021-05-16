@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.util;
 
 @SuppressWarnings("unused")
 public class CompoundTagUtils {
-
     public static final int TAG_END         = 0;
     public static final int TAG_BYTE        = 1;
     public static final int TAG_SHORT       = 2;
@@ -20,5 +19,4 @@ public class CompoundTagUtils {
 
     private CompoundTagUtils() {
     }
-
 }

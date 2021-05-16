@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 public class RiceUpperCropBlock extends CropBlock implements Fertilizable {
-
     public static final IntProperty RICE_AGE = Properties.AGE_3;
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.createCuboidShape(3.d, .0d, 3.d, 13.d, 8.d, 13.d),
@@ -72,5 +71,4 @@ public class RiceUpperCropBlock extends CropBlock implements Fertilizable {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE_BY_AGE[state.get(getAgeProperty())];
     }
-
 }

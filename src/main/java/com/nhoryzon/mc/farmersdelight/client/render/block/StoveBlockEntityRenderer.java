@@ -19,7 +19,6 @@ import net.minecraft.util.math.Vec2f;
 
 @Environment(value= EnvType.CLIENT)
 public class StoveBlockEntityRenderer extends BlockEntityRenderer<StoveBlockEntity> {
-
     public StoveBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
     }
@@ -53,5 +52,4 @@ public class StoveBlockEntityRenderer extends BlockEntityRenderer<StoveBlockEnti
             }
         }
     }
-
 }

@@ -14,7 +14,6 @@ import net.minecraft.util.Hand;
 import java.util.List;
 
 public class HorseFeedItem extends LivingEntityFeedItem {
-
     public static final List<StatusEffectInstance> EFFECT_LIST = Lists.newArrayList(
             new StatusEffectInstance(StatusEffects.SPEED, 6000, 1),
             new StatusEffectInstance(StatusEffects.JUMP_BOOST, 6000, 0));
@@ -43,5 +42,4 @@ public class HorseFeedItem extends LivingEntityFeedItem {
 
         return false;
     }
-
 }

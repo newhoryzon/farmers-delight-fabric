@@ -23,7 +23,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public enum ItemsRegistry {
-
     /* Block Items */
 
     STOVE("stove", () -> new ModBlockItem(BlocksRegistry.STOVE.get())),
@@ -78,8 +77,6 @@ public enum ItemsRegistry {
     STUFFED_PUMPKIN_BLOCK("stuffed_pumpkin_block", () -> new ModBlockItem(BlocksRegistry.STUFFED_PUMPKIN_BLOCK.get())),
     HONEY_GLAZED_HAM_BLOCK("honey_glazed_ham_block", () -> new ModBlockItem(BlocksRegistry.HONEY_GLAZED_HAM_BLOCK.get())),
     SHEPHERDS_PIE_BLOCK("shepherds_pie_block", () -> new ModBlockItem(BlocksRegistry.SHEPHERDS_PIE_BLOCK.get())),
-
-
 
     /* Items */
 
@@ -202,5 +199,4 @@ public enum ItemsRegistry {
         }
         return item;
     }
-
 }

@@ -36,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, Fertilizable {
-
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public WildRiceCropBlock() {
@@ -161,5 +160,4 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
             }
         }
     }
-
 }

@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class InventoryBlockWithEntity extends BlockWithEntity {
-
     protected InventoryBlockWithEntity(Settings settings) {
         super(settings);
     }
@@ -25,5 +24,4 @@ public abstract class InventoryBlockWithEntity extends BlockWithEntity {
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
-
 }

@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 
 public class NourishedEffect extends StatusEffect {
-
     public NourishedEffect() {
         super(StatusEffectType.BENEFICIAL, 0);
     }
@@ -35,5 +34,4 @@ public class NourishedEffect extends StatusEffect {
             }
         }
     }
-
 }

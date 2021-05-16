@@ -35,7 +35,6 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
-
     public static final IntProperty AGE = Properties.AGE_7;
     private static final int TOMATO_BEARING_AGE = 7;
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
@@ -201,5 +200,4 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
 
         return f;
     }
-
 }

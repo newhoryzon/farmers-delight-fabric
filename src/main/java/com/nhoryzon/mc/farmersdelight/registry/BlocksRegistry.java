@@ -46,7 +46,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.function.Supplier;
 
 public enum BlocksRegistry {
-
     STOVE("stove", StoveBlock::new),
     COOKING_POT("cooking_pot", CookingPotBlock::new, RenderLayer::getCutout),
     BASKET("basket", BasketBlock::new, RenderLayer::getCutout),
@@ -158,5 +157,4 @@ public enum BlocksRegistry {
 
         return block;
     }
-
 }

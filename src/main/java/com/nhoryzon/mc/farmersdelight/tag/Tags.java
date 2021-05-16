@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class Tags {
-
     public static final Tag<Block> WILD_CROPS = create("wild_crops", TagRegistry::block);
     public static final Tag<Block> HEAT_SOURCES = create("heat_sources", TagRegistry::block);
     public static final Tag<Block> TRAY_HEAT_SOURCES = create("tray_heat_sources", TagRegistry::block);
@@ -30,5 +29,4 @@ public class Tags {
     private static <E> Tag<E> create(String pathName, Function<Identifier, Tag<E>> tagCreateSupplier) {
         return tagCreateSupplier.apply(new Identifier(FarmersDelightMod.MOD_ID, pathName));
     }
-
 }

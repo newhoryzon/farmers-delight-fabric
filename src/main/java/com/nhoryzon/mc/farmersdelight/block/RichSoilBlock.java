@@ -27,7 +27,6 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class RichSoilBlock extends Block {
-
     public static final int COLONY_FORMING_LIGHT_LEVEL = 12;
 
     public RichSoilBlock() {
@@ -87,5 +86,4 @@ public class RichSoilBlock extends Block {
             }
         }
     }
-
 }

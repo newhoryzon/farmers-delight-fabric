@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum EffectsRegistry {
-
     NOURISHED("nourished", new NourishedEffect()),
     COMFORT("comfort", new ComfortEffect());
 
@@ -29,5 +28,4 @@ public enum EffectsRegistry {
     public StatusEffect get() {
         return effect;
     }
-
 }

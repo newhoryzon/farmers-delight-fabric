@@ -13,7 +13,6 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoardRecipe> {
-
     @Override
     public CuttingBoardRecipe read(Identifier id, JsonObject json) {
         final String groupIn = JsonHelper.getString(json, "group", "");
@@ -86,5 +85,4 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
 
         buf.writeString(recipe.getSoundEvent());
     }
-
 }

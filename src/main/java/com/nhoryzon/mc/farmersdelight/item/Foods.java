@@ -6,7 +6,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.FoodComponent;
 
 public enum Foods {
-
     CABBAGE(2, .4f),
     TOMATO(1, .3f),
     ONION(2, .4f),
@@ -122,5 +121,4 @@ public enum Foods {
     public FoodComponent get() {
         return food;
     }
-
 }

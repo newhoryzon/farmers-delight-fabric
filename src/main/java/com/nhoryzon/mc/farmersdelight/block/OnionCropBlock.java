@@ -12,7 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 
 public class OnionCropBlock extends CropBlock {
-
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d),
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 3.d, 16.d),
@@ -37,5 +36,4 @@ public class OnionCropBlock extends CropBlock {
     public VoxelShape getOutlineShape(BlockState state, net.minecraft.world.BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE_BY_AGE[state.get(getAgeProperty())];
     }
-
 }

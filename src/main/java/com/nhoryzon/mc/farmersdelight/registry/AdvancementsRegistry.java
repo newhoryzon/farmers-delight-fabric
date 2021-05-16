@@ -8,7 +8,6 @@ import net.minecraft.advancement.criterion.CriterionConditions;
 import java.util.function.Supplier;
 
 public enum AdvancementsRegistry {
-
     CUTTING_BOARD(CuttingBoardTrigger::new);
 
     private final Supplier<Criterion<? extends CriterionConditions>> criterionSupplier;
@@ -31,5 +30,4 @@ public enum AdvancementsRegistry {
 
         return criterion;
     }
-
 }

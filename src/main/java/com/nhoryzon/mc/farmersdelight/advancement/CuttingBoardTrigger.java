@@ -10,7 +10,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.Instance> {
-
     private static final Identifier ID = new Identifier(FarmersDelightMod.MOD_ID, "use_cutting_board");
 
     @Override
@@ -43,5 +42,4 @@ public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.I
         }
 
     }
-
 }

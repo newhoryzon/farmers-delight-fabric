@@ -14,7 +14,6 @@ import net.minecraft.util.Hand;
 import java.util.List;
 
 public class DogFoodItem extends LivingEntityFeedItem {
-
     public static final List<StatusEffectInstance> EFFECT_LIST = Lists.newArrayList(
             new StatusEffectInstance(StatusEffects.SPEED, 6000, 0),
             new StatusEffectInstance(StatusEffects.STRENGTH, 6000, 0),
@@ -50,5 +49,4 @@ public class DogFoodItem extends LivingEntityFeedItem {
     public boolean isConsumable() {
         return true;
     }
-
 }

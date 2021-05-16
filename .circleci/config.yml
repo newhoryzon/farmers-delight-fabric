@@ -1,0 +1,114 @@
+version: 2
+workflows:
+  version: 2
+  build-release-deploy:
+    jobs:
+      - build_n_test:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - release:
+          requires:
+            - build_n_test
+          filters:
+            branches: 
+              only: /master/
+      - deploy:
+          requires:
+            - build_n_test
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+jobs:
+  build_n_test:
+    name: Build and Test
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1024m
+      TERM: dumb
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle clean dependencies --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: gradle clean build test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+  release:
+    name: Release
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1024m
+      TERM: dumb
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle clean dependencies --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: git remote set-url origin ${CIRCLE_REPOSITORY_URL}
+      - run: git config --global user.email "ci-pipeline@newhoryzon.com"
+      - run: git config --global user.name "CI Pipeline"
+      - run: git checkout --force develop
+      - run: gradle clean release 
+          -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release" 
+          -Pdevelopment_commit_prefix="[skip ci][gradle-release-plugin] prepare for next development iteration"
+  deploy:
+    name: Deploy jar
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1024m
+      TERM: dumb
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle clean dependencies --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: gradle clean publish 
+          -Pscm_project_url=https://bitbucket.org/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -Pscm_connection_url=${CIRCLE_REPOSITORY_URL}
+          -Ppublish_maven_repo_username=${NEXUS_CI_USERNAME} -Ppublish_maven_repo_password=${NEXUS_CI_PASSWORD}
