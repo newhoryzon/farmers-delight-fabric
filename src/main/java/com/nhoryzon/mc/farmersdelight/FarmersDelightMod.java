@@ -68,7 +68,6 @@ import java.util.Set;
 /**
  * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
  * <ul>
- *     <li>the "Nourished Hunger" overlay</li>
  *     <li>the possibility to disable vanilla "Crops Crates"</li>
  *     <li>the integrations of others mods like : CraftTweaker, JEI, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
  * </ul>
