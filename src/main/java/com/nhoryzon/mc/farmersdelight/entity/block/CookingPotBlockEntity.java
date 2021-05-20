@@ -128,6 +128,15 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         fromTag(tag);
     }
 
+    private void fromTag(CompoundTag tag) {
+        itemHandler.fromTag(tag.getCompound("Inventory"));
+        cookTime = tag.getInt("CookTime");
+        cookTimeTotal = tag.getInt("CookTimeTotal");
+        container = ItemStack.fromTag(tag.getCompound("Container"));
+        if (tag.contains("CustomName", 8)) {
+            customName = Text.Serializer.fromJson(tag.getString("CustomName"));
+        }
+    }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
@@ -141,16 +150,6 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         tag.put("Inventory", itemHandler.toTag());
 
         return tag;
-    }
-
-    private void fromTag(CompoundTag tag) {
-        itemHandler.fromTag(tag.getCompound("Inventory"));
-        cookTime = tag.getInt("CookTime");
-        cookTimeTotal = tag.getInt("CookTimeTotal");
-        container = ItemStack.fromTag(tag.getCompound("Container"));
-        if (tag.contains("CustomName", 8)) {
-            customName = Text.Serializer.fromJson(tag.getString("CustomName"));
-        }
     }
 
     public CompoundTag writeItems(CompoundTag tag) {
@@ -381,6 +380,8 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
     /**
      * Returns every stored ItemStack in the pot, except for prepared meals.
+     *
+     * @return a list of item stack.
      */
     public DefaultedList<ItemStack> getDroppableInventory() {
         DefaultedList<ItemStack> drops = DefaultedList.of();
@@ -431,6 +432,9 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
     /**
      * Checks if the given ItemStack is a container for the stored meal. If true, takes a serving and returns it.
+     *
+     * @param container item stack held by the player
+     * @return the item stack (with 1 count) of stored meal.
      */
     public ItemStack useHeldItemOnMeal(ItemStack container) {
         if (isContainerValid(container) && !getMeal().isEmpty()) {
@@ -485,13 +489,10 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
         @Override
         public void set(int index, int value) {
-            switch (index) {
-                case 0:
-                    CookingPotBlockEntity.this.cookTime = value;
-                    break;
-                case 1:
-                    CookingPotBlockEntity.this.cookTimeTotal = value;
-                    break;
+            if (index == 0) {
+                CookingPotBlockEntity.this.cookTime = value;
+            } else if (index == 1) {
+                CookingPotBlockEntity.this.cookTimeTotal = value;
             }
         }
 

@@ -112,6 +112,7 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
         super.onEntityCollision(state, world, pos, entity);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         int age = state.get(AGE);
@@ -147,7 +148,7 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
         if (world.getLightLevel(pos, 0) >= 9) {
             int age = getAge(state);
             if (age < getMaxAge()) {
-                float growthChance = getGrowthChance(this, world, pos);
+                float growthChance = getGrowthChance(world, pos);
                 if (random.nextInt((int) (25.f / growthChance) + 1) == 0) {
                     world.setBlockState(pos, withAge(age + 1), BlockStateUtils.BLOCK_UPDATE);
                 }
@@ -155,49 +156,63 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
         }
     }
 
-    protected static float getGrowthChance(Block block, World world, BlockPos pos) {
-        float f = 1.f;
+    protected float getGrowthChance(World world, BlockPos pos) {
+        float growthChance = 1.f;
+
+        growthChance = getGrowthChanceWithGroundedFarmland(growthChance, world, pos);
+        growthChance = getGrowthChanceWithSurroundingBlock(growthChance, world, pos);
+
+        return growthChance;
+    }
+
+    protected float getGrowthChanceWithGroundedFarmland(float startingChance, World world, BlockPos pos) {
+        float finalChance = startingChance;
         BlockPos floorPos = pos.down();
-        BlockState blockState = world.getBlockState(pos);
+        BlockState blockState = world.getBlockState(floorPos);
 
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
-                float f1 = .0f;
+                float floorGrowthChance = .0f;
                 BlockState floorBlockState = world.getBlockState(floorPos.add(i, 0, j));
-                if (block.canPlaceAt(blockState, world, pos.add(i, 0, j))) {
-                    f1 = 1.f;
+                if (canPlaceAt(blockState, world, pos.add(i, 0, j))) {
+                    floorGrowthChance = 1.f;
                     if (floorBlockState.getBlock() instanceof FarmlandBlock && floorBlockState.get(FarmlandBlock.MOISTURE) == 7) {
-                        f1 = 3.f;
+                        floorGrowthChance = 3.f;
                     }
                 }
 
                 if (i != 0 || j != 0) {
-                    f1 /= 4.f;
+                    floorGrowthChance /= 4.f;
                 }
 
-                f += f1;
+                finalChance += floorGrowthChance;
             }
         }
+
+        return finalChance;
+    }
+
+    protected float getGrowthChanceWithSurroundingBlock(float startingChance, World world, BlockPos pos) {
+        float finalChance = startingChance;
 
         BlockPos northPos = pos.north();
         BlockPos southPos = pos.south();
         BlockPos westPos = pos.west();
         BlockPos eastPos = pos.east();
-        boolean isMatchedWestEast = block == world.getBlockState(westPos).getBlock() || block == world.getBlockState(eastPos)
-                .getBlock();
-        boolean isMatchedNorthSouth = block == world.getBlockState(northPos).getBlock() || block == world.getBlockState(southPos)
-                .getBlock();
+        boolean isMatchedWestEast = world.getBlockState(westPos).isOf(this) || world.getBlockState(eastPos).isOf(this);
+        boolean isMatchedNorthSouth = world.getBlockState(northPos).isOf(this) || world.getBlockState(southPos).isOf(this);
         if (isMatchedWestEast && isMatchedNorthSouth) {
-            f /= 2.f;
+            finalChance /= 2.f;
         } else {
-            boolean flag2 = block == world.getBlockState(westPos.north()).getBlock() || block == world.getBlockState(
-                    eastPos.north()).getBlock() || block == world.getBlockState(eastPos.south()).getBlock() ||
-                    block == world.getBlockState(westPos.south()).getBlock();
+            boolean flag2 = world.getBlockState(westPos.north()).isOf(this)
+                    || world.getBlockState(eastPos.north()).isOf(this)
+                    || world.getBlockState(eastPos.south()).isOf(this)
+                    || world.getBlockState(westPos.south()).isOf(this);
             if (flag2) {
-                f /= 2.f;
+                finalChance /= 2.f;
             }
         }
 
-        return f;
+        return finalChance;
     }
 }

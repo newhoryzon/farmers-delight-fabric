@@ -12,6 +12,19 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRecipe> {
+    private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
+        DefaultedList<Ingredient> ingredientList = DefaultedList.of();
+
+        for (int i = 0; i < ingredientArray.size(); ++i) {
+            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
+                ingredientList.add(ingredient);
+            }
+        }
+
+        return ingredientList;
+    }
+
     @Override
     public CookingPotRecipe read(Identifier id, JsonObject json) {
         final String groupIn = JsonHelper.getString(json, "group", "");
@@ -33,19 +46,6 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
 
             return new CookingPotRecipe(id, groupIn, inputItemsIn, outputIn, container, experienceIn, cookTimeIn);
         }
-    }
-
-    private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
-        DefaultedList<Ingredient> ingredientList = DefaultedList.of();
-
-        for (int i = 0; i < ingredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
-            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
-                ingredientList.add(ingredient);
-            }
-        }
-
-        return ingredientList;
     }
 
     @Override

@@ -25,6 +25,20 @@ public class RecipeWrapper implements Inventory {
     }
 
     /**
+     * Removes the stack contained in this slot from the underlying handler, and returns it.
+     */
+    @Override
+    public ItemStack removeStack(int slot) {
+        ItemStack itemStack = getStack(slot);
+        if (itemStack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        setStack(slot, ItemStack.EMPTY);
+
+        return itemStack;
+    }
+
+    /**
      * Attempts to remove n items from the specified slot.  Returns the split stack that was removed.  Modifies the inventory.
      */
     @Override
@@ -40,20 +54,6 @@ public class RecipeWrapper implements Inventory {
     @Override
     public void setStack(int slot, ItemStack itemStack) {
         inventory.setStack(slot, itemStack);
-    }
-
-    /**
-     * Removes the stack contained in this slot from the underlying handler, and returns it.
-     */
-    @Override
-    public ItemStack removeStack(int index) {
-        ItemStack itemStack = getStack(index);
-        if (itemStack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        setStack(index, ItemStack.EMPTY);
-
-        return itemStack;
     }
 
     @Override

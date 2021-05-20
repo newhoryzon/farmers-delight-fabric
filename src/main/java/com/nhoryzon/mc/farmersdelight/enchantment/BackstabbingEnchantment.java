@@ -40,6 +40,10 @@ public class BackstabbingEnchantment extends Enchantment {
 
     /**
      * Determines whether the attacker is facing a 90-100 degree cone behind the target's looking direction.
+     *
+     * @param target the target entity attacked
+     * @param attackerLocation location of the attacker
+     * @return true if the attackerLocation is in a code for 90-100 degree behind the target.
      */
     public static boolean isLookingBehindTarget(LivingEntity target, Vec3d attackerLocation) {
         if (attackerLocation != null) {
