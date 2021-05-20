@@ -11,7 +11,7 @@ workflows:
           requires:
             - build_n_test
           filters:
-            branches: 
+            branches:
               only: /master/
       - deploy:
           requires:
@@ -83,8 +83,8 @@ jobs:
       - run: git config --global user.email "ci-pipeline@newhoryzon.com"
       - run: git config --global user.name "CI Pipeline"
       - run: git checkout --force develop
-      - run: gradle clean release 
-          -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release" 
+      - run: gradle clean release
+          -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release"
           -Pdevelopment_commit_prefix="[skip ci][gradle-release-plugin] prepare for next development iteration"
   deploy:
     name: Deploy jar
@@ -109,6 +109,6 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      - run: gradle clean publish 
+      - run: gradle clean publish
           -Pscm_project_url=https://bitbucket.org/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -Pscm_connection_url=${CIRCLE_REPOSITORY_URL}
           -Ppublish_maven_repo_username=${NEXUS_CI_USERNAME} -Ppublish_maven_repo_password=${NEXUS_CI_PASSWORD}
