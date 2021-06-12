@@ -4,9 +4,13 @@ workflows:
   build-release-deploy:
     jobs:
       - build_n_test:
-          filters:  # required since `deploy` has tag filters AND requires `build`
+          filters:
             tags:
               only: /.*/
+      - code_analysis:
+          filters:
+            branches:
+              only: /master|develop/
       - release:
           requires:
             - build_n_test
@@ -22,6 +26,30 @@ workflows:
             branches:
               ignore: /.*/
 jobs:
+  code_analysis:
+    name: Code Analysis
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1024m
+      TERM: dumb
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle clean dependencies --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: gradle sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonar.beaucoralk.fr -Pgit_branch="${CIRCLE_BRANCH}"
   build_n_test:
     name: Build and Test
     docker:
