@@ -56,6 +56,19 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
         fromTag(tag);
     }
 
+    private void fromTag(CompoundTag tag) {
+        inventory.clear();
+        Inventories.fromTag(tag, inventory);
+        if (tag.contains("CookingTimes", 11)) {
+            int[] cookingTimeRead = tag.getIntArray("CookingTimes");
+            System.arraycopy(cookingTimeRead, 0, cookingTimes, 0, Math.min(cookingTotalTimes.length, cookingTimeRead.length));
+        }
+        if (tag.contains("CookingTotalTimes", 11)) {
+            int[] cookingTotalTimeRead = tag.getIntArray("CookingTotalTimes");
+            System.arraycopy(cookingTotalTimeRead, 0, cookingTotalTimes, 0, Math.min(cookingTotalTimes.length, cookingTotalTimeRead.length));
+        }
+    }
+
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         Inventories.toTag(tag, inventory, true);
@@ -73,19 +86,6 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return super.toTag(Inventories.toTag(tag, inventory, true));
-    }
-
-    private void fromTag(CompoundTag tag) {
-        inventory.clear();
-        Inventories.fromTag(tag, inventory);
-        if (tag.contains("CookingTimes", 11)) {
-            int[] cookingTimeRead = tag.getIntArray("CookingTimes");
-            System.arraycopy(cookingTimeRead, 0, cookingTimes, 0, Math.min(cookingTotalTimes.length, cookingTimeRead.length));
-        }
-        if (tag.contains("CookingTotalTimes", 11)) {
-            int[] cookingTotalTimeRead = tag.getIntArray("CookingTotalTimes");
-            System.arraycopy(cookingTotalTimeRead, 0, cookingTotalTimes, 0, Math.min(cookingTotalTimes.length, cookingTotalTimeRead.length));
-        }
     }
 
     @Override

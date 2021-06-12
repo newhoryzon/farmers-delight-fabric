@@ -93,7 +93,8 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     /**
      * Attempts to apply a recipe to the Cutting Board's stored item, using the given tool.
      *
-     * @param tool The item stack used to process the item.
+     * @param tool The item stack used to process the item
+     * @param player player who trying to process item with the tool
      * @return Whether the process succeeded or failed.
      */
     public boolean processItemUsingTool(ItemStack tool, PlayerEntity player) {
@@ -163,6 +164,9 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
      * Places the given stack on the board, but carved into it instead of laying on top.
      * This is purely for decoration purposes; the item can still be processed.
      * Ideally, the caller checks if the item is a damageable tool first.
+     *
+     * @param tool the tool used to try carving item placed on the board
+     * @return true if the tool in parameter can carve item placed on the board, false otherwise.
      */
     public boolean carveToolOnBoard(ItemStack tool) {
         if (addItem(tool)) {

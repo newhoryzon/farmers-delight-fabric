@@ -4,14 +4,18 @@ workflows:
   build-release-deploy:
     jobs:
       - build_n_test:
-          filters:  # required since `deploy` has tag filters AND requires `build`
+          filters:
             tags:
               only: /.*/
+      - code_analysis:
+          filters:
+            branches:
+              only: /master|develop/
       - release:
           requires:
             - build_n_test
           filters:
-            branches: 
+            branches:
               only: /master/
       - deploy:
           requires:
@@ -22,6 +26,30 @@ workflows:
             branches:
               ignore: /.*/
 jobs:
+  code_analysis:
+    name: Code Analysis
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1024m
+      TERM: dumb
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+      - run: gradle clean dependencies --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run: gradle sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonar.beaucoralk.fr -Pgit_branch="${CIRCLE_BRANCH}"
   build_n_test:
     name: Build and Test
     docker:
@@ -83,8 +111,8 @@ jobs:
       - run: git config --global user.email "ci-pipeline@newhoryzon.com"
       - run: git config --global user.name "CI Pipeline"
       - run: git checkout --force develop
-      - run: gradle clean release 
-          -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release" 
+      - run: gradle clean release
+          -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release"
           -Pdevelopment_commit_prefix="[skip ci][gradle-release-plugin] prepare for next development iteration"
   deploy:
     name: Deploy jar
@@ -109,6 +137,6 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      - run: gradle clean publish 
+      - run: gradle clean publish
           -Pscm_project_url=https://bitbucket.org/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -Pscm_connection_url=${CIRCLE_REPOSITORY_URL}
           -Ppublish_maven_repo_username=${NEXUS_CI_USERNAME} -Ppublish_maven_repo_password=${NEXUS_CI_PASSWORD}
