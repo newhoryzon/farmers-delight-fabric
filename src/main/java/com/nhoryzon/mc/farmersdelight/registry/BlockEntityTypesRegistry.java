@@ -6,6 +6,7 @@ import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.PantryBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.StoveBlockEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -28,11 +29,10 @@ public enum BlockEntityTypesRegistry {
     private final Supplier<BlockEntityType<? extends BlockEntity>> blockEntityTypeSupplier;
     private BlockEntityType<? extends BlockEntity> blockEntityType;
 
-    BlockEntityTypesRegistry(String pathName, Class<? extends BlockEntity> blockEntityClass,
-            Supplier<? extends BlockEntity> blockEntitySupplier, BlocksRegistry... blockRegistryArray) {
+    BlockEntityTypesRegistry(String pathName, Class<? extends BlockEntity> blockEntityClass, FabricBlockEntityTypeBuilder.Factory blockEntitySupplier, BlocksRegistry... blockRegistryArray) {
         this.pathName = pathName;
         this.blockEntityClass = blockEntityClass;
-        this.blockEntityTypeSupplier = () -> BlockEntityType.Builder.create(blockEntitySupplier, Arrays.stream(blockRegistryArray)
+        this.blockEntityTypeSupplier = () -> FabricBlockEntityTypeBuilder.create(blockEntitySupplier, Arrays.stream(blockRegistryArray)
                 .map(BlocksRegistry::get).toArray(Block[]::new)).build(null);
     }
 

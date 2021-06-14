@@ -125,10 +125,10 @@ public class FeastBlock extends Block {
             Item servingContainerItem = servingItem.getRecipeRemainder();
             if (heldItem.getItem() == servingContainerItem) {
                 world.setBlockState(pos, state.with(SERVINGS, servings - 1), 3);
-                if (!player.abilities.creativeMode) {
+                if (!player.getAbilities().creativeMode) {
                     heldItem.decrement(1);
                 }
-                if (!player.inventory.insertStack(servingItemStack)) {
+                if (!player.getInventory().insertStack(servingItemStack)) {
                     player.dropItem(servingItemStack, false);
                 }
                 if (world.getBlockState(pos).get(SERVINGS) == 0 && !hasLeftovers) {

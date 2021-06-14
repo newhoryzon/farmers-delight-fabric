@@ -108,7 +108,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         int age = state.get(AGE);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (age > 0 && heldItem.getItem().isIn(FabricToolTags.SHEARS)) {
+        if (age > 0 && FabricToolTags.SHEARS.contains(heldItem.getItem())) {
             dropStack(world, pos, getPickStack(world, pos, state));
             world.playSound(null, pos, SoundEvents.ENTITY_MOOSHROOM_SHEAR, SoundCategory.BLOCKS, 1.f, 1.f);
             world.setBlockState(pos, state.with(AGE, age - 1), BlockStateUtils.BLOCK_UPDATE);

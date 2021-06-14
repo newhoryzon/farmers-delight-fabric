@@ -1,7 +1,8 @@
 {
   "required": true,
   "package": "com.nhoryzon.mc.farmersdelight.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
+  "refmap": "farmers-delight-fabric-refmap.json",
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
     "CropBlockOnRichSoilFarmlandMixin",

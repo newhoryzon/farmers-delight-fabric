@@ -20,8 +20,7 @@ public class NourishedEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if  (!entity.getEntityWorld().isClient() && entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
+        if  (!entity.getEntityWorld().isClient() && entity instanceof PlayerEntity player) {
             HungerManager hungerManager = player.getHungerManager();
             boolean isPlayerHealingWithSaturation = player.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
                     && player.canFoodHeal() && hungerManager.getSaturationLevel() > .0f && hungerManager.getFoodLevel() >= 20;

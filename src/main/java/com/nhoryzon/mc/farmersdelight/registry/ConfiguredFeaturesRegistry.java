@@ -10,7 +10,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.gen.decorator.ConfiguredDecorator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.RandomPatchFeature;
@@ -24,25 +23,26 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public enum ConfiguredFeaturesRegistry {
-    PATCH_WILD_CABBAGES("patch_wild_cabbages", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP, 10,
+
+    PATCH_WILD_CABBAGES("patch_wild_cabbages", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
             () -> buildFeatureConfig(BlocksRegistry.WILD_CABBAGES.get(), 64, 2, 2, Blocks.SAND),
             "cabbages", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_ONIONS("patch_wild_onions", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
+    PATCH_WILD_ONIONS("patch_wild_onions", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
             () -> buildFeatureConfig(BlocksRegistry.WILD_ONIONS.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
             "onions", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_TOMATOES("patch_wild_tomatoes", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP, 10,
+    PATCH_WILD_TOMATOES("patch_wild_tomatoes", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
             () -> buildFeatureConfig(BlocksRegistry.WILD_TOMATOES.get(), 64, 2, 2, Blocks.GRASS_BLOCK, Blocks.SAND, Blocks.RED_SAND),
             "tomatoes", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_CARROTS("patch_wild_carrots", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
+    PATCH_WILD_CARROTS("patch_wild_carrots", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
             () -> buildFeatureConfig(BlocksRegistry.WILD_CARROTS.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
             "carrots", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_POTATOES("patch_wild_potatoes", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
+    PATCH_WILD_POTATOES("patch_wild_potatoes", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
             () -> buildFeatureConfig(BlocksRegistry.WILD_POTATOES.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
             "potatoes", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_BEETROOTS("patch_wild_beetroots", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP, 10,
+    PATCH_WILD_BEETROOTS("patch_wild_beetroots", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
             () -> buildFeatureConfig(BlocksRegistry.WILD_BEETROOTS.get(), 64, 2, 2, Blocks.SAND),
             "beetroots", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_RICE("patch_wild_rice", ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP, 10,
+    PATCH_WILD_RICE("patch_wild_rice", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
             () -> buildFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, 4, Blocks.DIRT),
             "rice", () -> new RiceCropFeature(RandomPatchFeatureConfig.CODEC));
 
@@ -102,7 +102,7 @@ public enum ConfiguredFeaturesRegistry {
 
     public RegistryKey<ConfiguredFeature<?, ?>> key() {
         if (configuredFeatureRegistryKey == null) {
-            configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, new Identifier(FarmersDelightMod.MOD_ID, pathName));
+            configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(FarmersDelightMod.MOD_ID, pathName));
         }
 
         return configuredFeatureRegistryKey;

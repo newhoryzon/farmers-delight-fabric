@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Sets;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarvedPumpkinBlock;
@@ -28,19 +27,18 @@ import net.minecraft.world.World;
 import java.util.Set;
 
 public class KnifeItem extends MiningToolItem {
-    private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Sets.newHashSet(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
     private static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Sets.newHashSet(Enchantments.SHARPNESS, Enchantments.SMITE,
             Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING);
 
     public KnifeItem(ToolMaterial material, Settings settings) {
-        super(.5f, -1.8f, material, EFFECTIVE_ON, settings);
+        super(.5f, -1.8f, material, Tags.KNIVES_CUTTABLE, settings);
     }
 
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         Material material = state.getMaterial();
-        if (EFFECTIVE_ON.contains(state.getBlock()) || EFFECTIVE_ON_MATERIAL.contains(material)) {
+        if (Tags.KNIVES_CUTTABLE.contains(state.getBlock()) || EFFECTIVE_ON_MATERIAL.contains(material)) {
             return this.miningSpeed;
         } else {
             return super.getMiningSpeedMultiplier(stack, state);

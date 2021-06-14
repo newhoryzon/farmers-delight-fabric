@@ -8,6 +8,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -58,11 +59,11 @@ public class SafetyNetBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         if (entity.bypassesLandingEffects()) {
-            super.onLandedUpon(world, pos, entity, distance);
+            super.onLandedUpon(world, state, pos, entity, fallDistance);
         } else {
-            entity.handleFallDamage(distance, .0f);
+            entity.handleFallDamage(fallDistance, .0f, DamageSource.FALL);
         }
     }
 

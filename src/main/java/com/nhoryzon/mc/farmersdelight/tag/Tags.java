@@ -17,6 +17,7 @@ public class Tags {
     public static final Tag<Block> TRAY_HEAT_SOURCES = create("tray_heat_sources", TagRegistry::block);
     public static final Tag<Block> COMPOST_ACTIVATORS = create("compost_activators", TagRegistry::block);
     public static final Tag<Block> UNAFFECTED_BY_RICH_SOIL = create("unaffected_by_rich_soil", TagRegistry::block);
+    public static final Tag<Block> KNIVES_CUTTABLE = create("knives_cuttable", TagRegistry::block);
     public static final Tag<Item> WILD_CROPS_ITEM = create("wild_crops", TagRegistry::item);
     public static final Tag<Item> STRAW_HARVESTERS = create("straw_harvesters", TagRegistry::item);
     public static final Tag<Item> COMFORT_FOODS = create("comfort_foods", TagRegistry::item);

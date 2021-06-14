@@ -38,10 +38,6 @@ public class SlotItemHandler extends Slot {
     }
 
     @Override
-    public void onStackChanged(ItemStack oldStackIn, ItemStack newStackIn) {
-    }
-
-    @Override
     public int getMaxItemCount() {
         return itemHandler.getMaxCountForSlot(this.index);
     }

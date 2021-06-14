@@ -9,9 +9,9 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
 import java.util.Random;
 
@@ -21,9 +21,13 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator chunkGenerator, Random random, BlockPos pos,
-            RandomPatchFeatureConfig config) {
-        BlockPos blockPos = world.getTopPosition(Heightmap.Type.OCEAN_FLOOR_WG, pos);
+    public boolean generate(FeatureContext<RandomPatchFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        BlockPos origin = context.getOrigin();
+        RandomPatchFeatureConfig config = context.getConfig();
+        Random random = context.getRandom();
+        BlockPos blockPos = world.getTopPosition(Heightmap.Type.OCEAN_FLOOR_WG, origin);
+        BlockState blockState = world.getBlockState(blockPos);
 
         int i = 0;
         BlockPos.Mutable blockPosMutable = new BlockPos.Mutable();
@@ -37,7 +41,7 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
             if (world.getBlockState(blockPosMutable).getBlock() == Blocks.WATER && world.getBlockState(blockPosMutable.up()).getBlock() == Blocks.AIR) {
                 BlockState bottomRiceState = BlocksRegistry.WILD_RICE.get().getDefaultState().with(WildRiceCropBlock.HALF, DoubleBlockHalf.LOWER);
                 if (bottomRiceState.canPlaceAt(world, blockPosMutable)) {
-                    ((WildRiceCropBlock) bottomRiceState.getBlock()).placeAt(world, blockPosMutable, 2);
+                    ((WildRiceCropBlock) bottomRiceState.getBlock()).placeAt(world, blockState, blockPosMutable, 2);
                     ++i;
                 }
             }

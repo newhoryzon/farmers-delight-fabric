@@ -15,7 +15,7 @@ public class BackstabbingEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem().isIn(Tags.KNIVES);
+        return Tags.KNIVES.contains(stack.getItem());
     }
 
     @Override
