@@ -71,8 +71,8 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return BlockEntityTypesRegistry.CUTTING_BOARD.get().instantiate();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return BlockEntityTypesRegistry.CUTTING_BOARD.get().instantiate(pos, state);
     }
 
     @Override
@@ -102,8 +102,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CuttingBoardBlockEntity) {
-            CuttingBoardBlockEntity cuttingBoardBlockEntity = (CuttingBoardBlockEntity) blockEntity;
+        if (blockEntity instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity) {
             ItemStack itemHeld = player.getStackInHand(hand);
             ItemStack itemOffhand = player.getOffHandStack();
 
@@ -113,7 +112,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
                 }
                 if (itemHeld.isEmpty()) {
                     return ActionResult.PASS;
-                } else if (cuttingBoardBlockEntity.addItem(player.abilities.creativeMode ? itemHeld.copy() : itemHeld)) {
+                } else if (cuttingBoardBlockEntity.addItem(player.getAbilities().creativeMode ? itemHeld.copy() : itemHeld)) {
                     world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
 
                     return ActionResult.SUCCESS;
@@ -128,7 +127,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
                 return ActionResult.CONSUME;
             } else if (hand.equals(Hand.MAIN_HAND)) {
                 if (!player.isCreative()) {
-                    if (!player.inventory.insertStack(cuttingBoardBlockEntity.removeItem())) {
+                    if (!player.getInventory().insertStack(cuttingBoardBlockEntity.removeItem())) {
                         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), cuttingBoardBlockEntity.removeItem());
                     }
                 } else {

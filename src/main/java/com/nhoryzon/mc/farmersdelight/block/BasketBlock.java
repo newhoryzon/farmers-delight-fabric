@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.nhoryzon.mc.farmersdelight.entity.block.BasketBlockEntity;
+import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -11,6 +12,8 @@ import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -105,8 +108,14 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new BasketBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new BasketBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockEntityTypesRegistry.BASKET.get(), BasketBlockEntity::tick);
     }
 
     @Override

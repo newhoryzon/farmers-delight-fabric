@@ -9,7 +9,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunctionType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class CopyMealFunction extends ConditionalLootFunction {
     public static ConditionalLootFunction.Builder<?> builder() {
@@ -24,7 +24,7 @@ public class CopyMealFunction extends ConditionalLootFunction {
     protected ItemStack process(ItemStack stack, LootContext context) {
         BlockEntity blockEntity = context.get(LootContextParameters.BLOCK_ENTITY);
         if (blockEntity instanceof CookingPotBlockEntity) {
-            CompoundTag tag = ((CookingPotBlockEntity) blockEntity).writeMeal(new CompoundTag());
+            NbtCompound tag = ((CookingPotBlockEntity) blockEntity).writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
                 stack.putSubTag("BlockEntityTag", tag);
             }

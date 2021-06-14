@@ -17,8 +17,9 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
+
     private static final Identifier BACKGROUND_TEXTURE = new Identifier(FarmersDelightMod.MOD_ID, "textures/gui/cooking_pot.png");
 
     public CookingPotScreen(CookingPotScreenHandler screenContainer, PlayerInventory inv, Text titleIn) {
@@ -38,7 +39,8 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
     }
 
     protected void renderHoveredToolTip(MatrixStack ms, int mouseX, int mouseY) {
-        if (client != null && client.player != null && client.player.inventory.getCursorStack().isEmpty() && focusedSlot != null && focusedSlot.hasStack()) {
+        if (client != null && client.player != null && client.player.getInventory().getMainHandStack().isEmpty() && focusedSlot != null &&
+                focusedSlot.hasStack()) {
             if (focusedSlot.id == 6) {
                 List<Text> tooltip = new ArrayList<>();
 
@@ -60,19 +62,18 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
     @Override
     protected void drawForeground(MatrixStack ms, int mouseX, int mouseY) {
         super.drawForeground(ms, mouseX, mouseY);
-        textRenderer.draw(ms, playerInventory.getDisplayName().getString(), 8.f, (float) (backgroundHeight - 96 + 2), 4210752);
+        textRenderer.draw(ms, playerInventoryTitle, 8.f, (float) (backgroundHeight - 96 + 2), 4210752);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void drawBackground(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
         // Render UI background
-        RenderSystem.color4f(1.f, 1.f, 1.f, 1.f);
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
         if (client == null) {
             return;
         }
 
-        client.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
+        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
         int centerX = (width - backgroundWidth) / 2;
         int centerY = (height - backgroundHeight) / 2;
         drawTexture(ms, centerX, centerY, 0, 0, backgroundWidth, backgroundHeight);
@@ -86,4 +87,5 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         int l = handler.getCookProgressionScaled();
         drawTexture(ms, x + 89, y + 25, 176, 15, l + 1, 17);
     }
+
 }

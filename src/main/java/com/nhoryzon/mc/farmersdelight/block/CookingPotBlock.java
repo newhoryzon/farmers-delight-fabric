@@ -18,6 +18,8 @@ import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +28,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.BlockSoundGroup;
@@ -72,8 +74,14 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return BlockEntityTypesRegistry.COOKING_POT.get().instantiate();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return BlockEntityTypesRegistry.COOKING_POT.get().instantiate(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::tick);
     }
 
     @Override
@@ -105,7 +113,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         ItemStack itemStack = super.getPickStack(world, pos, state);
         CookingPotBlockEntity blockEntity = (CookingPotBlockEntity) world.getBlockEntity(pos);
         if (blockEntity != null) {
-            CompoundTag tag = blockEntity.writeMeal(new CompoundTag());
+            NbtCompound tag = blockEntity.writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
                 itemStack.putSubTag("BlockEntityTag", tag);
             } else {
@@ -120,9 +128,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        CompoundTag tag = stack.getSubTag("BlockEntityTag");
+        NbtCompound tag = stack.getSubTag("BlockEntityTag");
         if (tag != null) {
-            CompoundTag inventoryTag = tag.getCompound("Inventory");
+            NbtCompound inventoryTag = tag.getCompound("Inventory");
             if (inventoryTag.contains("Items", 9)) {
                 ItemStackHandler handler = new ItemStackHandler();
                 handler.fromTag(inventoryTag);
@@ -187,7 +195,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
             if (blockEntity instanceof CookingPotBlockEntity) {
                 ItemStack serving = ((CookingPotBlockEntity) blockEntity).useHeldItemOnMeal(player.getStackInHand(hand));
                 if (serving != ItemStack.EMPTY) {
-                    if (!player.inventory.insertStack(serving)) {
+                    if (!player.getInventory().insertStack(serving)) {
                         player.dropItem(serving, false);
                     }
                     world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
@@ -267,6 +275,6 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     }
 
     private boolean needsTrayForHeatSource(BlockState state) {
-        return state.getBlock().isIn(Tags.TRAY_HEAT_SOURCES);
+        return Tags.TRAY_HEAT_SOURCES.contains(state.getBlock());
     }
 }

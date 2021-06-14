@@ -29,7 +29,7 @@ jobs:
   code_analysis:
     name: Code Analysis
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gradle:7.0.2-jdk16-openj9
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -41,19 +41,23 @@ jobs:
             - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean dependencies --no-daemon
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonar.beaucoralk.fr -Pgit_branch="${CIRCLE_BRANCH}"
   build_n_test:
     name: Build and Test
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gradle:7.0.2-jdk16-openj9
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -65,14 +69,18 @@ jobs:
             - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean dependencies --no-daemon
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean build test
       - run:
           name: Save test results
@@ -87,7 +95,7 @@ jobs:
   release:
     name: Release
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gradle:7.0.2-jdk16-openj9
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -99,14 +107,18 @@ jobs:
             - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean dependencies --no-daemon
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: git remote set-url origin ${CIRCLE_REPOSITORY_URL}
       - run: git config --global user.email "ci-pipeline@newhoryzon.com"
       - run: git config --global user.name "CI Pipeline"
@@ -117,7 +129,7 @@ jobs:
   deploy:
     name: Deploy jar
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: gradle:7.0.2-jdk16-openj9
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -129,14 +141,18 @@ jobs:
             - "a2:9d:cb:58:92:6e:fc:05:6e:39:49:2a:50:1a:9e:0c"
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean dependencies --no-daemon
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean publish
           -Pscm_project_url=https://bitbucket.org/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -Pscm_connection_url=${CIRCLE_REPOSITORY_URL}
           -Ppublish_maven_repo_username=${NEXUS_CI_USERNAME} -Ppublish_maven_repo_password=${NEXUS_CI_PASSWORD}

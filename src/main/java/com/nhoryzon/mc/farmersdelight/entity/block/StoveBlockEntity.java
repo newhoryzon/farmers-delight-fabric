@@ -13,13 +13,12 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +32,7 @@ import net.minecraft.world.World;
 import java.util.Optional;
 import java.util.Random;
 
-public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable, Tickable {
+public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable {
     private static final VoxelShape GRILLING_AREA = Block.createCuboidShape(3.f, .0f, 3.f, 13.f, 1.f, 13.f);
     private static final int MAX_STACK_SIZE = 6;
 
@@ -42,23 +41,23 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
 
     protected final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(MAX_STACK_SIZE, ItemStack.EMPTY);
 
-    private StoveBlockEntity(BlockEntityType<?> type) {
-        super(type);
+    private StoveBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+        super(type, blockPos, blockState);
     }
 
-    public StoveBlockEntity() {
-        this(BlockEntityTypesRegistry.STOVE.get());
+    public StoveBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypesRegistry.STOVE.get(), blockPos, blockState);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         fromTag(tag);
     }
 
-    private void fromTag(CompoundTag tag) {
+    private void fromTag(NbtCompound tag) {
         inventory.clear();
-        Inventories.fromTag(tag, inventory);
+        Inventories.readNbt(tag, inventory);
         if (tag.contains("CookingTimes", 11)) {
             int[] cookingTimeRead = tag.getIntArray("CookingTimes");
             System.arraycopy(cookingTimeRead, 0, cookingTimes, 0, Math.min(cookingTotalTimes.length, cookingTimeRead.length));
@@ -70,44 +69,43 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        Inventories.toTag(tag, inventory, true);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        Inventories.writeNbt(tag, inventory, true);
         tag.putIntArray("CookingTimes", cookingTimes);
         tag.putIntArray("CookingTotalTimes", cookingTotalTimes);
 
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         fromTag(tag);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return super.toTag(Inventories.toTag(tag, inventory, true));
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return super.writeNbt(Inventories.writeNbt(tag, inventory, true));
     }
 
-    @Override
-    public void tick() {
-        boolean isStoveLit = getCachedState().get(StoveBlock.LIT);
-        boolean isStoveBlocked = isStoveBlockedAbove();
+    public static void tick(World world, BlockPos pos, BlockState state, StoveBlockEntity blockEntity) {
+        boolean isStoveLit = blockEntity.getCachedState().get(StoveBlock.LIT);
+        boolean isStoveBlocked = blockEntity.isStoveBlockedAbove();
 
         if (world != null && world.isClient()) {
             if (isStoveLit) {
-                addParticles();
+                blockEntity.addParticles();
             }
         } else {
-            if (world != null && isStoveBlocked && !inventory.isEmpty()) {
-                ItemScatterer.spawn(world, pos, inventory);
-                inventoryChanged();
+            if (world != null && isStoveBlocked && !blockEntity.inventory.isEmpty()) {
+                ItemScatterer.spawn(world, pos, blockEntity.inventory);
+                blockEntity.inventoryChanged();
             }
             if (isStoveLit && !isStoveBlocked) {
-                cookAndDrop();
+                blockEntity.cookAndDrop();
             } else {
-                for (int i = 0; i < inventory.size(); ++i) {
-                    if (cookingTimes[i] > 0) {
-                        cookingTimes[i] = MathHelper.clamp(cookingTimes[i] - 2, 0, cookingTotalTimes[i]);
+                for (int i = 0; i < blockEntity.inventory.size(); ++i) {
+                    if (blockEntity.cookingTimes[i] > 0) {
+                        blockEntity.cookingTimes[i] = MathHelper.clamp(blockEntity.cookingTimes[i] - 2, 0, blockEntity.cookingTotalTimes[i]);
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class ConsumableItem extends Item {
             }
             if (player != null) {
                 player.incrementStat(Stats.USED.getOrCreateStat(this));
-                if (!player.abilities.creativeMode) {
+                if (!player.getAbilities().creativeMode) {
                     stack.decrement(1);
                 }
             }
@@ -40,9 +40,8 @@ public class ConsumableItem extends Item {
         if (stack.isEmpty()) {
             return container;
         } else {
-            if (user instanceof PlayerEntity && !((PlayerEntity) user).abilities.creativeMode) {
-                PlayerEntity player = (PlayerEntity) user;
-                if (!player.inventory.insertStack(container)) {
+            if (user instanceof PlayerEntity player && !((PlayerEntity) user).getAbilities().creativeMode) {
+                if (!player.getInventory().insertStack(container)) {
                     player.dropItem(container, false);
                 }
             }

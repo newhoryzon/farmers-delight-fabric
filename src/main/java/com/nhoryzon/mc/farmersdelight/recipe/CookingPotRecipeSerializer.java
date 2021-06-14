@@ -69,9 +69,9 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
     @Override
     public void write(PacketByteBuf buf, CookingPotRecipe recipe) {
         buf.writeString(recipe.getGroup());
-        buf.writeVarInt(recipe.getPreviewInputs().size());
+        buf.writeVarInt(recipe.getIngredients().size());
 
-        for (Ingredient ingredient : recipe.getPreviewInputs()) {
+        for (Ingredient ingredient : recipe.getIngredients()) {
             ingredient.write(buf);
         }
 

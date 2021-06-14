@@ -29,6 +29,8 @@ import com.nhoryzon.mc.farmersdelight.block.TomatoBushCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildPatchBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildRiceCropBlock;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -141,11 +143,17 @@ public enum BlocksRegistry {
         for (BlocksRegistry value : values()) {
             Block block = value.get();
             Registry.register(Registry.BLOCK, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), block);
-            if (value.renderLayerSupplier != null) {
-                BlockRenderLayerMap.INSTANCE.putBlock(block, value.renderLayerSupplier.get());
-            }
             if (isValidFlammableEntry(value.flammableRate)) {
                 FlammableBlockRegistry.getDefaultInstance().add(block, value.flammableRate);
+            }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void registerRenderLayer() {
+        for (BlocksRegistry value : values()) {
+            if (value.renderLayerSupplier != null) {
+                BlockRenderLayerMap.INSTANCE.putBlock(value.get(), value.renderLayerSupplier.get());
             }
         }
     }

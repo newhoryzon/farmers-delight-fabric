@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class LivingEntityKnivesKnockBackMixin {
     @Shadow @Nullable public abstract LivingEntity getAttacker();
 
-    @ModifyVariable(at = @At("HEAD"), method = "takeKnockback(FDD)V", ordinal = 0, argsOnly = true)
-    private float takeKnockbackStrength(float strength) {
+    @ModifyVariable(at = @At("HEAD"), method = "takeKnockback(DDD)V", ordinal = 0, argsOnly = true)
+    private double takeKnockbackStrength(double strength) {
         LivingEntity attacker = getAttacker();
         ItemStack tool = attacker != null ? attacker.getStackInHand(attacker.getActiveHand()) : ItemStack.EMPTY;
 
         if (tool.getItem() instanceof KnifeItem) {
-            return strength - .1f;
+            return strength - .1d;
         } else {
             return strength;
         }

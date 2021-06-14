@@ -6,37 +6,39 @@ import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class BasketBlockEntity extends LootableContainerBlockEntity implements Basket, Tickable {
+public class BasketBlockEntity extends LootableContainerBlockEntity implements Basket {
     private static final int MAX_INVENTORY_SIZE = 27;
     private DefaultedList<ItemStack> content;
     private int transferCooldown = -1;
 
-    protected BasketBlockEntity(BlockEntityType<?> type) {
-        super(type);
+    protected BasketBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+        super(type, blockPos, blockState);
         this.content = DefaultedList.ofSize(MAX_INVENTORY_SIZE, ItemStack.EMPTY);
     }
 
-    public static boolean pullItems(Basket basket, int facingIndex) {
-        for (ItemEntity itementity : getCaptureItems(basket, facingIndex)) {
+    public static boolean pullItems(World world, Basket basket, int facingIndex) {
+        for (ItemEntity itementity : getCaptureItems(world, basket, facingIndex)) {
             if (captureItem(basket, itementity)) {
                 return true;
             }
@@ -93,8 +95,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
             }
 
             if (flag) {
-                if (isDestinationEmpty && destination instanceof BasketBlockEntity) {
-                    BasketBlockEntity firstBasket = (BasketBlockEntity) destination;
+                if (isDestinationEmpty && destination instanceof BasketBlockEntity firstBasket) {
                     if (!firstBasket.mayTransfer()) {
                         int k = 0;
 
@@ -115,7 +116,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         ItemStack itemStackCatch = putStackInInventoryAllSlots(inventory, groundItemStack);
         if (itemStackCatch.isEmpty()) {
             flag = true;
-            itemEntity.remove();
+            itemEntity.remove(Entity.RemovalReason.DISCARDED);
         } else {
             itemEntity.setStack(itemStackCatch);
         }
@@ -123,15 +124,15 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         return flag;
     }
 
-    public static List<ItemEntity> getCaptureItems(Basket basket, int facingIndex) {
-        return basket.getWorld() == null ? new ArrayList<>() : basket.getFacingCollectionArea(facingIndex).getBoundingBoxes().stream()
-                .flatMap((boundingBoxe) -> basket.getWorld().getEntitiesByClass(ItemEntity.class,
+    public static List<ItemEntity> getCaptureItems(World world, Basket basket, int facingIndex) {
+        return world == null ? new ArrayList<>() : basket.getFacingCollectionArea(facingIndex).getBoundingBoxes().stream()
+                .flatMap((boundingBoxe) -> world.getEntitiesByClass(ItemEntity.class,
                         boundingBoxe.offset(basket.getHopperX() - .5d, basket.getHopperY() - .5d, basket.getHopperZ() - .5d),
                         EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
     }
 
-    public BasketBlockEntity() {
-        this(BlockEntityTypesRegistry.BASKET.get());
+    public BasketBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypesRegistry.BASKET.get(), blockPos, blockState);
     }
 
     @Override
@@ -174,14 +175,13 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         return getPos().getZ() + .5d;
     }
 
-    @Override
-    public void tick() {
+    public static void tick(World world, BlockPos pos, BlockState state, BasketBlockEntity blockEntity) {
         if (world != null && !world.isClient()) {
-            --transferCooldown;
-            if (isNotInTransferCooldown()) {
-                setTransferCooldown(0);
-                int facing = getCachedState().get(BasketBlock.FACING).getId();
-                updateHopper(() -> pullItems(this, facing));
+            --blockEntity.transferCooldown;
+            if (blockEntity.isNotInTransferCooldown()) {
+                blockEntity.setTransferCooldown(0);
+                int facing = blockEntity.getCachedState().get(BasketBlock.FACING).getId();
+                blockEntity.updateHopper(() -> pullItems(world, blockEntity, facing));
             }
         }
     }
@@ -202,10 +202,10 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, content);
+            Inventories.writeNbt(tag, content);
         }
         tag.putInt("TransferCooldown", transferCooldown);
 
@@ -213,11 +213,11 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         content = DefaultedList.ofSize(size(), ItemStack.EMPTY);
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, content);
+            Inventories.readNbt(tag, content);
         }
         transferCooldown = tag.getInt("TransferCooldown");
     }

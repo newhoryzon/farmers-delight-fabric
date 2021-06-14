@@ -5,13 +5,14 @@ import com.nhoryzon.mc.farmersdelight.block.PantryBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.entity.ChestStateManager;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
@@ -28,16 +29,39 @@ import java.util.Objects;
 public class PantryBlockEntity extends LootableContainerBlockEntity {
     private static final int MAX_INVENTORY_SIZE = 27;
 
+    private final ChestStateManager stateManager;
     private DefaultedList<ItemStack> content;
-    private int viewerCount;
 
-    private PantryBlockEntity(BlockEntityType<?> type) {
-        super(type);
-        this.content = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    public PantryBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypesRegistry.PANTRY.get(), blockPos, blockState);
     }
 
-    public PantryBlockEntity() {
-        this(BlockEntityTypesRegistry.PANTRY.get());
+    private PantryBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+        super(type, blockPos, blockState);
+        this.content = DefaultedList.ofSize(MAX_INVENTORY_SIZE, ItemStack.EMPTY);
+        this.stateManager = new ChestStateManager() {
+            protected void onChestOpened(World world, BlockPos pos, BlockState state) {
+                PantryBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                PantryBlockEntity.this.setOpen(state, true);
+            }
+
+            protected void onChestClosed(World world, BlockPos pos, BlockState state) {
+                PantryBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                PantryBlockEntity.this.setOpen(state, false);
+            }
+
+            protected void onInteracted(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+            }
+
+            protected boolean isPlayerViewing(PlayerEntity player) {
+                if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
+                    Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
+                    return inventory == PantryBlockEntity.this;
+                } else {
+                    return false;
+                }
+            }
+        };
     }
 
     @Override
@@ -67,55 +91,43 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
 
     @Override
     public void onOpen(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            if (viewerCount < 0) {
-                viewerCount = 0;
-            }
-
-            ++viewerCount;
-            BlockState blockState = getCachedState();
-            if (!blockState.get(PantryBlock.OPEN)) {
-                playSound(blockState, SoundEvents.BLOCK_BARREL_OPEN);
-                setOpen(blockState, true);
-            }
-
-            scheduleTick();
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.openChest(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
     public void onClose(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            --viewerCount;
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.closeChest(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, content);
+            Inventories.writeNbt(tag, content);
         }
 
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         content = DefaultedList.ofSize(size(), ItemStack.EMPTY);
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, content);
+            Inventories.readNbt(tag, content);
         }
     }
 
     public void tick() {
-        BlockPos pos = getPos();
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-        viewerCount = ChestBlockEntity.countViewers(Objects.requireNonNull(getWorld()), this, x, y, z);
-        if (viewerCount > 0) {
+        if (!this.removed) {
+            this.stateManager.updateViewerCount(this.getWorld(), this.getPos(), this.getCachedState());
+        }
+
+        if (this.stateManager.getViewerCount() > 0) {
             scheduleTick();
         } else {
             BlockState blockstate = getCachedState();

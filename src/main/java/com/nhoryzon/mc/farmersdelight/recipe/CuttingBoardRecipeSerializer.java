@@ -75,7 +75,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
     @Override
     public void write(PacketByteBuf buf, CuttingBoardRecipe recipe) {
         buf.writeString(recipe.getGroup());
-        recipe.getPreviewInputs().get(0).write(buf);
+        recipe.getIngredients().get(0).write(buf);
         recipe.getTool().write(buf);
 
         buf.writeVarInt(recipe.getResultList().size());
