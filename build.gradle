@@ -54,6 +54,7 @@ release {
     git {
         requireBranch = /master|develop/
     }
+	ignoredSnapshotDependencies = ['fabric-loom:fabric-loom.gradle.plugin']
 }
 
 publishing {
