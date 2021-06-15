@@ -47,8 +47,7 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockState aboveState = world.getBlockState(pos.up());
-        return !aboveState.getMaterial().isSolid() || aboveState.getBlock() instanceof FenceGateBlock ||
-                aboveState.getBlock() instanceof PistonExtensionBlock || aboveState.getBlock() instanceof StemBlock;
+        return super.canPlaceAt(state, world, pos) || aboveState.getBlock() instanceof StemBlock;
     }
 
     @Override
@@ -77,8 +76,7 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
             }
 
             // If all else fails, and it's a plant, give it a growth boost now and then!
-            if (aboveBlock instanceof Fertilizable && MathUtils.RAND.nextFloat() <= .2f) {
-                Fertilizable growable = (Fertilizable) aboveBlock;
+            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f) {
                 if (growable.isFertilizable(world, pos.up(), aboveState, false)) {
                     growable.grow(world, world.getRandom(), pos.up(), aboveState);
                     if (!world.isClient()) {
@@ -91,12 +89,12 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return !getDefaultState().canPlaceAt(context.getWorld(), context.getBlockPos()) ? BlocksRegistry.RICH_SOIL.get()
-                .getDefaultState() : super.getPlacementState(context);
+        return !getDefaultState().canPlaceAt(context.getWorld(), context.getBlockPos()) ? BlocksRegistry.RICH_SOIL.get().getDefaultState() : super.getPlacementState(context);
     }
 
     @Override
-    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         // Rich Soil is immune to trampling
     }
+
 }

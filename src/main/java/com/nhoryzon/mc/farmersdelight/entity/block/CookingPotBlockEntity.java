@@ -18,7 +18,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
@@ -29,7 +29,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -41,7 +40,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class CookingPotBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable, Nameable {
+public class CookingPotBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Nameable {
     public static final int MEAL_DISPLAY_SLOT = 6;
     public static final int CONTAINER_SLOT = 7;
     public static final int OUTPUT_SLOT = 8;
@@ -102,39 +101,48 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
     protected final PropertyDelegate cookingPotData = new CookingPotSyncedData();
     protected final RecipeType<? extends CookingPotRecipe> recipeType;
 
-    public CookingPotBlockEntity(BlockEntityType<?> blockEntityType, RecipeType<? extends CookingPotRecipe> recipeType) {
-        super(blockEntityType);
+    public CookingPotBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, RecipeType<? extends CookingPotRecipe> recipeType) {
+        super(blockEntityType, blockPos, blockState);
         this.recipeType = recipeType;
         this.container = ItemStack.EMPTY;
     }
 
-    public CookingPotBlockEntity() {
-        this(BlockEntityTypesRegistry.COOKING_POT.get(), RecipeTypesRegistry.COOKING_RECIPE_SERIALIZER.type());
+    public CookingPotBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypesRegistry.COOKING_POT.get(), blockPos, blockState, RecipeTypesRegistry.COOKING_RECIPE_SERIALIZER.type());
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         return writeItems(tag);
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
-        fromTag(getCachedState(), tag);
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void fromClientTag(NbtCompound tag) {
         fromTag(tag);
     }
 
+    @Override
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        fromTag(tag);
+    }
+
+    private void fromTag(NbtCompound tag) {
+        itemHandler.fromTag(tag.getCompound("Inventory"));
+        cookTime = tag.getInt("CookTime");
+        cookTimeTotal = tag.getInt("CookTimeTotal");
+        container = ItemStack.fromNbt(tag.getCompound("Container"));
+        if (tag.contains("CustomName", 8)) {
+            customName = Text.Serializer.fromJson(tag.getString("CustomName"));
+        }
+    }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt("CookTime", cookTime);
         tag.putInt("CookTimeTotal", cookTimeTotal);
-        tag.put("Container", container.toTag(new CompoundTag()));
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         if (customName != null) {
             tag.putString("CustomName", Text.Serializer.toJson(customName));
         }
@@ -143,25 +151,15 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         return tag;
     }
 
-    private void fromTag(CompoundTag tag) {
-        itemHandler.fromTag(tag.getCompound("Inventory"));
-        cookTime = tag.getInt("CookTime");
-        cookTimeTotal = tag.getInt("CookTimeTotal");
-        container = ItemStack.fromTag(tag.getCompound("Container"));
-        if (tag.contains("CustomName", 8)) {
-            customName = Text.Serializer.fromJson(tag.getString("CustomName"));
-        }
-    }
-
-    public CompoundTag writeItems(CompoundTag tag) {
-        super.toTag(tag);
-        tag.put("Container", container.toTag(new CompoundTag()));
+    public NbtCompound writeItems(NbtCompound tag) {
+        super.writeNbt(tag);
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         tag.put("Inventory", itemHandler.toTag());
 
         return tag;
     }
 
-    public CompoundTag writeMeal(CompoundTag tag) {
+    public NbtCompound writeMeal(NbtCompound tag) {
         if (getMeal().isEmpty()) {
             return tag;
         }
@@ -181,7 +179,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         if (customName != null) {
             tag.putString("CustomName", Text.Serializer.toJson(customName));
         }
-        tag.put("Container", container.toTag(new CompoundTag()));
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         tag.put("Inventory", drops.toTag());
 
         return tag;
@@ -207,49 +205,48 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         return new CookingPotScreenHandler(syncId, inv, this, cookingPotData);
     }
 
-    @Override
-    public void tick() {
-        boolean isHeated = isAboveLitHeatSource();
+    public static void tick(World world, BlockPos pos, BlockState state, CookingPotBlockEntity blockEntity) {
+        boolean isHeated = blockEntity.isAboveLitHeatSource();
         boolean dirty = false;
 
         if (!Objects.requireNonNull(world).isClient()) {
-            if (isHeated && hasInput()) {
-                CookingPotRecipe recipe = world.getRecipeManager().getFirstMatch(recipeType, new RecipeWrapper(itemHandler), world).orElse(
+            if (isHeated && blockEntity.hasInput()) {
+                CookingPotRecipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, new RecipeWrapper(blockEntity.itemHandler), world).orElse(
                         null);
-                if (canCook(recipe)) {
-                    ++cookTime;
-                    if (cookTime == cookTimeTotal) {
-                        cookTime = 0;
-                        cookTimeTotal = getCookTime();
-                        cook(recipe);
+                if (blockEntity.canCook(recipe)) {
+                    ++blockEntity.cookTime;
+                    if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
+                        blockEntity.cookTime = 0;
+                        blockEntity.cookTimeTotal = blockEntity.getCookTime();
+                        blockEntity.cook(recipe);
                         dirty = true;
                     }
                 } else {
-                    cookTime = 0;
+                    blockEntity.cookTime = 0;
                 }
-            } else if (cookTime > 0) {
-                cookTime = MathHelper.clamp(cookTime - 2, 0, cookTimeTotal);
+            } else if (blockEntity.cookTime > 0) {
+                blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
             }
 
-            ItemStack meal = getMeal();
+            ItemStack meal = blockEntity.getMeal();
             if (!meal.isEmpty()) {
-                if (!doesMealHaveContainer(meal)) {
-                    moveMealToOutput();
+                if (!blockEntity.doesMealHaveContainer(meal)) {
+                    blockEntity.moveMealToOutput();
                     dirty = true;
-                } else if (!itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
-                    useStoredContainersOnMeal();
+                } else if (!blockEntity.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
+                    blockEntity.useStoredContainersOnMeal();
                     dirty = true;
                 }
             }
 
         } else {
             if (isHeated) {
-                animate();
+                blockEntity.animate();
             }
         }
 
         if (dirty) {
-            inventoryChanged();
+            blockEntity.inventoryChanged();
         }
     }
 
@@ -381,6 +378,8 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
     /**
      * Returns every stored ItemStack in the pot, except for prepared meals.
+     *
+     * @return a list of item stack.
      */
     public DefaultedList<ItemStack> getDroppableInventory() {
         DefaultedList<ItemStack> drops = DefaultedList.of();
@@ -431,6 +430,9 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
     /**
      * Checks if the given ItemStack is a container for the stored meal. If true, takes a serving and returns it.
+     *
+     * @param container item stack held by the player
+     * @return the item stack (with 1 count) of stored meal.
      */
     public ItemStack useHeldItemOnMeal(ItemStack container) {
         if (isContainerValid(container) && !getMeal().isEmpty()) {
@@ -473,25 +475,19 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
         @Override
         public int get(int index) {
-            switch (index) {
-                case 0:
-                    return CookingPotBlockEntity.this.cookTime;
-                case 1:
-                    return CookingPotBlockEntity.this.cookTimeTotal;
-                default:
-                    return 0;
-            }
+            return switch (index) {
+                case 0 -> CookingPotBlockEntity.this.cookTime;
+                case 1 -> CookingPotBlockEntity.this.cookTimeTotal;
+                default -> 0;
+            };
         }
 
         @Override
         public void set(int index, int value) {
-            switch (index) {
-                case 0:
-                    CookingPotBlockEntity.this.cookTime = value;
-                    break;
-                case 1:
-                    CookingPotBlockEntity.this.cookTimeTotal = value;
-                    break;
+            if (index == 0) {
+                CookingPotBlockEntity.this.cookTime = value;
+            } else if (index == 1) {
+                CookingPotBlockEntity.this.cookTimeTotal = value;
             }
         }
 

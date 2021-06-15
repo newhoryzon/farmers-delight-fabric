@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:rich_soil"
+            "items": ["farmersdelight:rich_soil"]
           }
         ]
       }

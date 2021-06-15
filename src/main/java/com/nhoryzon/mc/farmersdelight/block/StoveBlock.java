@@ -15,6 +15,8 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -41,7 +43,6 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,8 +60,14 @@ public class StoveBlock extends BlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return BlockEntityTypesRegistry.STOVE.get().instantiate();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return BlockEntityTypesRegistry.STOVE.get().instantiate(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntity::tick);
     }
 
     @Override
@@ -74,12 +81,11 @@ public class StoveBlock extends BlockWithEntity {
         Item usedItem = itemStack.getItem();
         if (state.get(LIT)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof StoveBlockEntity) {
-                StoveBlockEntity stoveBlockEntity = (StoveBlockEntity) blockEntity;
+            if (blockEntity instanceof StoveBlockEntity stoveBlockEntity) {
                 Optional<CampfireCookingRecipe> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
                 if (optional.isPresent()) {
                     if (!world.isClient() && !stoveBlockEntity.isStoveBlockedAbove() && stoveBlockEntity.addItem(
-                            player.abilities.creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                            player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                         player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
 
                         return ActionResult.SUCCESS;
@@ -133,13 +139,13 @@ public class StoveBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onSteppedOn(World world, BlockPos pos, Entity entity) {
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         boolean isLit = world.getBlockState(pos).get(LIT);
         if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
             entity.damage(DamageSource.HOT_FLOOR, 1.f);
         }
 
-        super.onSteppedOn(world, pos, entity);
+        super.onSteppedOn(world, pos, state, entity);
     }
 
     @Override

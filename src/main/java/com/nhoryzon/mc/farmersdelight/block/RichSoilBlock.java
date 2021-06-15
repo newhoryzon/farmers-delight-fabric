@@ -36,7 +36,7 @@ public class RichSoilBlock extends Block {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
-        if (itemStack.getItem().isIn(FabricToolTags.HOES) && state.getBlock() == BlocksRegistry.RICH_SOIL.get() &&
+        if (FabricToolTags.HOES.contains(itemStack.getItem()) && state.getBlock() == BlocksRegistry.RICH_SOIL.get() &&
                 hit.getSide() != Direction.DOWN && world.getBlockState(pos.up()).isAir()) {
             world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.f, 1.f);
             if (!world.isClient()) {
@@ -77,8 +77,7 @@ public class RichSoilBlock extends Block {
             }
 
             // If all else fails, and it's a plant, give it a growth boost now and then!
-            if (aboveBlock instanceof Fertilizable && MathUtils.RAND.nextFloat() <= .2f) {
-                Fertilizable growable = (Fertilizable) aboveBlock;
+            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f) {
                 if (growable.isFertilizable(world, pos.up(), aboveState, false)) {
                     growable.grow(world, world.getRandom(), pos.up(), aboveState);
                     world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);

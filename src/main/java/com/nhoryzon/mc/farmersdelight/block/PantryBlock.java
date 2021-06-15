@@ -25,7 +25,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +41,8 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return BlockEntityTypesRegistry.PANTRY.get().instantiate();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return BlockEntityTypesRegistry.PANTRY.get().instantiate(pos, state);
     }
 
     @Override

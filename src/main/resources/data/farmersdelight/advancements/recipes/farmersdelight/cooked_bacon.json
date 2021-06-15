@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:bacon"
+            "items": ["farmersdelight:bacon"]
           }
         ]
       }

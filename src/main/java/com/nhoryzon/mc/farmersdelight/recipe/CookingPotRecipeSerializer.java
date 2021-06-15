@@ -12,6 +12,19 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRecipe> {
+    private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
+        DefaultedList<Ingredient> ingredientList = DefaultedList.of();
+
+        for (int i = 0; i < ingredientArray.size(); ++i) {
+            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
+                ingredientList.add(ingredient);
+            }
+        }
+
+        return ingredientList;
+    }
+
     @Override
     public CookingPotRecipe read(Identifier id, JsonObject json) {
         final String groupIn = JsonHelper.getString(json, "group", "");
@@ -35,19 +48,6 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
         }
     }
 
-    private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
-        DefaultedList<Ingredient> ingredientList = DefaultedList.of();
-
-        for (int i = 0; i < ingredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
-            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
-                ingredientList.add(ingredient);
-            }
-        }
-
-        return ingredientList;
-    }
-
     @Override
     public CookingPotRecipe read(Identifier id, PacketByteBuf buf) {
         String groupIn = buf.readString(32767);
@@ -69,9 +69,9 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
     @Override
     public void write(PacketByteBuf buf, CookingPotRecipe recipe) {
         buf.writeString(recipe.getGroup());
-        buf.writeVarInt(recipe.getPreviewInputs().size());
+        buf.writeVarInt(recipe.getIngredients().size());
 
-        for (Ingredient ingredient : recipe.getPreviewInputs()) {
+        for (Ingredient ingredient : recipe.getIngredients()) {
             ingredient.write(buf);
         }
 

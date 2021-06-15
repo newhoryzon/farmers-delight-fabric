@@ -6,6 +6,7 @@ import com.nhoryzon.mc.farmersdelight.client.render.block.StoveBlockEntityRender
 import com.nhoryzon.mc.farmersdelight.client.screen.CookingPotScreen;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -21,6 +22,8 @@ import net.minecraft.screen.PlayerScreenHandler;
 public class FarmersDelightModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		BlocksRegistry.registerRenderLayer();
+
 		// BlockEntityRenderer register
 		BlockEntityRendererRegistry.INSTANCE.register(BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.INSTANCE.register(BlockEntityTypesRegistry.CUTTING_BOARD.get(), CuttingBoardBlockEntityRenderer::new);

@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
 
 public interface Basket extends Hopper {
     VoxelShape[] COLLECTION_AREA_SHAPES = {
@@ -18,12 +17,6 @@ public interface Basket extends Hopper {
     default VoxelShape getFacingCollectionArea(int facingIndex) {
         return COLLECTION_AREA_SHAPES[facingIndex];
     }
-
-    /**
-     * Returns the worldObj for this tileEntity.
-     */
-    @Override
-    World getWorld();
 
     /**
      * Gets the world X position for this hopper entity.

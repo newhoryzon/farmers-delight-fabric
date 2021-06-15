@@ -23,7 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
@@ -33,6 +33,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
@@ -54,36 +55,36 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     };
     protected final RecipeType<? extends CuttingBoardRecipe> recipeType;
 
-    protected CuttingBoardBlockEntity(BlockEntityType<?> blockEntityType, RecipeType<? extends CuttingBoardRecipe> recipeType) {
-        super(blockEntityType);
+    protected CuttingBoardBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, RecipeType<? extends CuttingBoardRecipe> recipeType) {
+        super(blockEntityType, blockPos, blockState);
         this.recipeType = recipeType;
         this.isItemCarvingBoard = false;
     }
 
-    public CuttingBoardBlockEntity() {
-        this(BlockEntityTypesRegistry.CUTTING_BOARD.get(), RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type());
+    public CuttingBoardBlockEntity(BlockPos blockPos, BlockState blockState) {
+        this(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState, RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type());
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return toTag(tag);
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return writeNbt(tag);
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
-        fromTag(getCachedState(), tag);
+    public void fromClientTag(NbtCompound tag) {
+        readNbt(tag);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         isItemCarvingBoard = tag.getBoolean("IsItemCarved");
         itemHandler.fromTag(tag.getCompound("Inventory"));
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.put("Inventory", itemHandler.toTag());
         tag.putBoolean("IsItemCarved", isItemCarvingBoard);
 
@@ -93,7 +94,8 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     /**
      * Attempts to apply a recipe to the Cutting Board's stored item, using the given tool.
      *
-     * @param tool The item stack used to process the item.
+     * @param tool The item stack used to process the item
+     * @param player player who trying to process item with the tool
      * @return Whether the process succeeded or failed.
      */
     public boolean processItemUsingTool(ItemStack tool, PlayerEntity player) {
@@ -142,9 +144,9 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
 
         if (sound != null) {
             playSound(sound, 1.f, 1.f);
-        } else if (tool.isIn(FabricToolTags.SHEARS)) {
+        } else if (FabricToolTags.SHEARS.contains(tool)) {
             playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.f, 1.f);
-        } else if (tool.isIn(Tags.KNIVES)) {
+        } else if (Tags.KNIVES.contains(tool)) {
             playSound(SoundsRegistry.BLOCK_CUTTING_BOARD_KNIFE.get(), .8f, 1.f);
         } else if (boardItem instanceof BlockItem) {
             Block block = ((BlockItem) boardItem).getBlock();
@@ -163,6 +165,9 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
      * Places the given stack on the board, but carved into it instead of laying on top.
      * This is purely for decoration purposes; the item can still be processed.
      * Ideally, the caller checks if the item is a damageable tool first.
+     *
+     * @param tool the tool used to try carving item placed on the board
+     * @return true if the tool in parameter can carve item placed on the board, false otherwise.
      */
     public boolean carveToolOnBoard(ItemStack tool) {
         if (addItem(tool)) {

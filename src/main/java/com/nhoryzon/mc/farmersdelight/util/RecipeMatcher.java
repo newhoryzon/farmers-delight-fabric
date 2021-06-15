@@ -15,6 +15,9 @@ public class RecipeMatcher {
      *   any test doesn't match a input
      *   If we are unable to determine a proper pair
      *
+     * @param inputs list of recipe that should be tested
+     * @param tests list of predicate applied to the inputs to find which matches
+     * @param <T> the recipe type
      * @return An array mapping inputs to tests. ret[x] = y means input[x] = test[y]
      */
     public static <T> int[] findMatches(List<T> inputs, List<? extends Predicate<T>> tests)

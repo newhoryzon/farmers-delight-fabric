@@ -38,9 +38,13 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.ConfiguredDecorator;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.decorator.HeightmapDecoratorConfig;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -53,6 +57,12 @@ import java.util.Set;
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
+    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP = Decorator.HEIGHTMAP.configure(
+            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
+    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP_SPREAD_DOUBLE = Decorator.HEIGHTMAP_SPREAD_DOUBLE.configure(
+            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
+    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP = HEIGHTMAP.spreadHorizontally();
+    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP_SPREAD_DOUBLE = HEIGHTMAP_SPREAD_DOUBLE.spreadHorizontally();
 
     public static final String MOD_ID = "farmersdelight";
 
@@ -98,7 +108,8 @@ public class FarmersDelightMod implements ModInitializer {
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             ItemStack heldItem = player.getMainHandStack();
             if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
-                ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
+                ItemScatterer.spawn(world, pos,
+                        DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
             }
         });
 
@@ -109,10 +120,11 @@ public class FarmersDelightMod implements ModInitializer {
             if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()) {
                 if (heldItem.getItem() instanceof ToolItem || heldItem.getItem() instanceof TridentItem ||
                         heldItem.getItem() instanceof ShearsItem) {
-                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.abilities.creativeMode ? heldItem.copy() : heldItem);
+                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.getAbilities().creativeMode ? heldItem.copy() : heldItem);
 
                     if (success) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
+                                .8f);
 
                         return ActionResult.SUCCESS;
                     }
@@ -146,15 +158,13 @@ public class FarmersDelightMod implements ModInitializer {
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack itemStack = player.getStackInHand(hand);
 
-            if (entity instanceof LivingEntity && (Tags.DOG_FOOD_USERS.contains(entity.getType()) || Tags.HORSE_FEED_USERS.contains(
+            if (entity instanceof LivingEntity livingEntity && (Tags.DOG_FOOD_USERS.contains(entity.getType()) || Tags.HORSE_FEED_USERS.contains(
                     entity.getType()))) {
-                LivingEntity livingEntity = (LivingEntity) entity;
                 boolean isTameable = livingEntity instanceof TameableEntity;
 
                 if (livingEntity.isAlive() && (!isTameable || ((TameableEntity) livingEntity).isTamed()) &&
-                        itemStack.getItem() instanceof LivingEntityFeedItem &&
+                        itemStack.getItem() instanceof LivingEntityFeedItem livingEntityFeedItem &&
                         ((LivingEntityFeedItem) itemStack.getItem()).canFeed(itemStack, player, livingEntity, hand)) {
-                    LivingEntityFeedItem livingEntityFeedItem = (LivingEntityFeedItem) itemStack.getItem();
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                     for (StatusEffectInstance effect : livingEntityFeedItem.getStatusEffectApplied()) {
                         livingEntity.addStatusEffect(new StatusEffectInstance(effect));
@@ -262,13 +272,11 @@ public class FarmersDelightMod implements ModInitializer {
                 EntityType.MULE.getLootTableId(),
                 EntityType.RABBIT.getLootTableId(),
                 EntityType.SHULKER.getLootTableId(),
-                EntityType.SPIDER.getLootTableId()
-        );
+                EntityType.SPIDER.getLootTableId());
         Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(
                 Blocks.GRASS.getLootTableId(),
                 Blocks.TALL_GRASS.getLootTableId(),
-                Blocks.WHEAT.getLootTableId()
-        );
+                Blocks.WHEAT.getLootTableId());
 
         LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());

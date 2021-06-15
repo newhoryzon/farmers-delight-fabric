@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:brown_mushroom_colony"
+            "items": ["farmersdelight:brown_mushroom_colony"]
           }
         ]
       }
@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:red_mushroom_colony"
+            "items": ["farmersdelight:red_mushroom_colony"]
           }
         ]
       }

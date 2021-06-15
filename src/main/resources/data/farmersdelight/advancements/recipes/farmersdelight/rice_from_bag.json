@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:rice_bag"
+            "items": ["farmersdelight:rice_bag"]
           }
         ]
       }

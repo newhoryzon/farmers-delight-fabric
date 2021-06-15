@@ -13,25 +13,6 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 
 public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoardRecipe> {
-    @Override
-    public CuttingBoardRecipe read(Identifier id, JsonObject json) {
-        final String groupIn = JsonHelper.getString(json, "group", "");
-        final DefaultedList<Ingredient> inputItemsIn = readIngredients(JsonHelper.getArray(json, "ingredients"));
-        final JsonObject toolObject = JsonHelper.getObject(json, "tool");
-        final Ingredient tool = Ingredient.fromJson(toolObject);
-        if (inputItemsIn.isEmpty()) {
-            throw new JsonParseException("No ingredients for cooking recipe");
-        } else if (tool.getMatchingStacksClient() == null || tool.getMatchingStacksClient().length == 0) {
-            throw new JsonParseException("No tool for cutting recipe");
-        } else if (inputItemsIn.size() > 1) {
-            throw new JsonParseException("Too many ingredients for cooking recipe! Please define only one ingredient");
-        } else {
-            final DefaultedList<ItemStack> resultList = readResultList(JsonHelper.getArray(json, "result"));
-            final String soundId = JsonHelper.getString(json, "sound", "");
-            return new CuttingBoardRecipe(id, groupIn, inputItemsIn.get(0), tool, resultList, soundId);
-        }
-    }
-
     private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
         DefaultedList<Ingredient> ingredientList = DefaultedList.of();
 
@@ -57,6 +38,25 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
     }
 
     @Override
+    public CuttingBoardRecipe read(Identifier id, JsonObject json) {
+        final String groupIn = JsonHelper.getString(json, "group", "");
+        final DefaultedList<Ingredient> inputItemsIn = readIngredients(JsonHelper.getArray(json, "ingredients"));
+        final JsonObject toolObject = JsonHelper.getObject(json, "tool");
+        final Ingredient tool = Ingredient.fromJson(toolObject);
+        if (inputItemsIn.isEmpty()) {
+            throw new JsonParseException("No ingredients for cooking recipe");
+        } else if (tool.getMatchingStacksClient() == null || tool.getMatchingStacksClient().length == 0) {
+            throw new JsonParseException("No tool for cutting recipe");
+        } else if (inputItemsIn.size() > 1) {
+            throw new JsonParseException("Too many ingredients for cooking recipe! Please define only one ingredient");
+        } else {
+            final DefaultedList<ItemStack> resultList = readResultList(JsonHelper.getArray(json, "result"));
+            final String soundId = JsonHelper.getString(json, "sound", "");
+            return new CuttingBoardRecipe(id, groupIn, inputItemsIn.get(0), tool, resultList, soundId);
+        }
+    }
+
+    @Override
     public CuttingBoardRecipe read(Identifier id, PacketByteBuf buf) {
         String groupIn = buf.readString(32767);
         Ingredient input = Ingredient.fromPacket(buf);
@@ -75,7 +75,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
     @Override
     public void write(PacketByteBuf buf, CuttingBoardRecipe recipe) {
         buf.writeString(recipe.getGroup());
-        recipe.getPreviewInputs().get(0).write(buf);
+        recipe.getIngredients().get(0).write(buf);
         recipe.getTool().write(buf);
 
         buf.writeVarInt(recipe.getResultList().size());
