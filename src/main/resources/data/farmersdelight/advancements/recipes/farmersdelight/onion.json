@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:onion_crate"
+            "items": ["farmersdelight:onion_crate"]
           }
         ]
       }

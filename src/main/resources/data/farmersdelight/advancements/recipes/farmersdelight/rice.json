@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:rice_panicle"
+            "items": ["farmersdelight:rice_panicle"]
           }
         ]
       }

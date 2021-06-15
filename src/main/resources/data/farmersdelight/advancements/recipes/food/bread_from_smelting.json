@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:wheat_dough"
+            "items": ["farmersdelight:wheat_dough"]
           }
         ]
       }

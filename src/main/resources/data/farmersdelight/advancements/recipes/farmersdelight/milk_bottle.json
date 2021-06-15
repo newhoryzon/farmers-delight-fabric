@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:milk_bucket"
+            "items": ["minecraft:milk_bucket"]
           }
         ]
       }

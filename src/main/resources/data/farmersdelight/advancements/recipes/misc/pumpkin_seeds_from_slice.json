@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:pumpkin_slice"
+            "items": ["farmersdelight:pumpkin_slice"]
           }
         ]
       }
