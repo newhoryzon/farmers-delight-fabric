@@ -47,8 +47,7 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockState aboveState = world.getBlockState(pos.up());
-        return !aboveState.getMaterial().isSolid() || aboveState.getBlock() instanceof FenceGateBlock ||
-                aboveState.getBlock() instanceof PistonExtensionBlock || aboveState.getBlock() instanceof StemBlock;
+        return super.canPlaceAt(state, world, pos) || aboveState.getBlock() instanceof StemBlock;
     }
 
     @Override
