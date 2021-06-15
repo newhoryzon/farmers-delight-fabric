@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.nhoryzon.mc.farmersdelight.entity.block.BasketBlockEntity;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -46,61 +47,30 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static final VoxelShape OUT_SHAPE = VoxelShapes.fullCube();
-    public static final ImmutableMap<Direction, VoxelShape> SHAPE_FACING = new ImmutableMap.Builder<Direction, VoxelShape>()
-            .put(Direction.DOWN, cutout(
-                    createCuboidShape(2.d, .0d, 2.d, 14.d, 14.d, 14.d),
-                    createCuboidShape(6.d, 3.d, 14.d, 10.d, 5.d, 16.d),
-                    createCuboidShape(14.d, 3.d, 6.d, 16.d, 5.d, 10.d),
-                    createCuboidShape(6.d, 3.d, .0d, 10.d, 5.d, 2.d),
-                    createCuboidShape(.0d, 3.d, 6.d, 2.d, 5.d, 10.d)
-            ))
-            .put(Direction.UP, cutout(
-                    createCuboidShape(2.d, 2.d, 2.d, 14.d, 16.d, 14.d),
-                    createCuboidShape(6.d, 11.d, .0d, 10.d, 13.d, 2.d),
-                    createCuboidShape(14.d, 11.d, 6.d, 16.d, 13.d, 10.d),
-                    createCuboidShape(6.d, 11.d, 14.d, 10.d, 13.d, 16.d),
-                    createCuboidShape(.0d, 11.d, 6.d, 2.d, 13.d, 10.d)
-            ))
-            .put(Direction.NORTH, cutout(
-                    createCuboidShape(2.d, 2.d, .0d, 14.d, 14.d, 14.d),
-                    createCuboidShape(6.d, .0d, 3.d, 10.d, 2.d, 5.d),
-                    createCuboidShape(14.d, 6.d, 3.d, 16.d, 10.d, 5.d),
-                    createCuboidShape(6.d, 14.d, 3.d, 10.d, 16.d, 5.d),
-                    createCuboidShape(.0d, 6.d, 3.d, 2.d, 10.d, 5.d)
-            ))
-            .put(Direction.SOUTH, cutout(
-                    createCuboidShape(2.d, 2.d, 2.d, 14.d, 14.d, 16.d),
-                    createCuboidShape(6.d, 14.d, 11.d, 10.d, 16.d, 13.d),
-                    createCuboidShape(14.d, 6.d, 11.d, 16.d, 10.d, 13.d),
-                    createCuboidShape(6.d, .0d, 11.d, 10.d, 2.d, 13.d),
-                    createCuboidShape(.0d, 6.d, 11.d, 2.d, 10.d, 13.d)
-            ))
-            .put(Direction.WEST, cutout(
-                    createCuboidShape(.0d, 2.d, 2.d, 14.d, 14.d, 14.d),
-                    createCuboidShape(3.d, 14.d, 6.d, 5.d, 16.d, 10.d),
-                    createCuboidShape(3.d, 6.d, 14.d, 5.d, 10.d, 16.d),
-                    createCuboidShape(3.d, .0d, 6.d, 5.d, 2.d, 10.d),
-                    createCuboidShape(3.d, 6.d, .0d, 5.d, 10.d, 2.d)
-            ))
-            .put(Direction.EAST, cutout(
-                    createCuboidShape(2.d, 2.d, 2.d, 16.d, 14.d, 14.d),
-                    createCuboidShape(11.d, 14.d, 6.d, 13.d, 16.d, 10.d),
-                    createCuboidShape(11.d, 6.d, .0d, 13.d, 10.d, 2.d),
-                    createCuboidShape(11.d, .0d, 6.d, 13.d, 2.d, 10.d),
-                    createCuboidShape(11.d, 6.d, 14.d, 13.d, 10.d, 16.d)
-            )).build();
+    public static final ImmutableMap<Direction, VoxelShape> RENDER_SHAPE_FACING = new ImmutableMap.Builder<Direction, VoxelShape>()
+            .put(Direction.DOWN, createCuboidShape(.0d, 15.d, .0d, 16.d, 16.d, 16.d))
+            .put(Direction.UP, createCuboidShape(.0d, .0d, .0d, 16.d, 1.d, 16.d))
+            .put(Direction.NORTH, createCuboidShape(.0d, .0d, 15.d, 16.d, 16.d, 16.d))
+            .put(Direction.SOUTH, createCuboidShape(.0d, .0d, .0d, 16.d, 16.d, 1.d))
+            .put(Direction.WEST, createCuboidShape(15.d, .0d, .0d, 16.d, 16.d, 16.d))
+            .put(Direction.EAST, createCuboidShape(.0d, .0d, .0d, 1.d, 16.d, 16.d))
+            .build();
+    public static final ImmutableMap<Direction, VoxelShape> COLLISION_SHAPE_FACING = new ImmutableMap.Builder<Direction, VoxelShape>()
+                    .put(Direction.DOWN, makeHollowCubeShape(createCuboidShape(2.d, .0d, 2.d, 14.d, 14.d, 14.d)))
+                    .put(Direction.UP, makeHollowCubeShape(createCuboidShape(2.d, 2.d, 2.d, 14.d, 16.d, 14.d)))
+                    .put(Direction.NORTH, makeHollowCubeShape(createCuboidShape(2.d, 2.d, .0d, 14.d, 14.d, 14.d)))
+                    .put(Direction.SOUTH, makeHollowCubeShape(createCuboidShape(2.d, 2.d, 2.d, 14.d, 14.d, 16.d)))
+                    .put(Direction.WEST, makeHollowCubeShape(createCuboidShape(.0d, 2.d, 2.d, 14.d, 14.d, 14.d)))
+                    .put(Direction.EAST, makeHollowCubeShape(createCuboidShape(2.d, 2.d, 2.d, 16.d, 14.d, 14.d)))
+                    .build();
 
     public BasketBlock() {
         super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.WOOD));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, false));
     }
 
-    private static VoxelShape cutout(VoxelShape... cutouts) {
-        VoxelShape shape = OUT_SHAPE;
-        for (VoxelShape cutout : cutouts) {
-            shape = VoxelShapes.combine(shape, cutout, BooleanBiFunction.ONLY_FIRST);
-        }
-        return shape.simplify();
+    private static VoxelShape makeHollowCubeShape(VoxelShape cutout) {
+        return VoxelShapes.combine(OUT_SHAPE, cutout, BooleanBiFunction.ONLY_FIRST).simplify();
     }
 
     @Nullable
@@ -176,7 +146,12 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE_FACING.get(state.get(FACING));
+        return COLLISION_SHAPE_FACING.get(state.get(FACING));
+    }
+
+    @Override
+    public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+        return RENDER_SHAPE_FACING.get(state.get(FACING));
     }
 
     @Override
@@ -186,7 +161,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE_FACING.get(state.get(FACING));
+        return COLLISION_SHAPE_FACING.get(state.get(FACING));
     }
 
     @Override

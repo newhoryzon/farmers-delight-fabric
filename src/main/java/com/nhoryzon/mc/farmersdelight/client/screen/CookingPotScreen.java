@@ -34,10 +34,10 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
     public void render(MatrixStack ms, final int mouseX, final int mouseY, float partialTicks) {
         renderBackground(ms);
         super.render(ms, mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(ms, mouseX, mouseY);
+        renderMealDisplayTooltip(ms, mouseX, mouseY);
     }
 
-    protected void renderHoveredToolTip(MatrixStack ms, int mouseX, int mouseY) {
+    protected void renderMealDisplayTooltip(MatrixStack ms, int mouseX, int mouseY) {
         if (client != null && client.player != null && client.player.inventory.getCursorStack().isEmpty() && focusedSlot != null && focusedSlot.hasStack()) {
             if (focusedSlot.id == 6) {
                 List<Text> tooltip = new ArrayList<>();

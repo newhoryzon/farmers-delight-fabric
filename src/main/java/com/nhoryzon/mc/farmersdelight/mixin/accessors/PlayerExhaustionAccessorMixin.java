@@ -1,4 +1,4 @@
-package com.nhoryzon.mc.farmersdelight.mixin;
+package com.nhoryzon.mc.farmersdelight.mixin.accessors;
 
 import net.minecraft.entity.player.HungerManager;
 import org.spongepowered.asm.mixin.Mixin;

@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
+    "CampfireBaleMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
     "EnchantmentHelperEnhancementMixin",
@@ -12,8 +13,10 @@
     "LivingEntityKnivesKnockBackMixin",
     "LivingEntityOnUseItemFinishMixin",
     "PlantBlockOnRichSoilMixin",
-    "PlayerExhaustionAccessorMixin",
-    "StemBlockOnRichSoilFarmlandMixin"
+    "StemBlockOnRichSoilFarmlandMixin",
+    "accessors.ChickenEntityAccessorMixin",
+    "accessors.PigEntityAccessorMixin",
+    "accessors.PlayerExhaustionAccessorMixin"
   ],
   "client": [
     "InGameHudMixin"

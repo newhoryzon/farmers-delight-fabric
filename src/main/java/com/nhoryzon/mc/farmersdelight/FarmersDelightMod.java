@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.item.LivingEntityFeedItem;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.ChickenEntityAccessorMixin;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.PigEntityAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.*;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
@@ -28,6 +30,7 @@ import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
@@ -42,7 +45,10 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -92,13 +98,15 @@ public class FarmersDelightMod implements ModInitializer {
         registerEventListeners();
         registerLootTable();
         registerDispenserBehavior();
+        registerExtraAnimalFeeding();
     }
 
     protected void registerEventListeners() {
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             ItemStack heldItem = player.getMainHandStack();
             if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
-                ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
+                ItemScatterer.spawn(world, pos,
+                        DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
             }
         });
 
@@ -109,10 +117,12 @@ public class FarmersDelightMod implements ModInitializer {
             if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()) {
                 if (heldItem.getItem() instanceof ToolItem || heldItem.getItem() instanceof TridentItem ||
                         heldItem.getItem() instanceof ShearsItem) {
-                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.abilities.creativeMode ? heldItem.copy() : heldItem);
+                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(
+                            player.abilities.creativeMode ? heldItem.copy() : heldItem);
 
                     if (success) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
+                                .8f);
 
                         return ActionResult.SUCCESS;
                     }
@@ -152,8 +162,8 @@ public class FarmersDelightMod implements ModInitializer {
                 boolean isTameable = livingEntity instanceof TameableEntity;
 
                 if (livingEntity.isAlive() && (!isTameable || ((TameableEntity) livingEntity).isTamed()) &&
-                        itemStack.getItem() instanceof LivingEntityFeedItem &&
-                        ((LivingEntityFeedItem) itemStack.getItem()).canFeed(itemStack, player, livingEntity, hand)) {
+                        itemStack.getItem() instanceof LivingEntityFeedItem && ((LivingEntityFeedItem) itemStack.getItem()).canFeed(
+                        itemStack, player, livingEntity, hand)) {
                     LivingEntityFeedItem livingEntityFeedItem = (LivingEntityFeedItem) itemStack.getItem();
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                     for (StatusEffectInstance effect : livingEntityFeedItem.getStatusEffectApplied()) {
@@ -191,7 +201,8 @@ public class FarmersDelightMod implements ModInitializer {
                 ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_CABBAGES.key());
-        BiomeModifications.addFeature(context -> Arrays.asList(Biome.Category.SWAMP, Biome.Category.JUNGLE).contains(context.getBiome().getCategory()),
+        BiomeModifications.addFeature(
+                context -> Arrays.asList(Biome.Category.SWAMP, Biome.Category.JUNGLE).contains(context.getBiome().getCategory()),
                 GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
         BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());
@@ -245,30 +256,14 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerLootTable() {
-        Set<Identifier> villageHouseChestsId = Sets.newHashSet(
-                LootTables.VILLAGE_PLAINS_CHEST,
-                LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
-                LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
-                LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
-                LootTables.VILLAGE_DESERT_HOUSE_CHEST);
-        Set<Identifier> scavengingEntityIdList = Sets.newHashSet(
-                EntityType.PIG.getLootTableId(),
-                EntityType.HOGLIN.getLootTableId(),
-                EntityType.CHICKEN.getLootTableId(),
-                EntityType.COW.getLootTableId(),
-                EntityType.DONKEY.getLootTableId(),
-                EntityType.HORSE.getLootTableId(),
-                EntityType.LLAMA.getLootTableId(),
-                EntityType.MULE.getLootTableId(),
-                EntityType.RABBIT.getLootTableId(),
-                EntityType.SHULKER.getLootTableId(),
-                EntityType.SPIDER.getLootTableId()
-        );
-        Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(
-                Blocks.GRASS.getLootTableId(),
-                Blocks.TALL_GRASS.getLootTableId(),
-                Blocks.WHEAT.getLootTableId()
-        );
+        Set<Identifier> villageHouseChestsId = Sets.newHashSet(LootTables.VILLAGE_PLAINS_CHEST, LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
+                LootTables.VILLAGE_SNOWY_HOUSE_CHEST, LootTables.VILLAGE_TAIGA_HOUSE_CHEST, LootTables.VILLAGE_DESERT_HOUSE_CHEST);
+        Set<Identifier> scavengingEntityIdList = Sets.newHashSet(EntityType.PIG.getLootTableId(), EntityType.HOGLIN.getLootTableId(),
+                EntityType.CHICKEN.getLootTableId(), EntityType.COW.getLootTableId(), EntityType.DONKEY.getLootTableId(),
+                EntityType.HORSE.getLootTableId(), EntityType.LLAMA.getLootTableId(), EntityType.MULE.getLootTableId(),
+                EntityType.RABBIT.getLootTableId(), EntityType.SHULKER.getLootTableId(), EntityType.SPIDER.getLootTableId());
+        Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(Blocks.GRASS.getLootTableId(), Blocks.TALL_GRASS.getLootTableId(),
+                Blocks.WHEAT.getLootTableId());
 
         LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());
@@ -316,4 +311,20 @@ public class FarmersDelightMod implements ModInitializer {
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
     }
+
+    protected void registerExtraAnimalFeeding() {
+        List<ItemStack> chickenFood = new ArrayList<>();
+        Collections.addAll(chickenFood, ChickenEntityAccessorMixin.getFoodItems().getMatchingStacksClient());
+        chickenFood.add(new ItemStack(ItemsRegistry.CABBAGE_SEEDS.get()));
+        chickenFood.add(new ItemStack(ItemsRegistry.TOMATO_SEED.get()));
+        chickenFood.add(new ItemStack(ItemsRegistry.RICE.get()));
+        ChickenEntityAccessorMixin.setFoodItems(Ingredient.ofStacks(chickenFood.stream()));
+
+        List<ItemStack> pigFood = new ArrayList<>();
+        Collections.addAll(pigFood, PigEntityAccessorMixin.getFoodItems().getMatchingStacksClient());
+        pigFood.add(new ItemStack(ItemsRegistry.CABBAGE.get()));
+        pigFood.add(new ItemStack(ItemsRegistry.TOMATO.get()));
+        PigEntityAccessorMixin.setFoodItems(Ingredient.ofStacks(pigFood.stream()));
+    }
+
 }
