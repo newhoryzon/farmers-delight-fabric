@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "farmersdelight:chicken_cuts"
+            "items": ["farmersdelight:chicken_cuts"]
           }
         ]
       }
