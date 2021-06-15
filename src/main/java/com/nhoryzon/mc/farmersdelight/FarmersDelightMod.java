@@ -108,7 +108,8 @@ public class FarmersDelightMod implements ModInitializer {
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             ItemStack heldItem = player.getMainHandStack();
             if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
-                ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
+                ItemScatterer.spawn(world, pos,
+                        DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
             }
         });
 
@@ -122,7 +123,8 @@ public class FarmersDelightMod implements ModInitializer {
                     boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.getAbilities().creativeMode ? heldItem.copy() : heldItem);
 
                     if (success) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
+                                .8f);
 
                         return ActionResult.SUCCESS;
                     }
@@ -270,13 +272,11 @@ public class FarmersDelightMod implements ModInitializer {
                 EntityType.MULE.getLootTableId(),
                 EntityType.RABBIT.getLootTableId(),
                 EntityType.SHULKER.getLootTableId(),
-                EntityType.SPIDER.getLootTableId()
-        );
+                EntityType.SPIDER.getLootTableId());
         Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(
                 Blocks.GRASS.getLootTableId(),
                 Blocks.TALL_GRASS.getLootTableId(),
-                Blocks.WHEAT.getLootTableId()
-        );
+                Blocks.WHEAT.getLootTableId());
 
         LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());

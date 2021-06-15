@@ -2,13 +2,13 @@ package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.effect.ComfortEffect;
-import com.nhoryzon.mc.farmersdelight.effect.NourishedEffect;
+import com.nhoryzon.mc.farmersdelight.effect.NourishmentEffect;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum EffectsRegistry {
-    NOURISHED("nourished", new NourishedEffect()),
+    NOURISHED("nourished", new NourishmentEffect()),
     COMFORT("comfort", new ComfortEffect());
 
     private final String pathName;

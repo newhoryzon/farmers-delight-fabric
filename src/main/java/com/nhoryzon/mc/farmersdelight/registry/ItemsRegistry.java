@@ -88,7 +88,7 @@ public enum ItemsRegistry {
 
     STRAW("straw", () -> new Item(new ModItemSettings()), 100),
     CANVAS("canvas", () -> new Item(new ModItemSettings()), 400),
-    TREE_BARK("tree_bark", () -> new Item(new ModItemSettings()), 100),
+    TREE_BARK("tree_bark", () -> new Item(new ModItemSettings()), 200),
 
     CABBAGE("cabbage", () -> new Item(new ModItemSettings().food(Foods.CABBAGE.get()))),
     CABBAGE_SEEDS("cabbage_seeds", () -> new BlockItem(BlocksRegistry.CABBAGE_CROP.get(), new ModItemSettings())),

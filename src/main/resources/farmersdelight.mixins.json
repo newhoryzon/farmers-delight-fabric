@@ -5,6 +5,8 @@
   "refmap": "farmers-delight-fabric-refmap.json",
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
+    "CampfireBaleMixin",
+    "ChickenEntityBreedingMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
     "EnchantmentHelperEnhancementMixin",
@@ -12,9 +14,10 @@
     "LivingEntityComfortImmunitiesMixin",
     "LivingEntityKnivesKnockBackMixin",
     "LivingEntityOnUseItemFinishMixin",
+    "PigEntityBreedingMixin",
     "PlantBlockOnRichSoilMixin",
-    "PlayerExhaustionAccessorMixin",
-    "StemBlockOnRichSoilFarmlandMixin"
+    "StemBlockOnRichSoilFarmlandMixin",
+    "accessors.PlayerExhaustionAccessorMixin"
   ],
   "client": [
     "InGameHudMixin"
