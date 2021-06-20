@@ -14,13 +14,13 @@
             "items": ["minecraft:melon_slice"]
           },
           {
-            "item": "minecraft:sweet_berries"
+            "items": ["minecraft:sweet_berries"]
           },
           {
-            "item": "minecraft:apple"
+            "items": ["minecraft:apple"]
           },
           {
-            "item": "farmersdelight:pumpkin_slice"
+            "items": ["farmersdelight:pumpkin_slice"]
           }
         ]
       }
