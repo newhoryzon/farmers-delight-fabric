@@ -3,9 +3,11 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.entity.block.PantryBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -34,8 +36,8 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = Properties.OPEN;
 
-    public PantryBlock(FabricBlockSettings fabricBlockSettings) {
-        super(fabricBlockSettings);
+    public PantryBlock() {
+        super(FabricBlockSettings.copyOf(Blocks.BARREL).breakByTool(FabricToolTags.AXES));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
     }
 
