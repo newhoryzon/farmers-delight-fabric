@@ -26,7 +26,7 @@ public class CopyMealFunction extends ConditionalLootFunction {
         if (blockEntity instanceof CookingPotBlockEntity) {
             NbtCompound tag = ((CookingPotBlockEntity) blockEntity).writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
-                stack.putSubTag("BlockEntityTag", tag);
+                stack.setSubNbt("BlockEntityTag", tag);
             }
         }
 

@@ -9,6 +9,7 @@ import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -68,7 +69,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     protected static final VoxelShape SHAPE_SUPPORTED = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
 
     public CookingPotBlock() {
-        super(FabricBlockSettings.of(Material.METAL).hardness(2.f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
+        super(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES).hardness(2.f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORTED, false).with(WATERLOGGED, false));
     }
 
@@ -115,7 +116,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         if (blockEntity != null) {
             NbtCompound tag = blockEntity.writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
-                itemStack.putSubTag("BlockEntityTag", tag);
+                itemStack.setSubNbt("BlockEntityTag", tag);
             } else {
                 itemStack.setCustomName(blockEntity.getCustomName());
             }
@@ -128,7 +129,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        NbtCompound tag = stack.getSubTag("BlockEntityTag");
+        NbtCompound tag = stack.getSubNbt("BlockEntityTag");
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound("Inventory");
             if (inventoryTag.contains("Items", 9)) {

@@ -7,7 +7,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -37,7 +37,7 @@ public class HotCocoaItem extends MilkBottleItem {
     }
 
     private boolean canEffectInstanceBeRemovedByMilk(StatusEffectInstance effectInstance) {
-        return effectInstance.getEffectType().getType() == StatusEffectType.HARMFUL;
+        return effectInstance.getEffectType().getCategory() == StatusEffectCategory.HARMFUL;
     }
 
     @Override

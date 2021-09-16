@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffects;
 
 import java.util.Set;
@@ -13,7 +13,7 @@ public class ComfortEffect extends StatusEffect {
     public static final Set<StatusEffect> COMFORT_IMMUNITIES = Sets.newHashSet(StatusEffects.SLOWNESS, StatusEffects.WEAKNESS, StatusEffects.HUNGER);
 
     public ComfortEffect() {
-        super(StatusEffectType.BENEFICIAL, 0);
+        super(StatusEffectCategory.BENEFICIAL, 0);
     }
 
     @Override

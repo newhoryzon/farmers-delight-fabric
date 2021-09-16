@@ -18,7 +18,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
 
         for (JsonElement ingredientJson : ingredientArray) {
             Ingredient ingredient = Ingredient.fromJson(ingredientJson);
-            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
+            if (ingredient.getMatchingStacks() != null && ingredient.getMatchingStacks().length > 0) {
                 ingredientList.add(ingredient);
             }
         }
@@ -45,7 +45,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
         final Ingredient tool = Ingredient.fromJson(toolObject);
         if (inputItemsIn.isEmpty()) {
             throw new JsonParseException("No ingredients for cooking recipe");
-        } else if (tool.getMatchingStacksClient() == null || tool.getMatchingStacksClient().length == 0) {
+        } else if (tool.getMatchingStacks() == null || tool.getMatchingStacks().length == 0) {
             throw new JsonParseException("No tool for cutting recipe");
         } else if (inputItemsIn.size() > 1) {
             throw new JsonParseException("Too many ingredients for cooking recipe! Please define only one ingredient");
