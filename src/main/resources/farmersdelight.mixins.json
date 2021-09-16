@@ -19,9 +19,6 @@
     "StemBlockOnRichSoilFarmlandMixin",
     "accessors.PlayerExhaustionAccessorMixin"
   ],
-  "client": [
-    "InGameHudMixin"
-  ],
   "injectors": {
     "defaultRequire": 1,
     "maxShiftBy": 2,

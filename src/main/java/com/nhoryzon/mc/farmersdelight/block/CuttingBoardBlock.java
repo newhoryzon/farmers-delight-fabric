@@ -3,6 +3,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -65,7 +66,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     }
 
     public CuttingBoardBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(2.f).sounds(BlockSoundGroup.WOOD));
+        super(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(2.f).sounds(BlockSoundGroup.WOOD));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 

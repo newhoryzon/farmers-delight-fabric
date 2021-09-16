@@ -98,12 +98,6 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
     }
 
     @Override
-    public void placeAt(WorldAccess world, BlockState state, BlockPos pos, int flags) {
-        world.setBlockState(pos, getDefaultState().with(WATERLOGGED, true).with(HALF, DoubleBlockHalf.LOWER), flags);
-        world.setBlockState(pos.up(), getDefaultState().with(WATERLOGGED, false).with(HALF, DoubleBlockHalf.UPPER), flags);
-    }
-
-    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         BlockState blockstate = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);

@@ -22,11 +22,11 @@ public class ItemStackHandler implements ItemHandler {
 
     @SuppressWarnings("ConstantConditions")
     public static boolean canItemStacksStack(ItemStack left, ItemStack right) {
-        if (left.isEmpty() || !left.isItemEqual(right) || left.hasTag() != right.hasTag()) {
+        if (left.isEmpty() || !left.isItemEqual(right) || left.hasNbt() != right.hasNbt()) {
             return false;
         }
 
-        return (!left.hasTag() || left.getTag().equals(right.getTag()));
+        return (!left.hasNbt() || left.getNbt().equals(right.getNbt()));
     }
 
     public static ItemStack copyStackWithNewSize(ItemStack itemStack, int newSize) {

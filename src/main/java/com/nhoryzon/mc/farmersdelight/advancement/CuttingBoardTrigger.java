@@ -24,7 +24,7 @@ public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.I
     }
 
     public void trigger(ServerPlayerEntity player) {
-        test(player, Instance::test);
+        trigger(player, Instance::test);
     }
 
     public static class Instance extends AbstractCriterionConditions {
