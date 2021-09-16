@@ -49,9 +49,9 @@ import java.util.function.Supplier;
 
 public enum BlocksRegistry {
     STOVE("stove", StoveBlock::new),
-    COOKING_POT("cooking_pot", CookingPotBlock::new, RenderLayer::getCutout),
-    BASKET("basket", BasketBlock::new, RenderLayer::getCutout),
-    CUTTING_BOARD("cutting_board", CuttingBoardBlock::new, RenderLayer::getCutout),
+    COOKING_POT("cooking_pot", CookingPotBlock::new, true),
+    BASKET("basket", BasketBlock::new, true),
+    CUTTING_BOARD("cutting_board", CuttingBoardBlock::new, true),
 
     CARROT_CRATE("carrot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
     POTATO_CRATE("potato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
@@ -59,12 +59,12 @@ public enum BlocksRegistry {
     CABBAGE_CRATE("cabbage_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
     TOMATO_CRATE("tomato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
     ONION_CRATE("onion_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    RICE_BALE("rice_bale", RiceBaleBlock::new, flammable(20, 60)),
+    RICE_BALE("rice_bale", RiceBaleBlock::new, false, flammable(20, 60)),
     RICE_BAG("rice_bag", () -> new Block(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).breakByTool(FabricToolTags.HOES))),
-    STRAW_BALE("straw_bale", () -> new HayBlock(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES)), flammable(20, 60)),
+    STRAW_BALE("straw_bale", () -> new HayBlock(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES)), true, flammable(20, 60)),
 
-    ROPE("rope", RopeBlock::new, RenderLayer::getCutout),
-    SAFETY_NET("safety_net", SafetyNetBlock::new, RenderLayer::getCutout),
+    ROPE("rope", RopeBlock::new, true),
+    SAFETY_NET("safety_net", SafetyNetBlock::new, true),
     OAK_PANTRY("oak_pantry", PantryBlock::new),
     BIRCH_PANTRY("birch_pantry", PantryBlock::new),
     SPRUCE_PANTRY("spruce_pantry", PantryBlock::new),
@@ -74,34 +74,34 @@ public enum BlocksRegistry {
     CRIMSON_PANTRY("crimson_pantry", PantryBlock::new),
     WARPED_PANTRY("warped_pantry", PantryBlock::new),
     TATAMI("tatami", TatamiBlock::new),
-    FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, RenderLayer::getCutout),
+    FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, true),
     HALF_TATAMI_MAT("half_tatami_mat", TatamiHalfMatBlock::new),
 
-    BROWN_MUSHROOM_COLONY("brown_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.BROWN_MUSHROOM), Items.BROWN_MUSHROOM), RenderLayer::getCutout),
-    RED_MUSHROOM_COLONY("red_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.RED_MUSHROOM), Items.RED_MUSHROOM), RenderLayer::getCutout),
+    BROWN_MUSHROOM_COLONY("brown_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.BROWN_MUSHROOM), Items.BROWN_MUSHROOM), true),
+    RED_MUSHROOM_COLONY("red_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.RED_MUSHROOM), Items.RED_MUSHROOM), true),
     ORGANIC_COMPOST("organic_compost", OrganicCompostBlock::new),
     RICH_SOIL("rich_soil", RichSoilBlock::new),
     RICH_SOIL_FARMLAND("rich_soil_farmland", RichSoilFarmlandBlock::new),
 
-    WILD_CABBAGES("wild_cabbages", WildPatchBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_ONIONS("wild_onions", WildCropBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_TOMATOES("wild_tomatoes", WildPatchBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_CARROTS("wild_carrots", WildCropBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_POTATOES("wild_potatoes", WildPatchBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_BEETROOTS("wild_beetroots", WildPatchBlock::new, RenderLayer::getCutout, flammable(100, 60)),
-    WILD_RICE("wild_rice", WildRiceCropBlock::new, RenderLayer::getCutout, flammable(100, 60)),
+    WILD_CABBAGES("wild_cabbages", WildPatchBlock::new, true, flammable(100, 60)),
+    WILD_ONIONS("wild_onions", WildCropBlock::new, true, flammable(100, 60)),
+    WILD_TOMATOES("wild_tomatoes", WildPatchBlock::new, true, flammable(100, 60)),
+    WILD_CARROTS("wild_carrots", WildCropBlock::new, true, flammable(100, 60)),
+    WILD_POTATOES("wild_potatoes", WildPatchBlock::new, true, flammable(100, 60)),
+    WILD_BEETROOTS("wild_beetroots", WildPatchBlock::new, true, flammable(100, 60)),
+    WILD_RICE("wild_rice", WildRiceCropBlock::new, true, flammable(100, 60)),
 
-    CABBAGE_CROP("cabbages", CabbageCropBlock::new, RenderLayer::getCutout),
-    ONION_CROP("onions", OnionCropBlock::new, RenderLayer::getCutout),
-    TOMATO_CROP("tomatoes", TomatoBushCropBlock::new, RenderLayer::getCutout),
-    RICE_CROP("rice_crop", RiceCropBlock::new, RenderLayer::getCutout),
-    RICE_UPPER_CROP("rice_upper_crop", RiceUpperCropBlock::new, RenderLayer::getCutout),
+    CABBAGE_CROP("cabbages", CabbageCropBlock::new, true),
+    ONION_CROP("onions", OnionCropBlock::new, true),
+    TOMATO_CROP("tomatoes", TomatoBushCropBlock::new, true),
+    RICE_CROP("rice_crop", RiceCropBlock::new, true),
+    RICE_UPPER_CROP("rice_upper_crop", RiceUpperCropBlock::new, true),
 
     APPLE_PIE("apple_pie", () -> new PieBlock(ItemsRegistry.APPLE_PIE_SLICE.get())),
     SWEET_BERRY_CHEESECAKE("sweet_berry_cheesecake", () -> new PieBlock(ItemsRegistry.SWEET_BERRY_CHEESECAKE_SLICE.get())),
     CHOCOLATE_PIE("chocolate_pie", () -> new PieBlock(ItemsRegistry.CHOCOLATE_PIE_SLICE.get())),
 
-    ROAST_CHICKEN_BLOCK("roast_chicken_block", RoastChickenBlock::new, RenderLayer::getCutout),
+    ROAST_CHICKEN_BLOCK("roast_chicken_block", RoastChickenBlock::new, true),
     STUFFED_PUMPKIN_BLOCK("stuffed_pumpkin_block", () -> new FeastBlock(FabricBlockSettings.copyOf(Blocks.PUMPKIN), ItemsRegistry.STUFFED_PUMPKIN.get(), false)),
     HONEY_GLAZED_HAM_BLOCK("honey_glazed_ham_block", HoneyGlazedHamBlock::new),
     SHEPHERDS_PIE_BLOCK("shepherds_pie_block", ShepherdsPieBlock::new);
@@ -117,26 +117,22 @@ public enum BlocksRegistry {
     private final String pathName;
     private final Supplier<Block> blockSupplier;
     private final FlammableBlockRegistry.Entry flammableRate;
-    private final Supplier<RenderLayer> renderLayerSupplier;
+    private final boolean isCutout;
     private Block block;
 
     BlocksRegistry(String pathName, Supplier<Block> blockSupplier) {
-        this(pathName, blockSupplier, new FlammableBlockRegistry.Entry(0, 0));
+        this(pathName, blockSupplier, false, new FlammableBlockRegistry.Entry(0, 0));
     }
 
-    BlocksRegistry(String pathName, Supplier<Block> blockSupplier, Supplier<RenderLayer> renderLayerSupplier) {
-        this(pathName, blockSupplier, renderLayerSupplier, new FlammableBlockRegistry.Entry(0, 0));
+    BlocksRegistry(String pathName, Supplier<Block> blockSupplier, boolean isCutout) {
+        this(pathName, blockSupplier, isCutout, new FlammableBlockRegistry.Entry(0, 0));
     }
 
-    BlocksRegistry(String pathName, Supplier<Block> blockSupplier, FlammableBlockRegistry.Entry flammableRate) {
-        this(pathName, blockSupplier, null, flammableRate);
-    }
-
-    BlocksRegistry(String pathName, Supplier<Block> blockSupplier, Supplier<RenderLayer> renderLayerSupplier, FlammableBlockRegistry.Entry flammableRate) {
+    BlocksRegistry(String pathName, Supplier<Block> blockSupplier, boolean isCutout, FlammableBlockRegistry.Entry flammableRate) {
         this.pathName = pathName;
         this.blockSupplier = blockSupplier;
-        this.renderLayerSupplier = renderLayerSupplier;
         this.flammableRate = flammableRate;
+        this.isCutout = isCutout;
     }
 
     public static void registerAll() {
@@ -152,8 +148,8 @@ public enum BlocksRegistry {
     @Environment(EnvType.CLIENT)
     public static void registerRenderLayer() {
         for (BlocksRegistry value : values()) {
-            if (value.renderLayerSupplier != null) {
-                BlockRenderLayerMap.INSTANCE.putBlock(value.get(), value.renderLayerSupplier.get());
+            if (value.isCutout) {
+                BlockRenderLayerMap.INSTANCE.putBlock(value.get(), RenderLayer.getCutout());
             }
         }
     }
