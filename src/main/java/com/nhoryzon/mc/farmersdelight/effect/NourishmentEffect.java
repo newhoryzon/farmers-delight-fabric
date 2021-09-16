@@ -3,14 +3,14 @@ package com.nhoryzon.mc.farmersdelight.effect;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.PlayerExhaustionAccessorMixin;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
 
 public class NourishmentEffect extends StatusEffect {
     public NourishmentEffect() {
-        super(StatusEffectType.BENEFICIAL, 0);
+        super(StatusEffectCategory.BENEFICIAL, 0);
     }
 
     @Override

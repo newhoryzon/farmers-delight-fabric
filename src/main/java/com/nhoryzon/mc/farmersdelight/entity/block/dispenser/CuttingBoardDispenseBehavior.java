@@ -40,7 +40,7 @@ public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior 
     public boolean tryDispenseStackOnCuttingBoard(BlockPointer source, ItemStack stack) {
         setSuccess(false);
         World world = source.getWorld();
-        BlockPos blockPos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+        BlockPos blockPos = source.getPos().offset(source.getBlockState().get(DispenserBlock.FACING));
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);

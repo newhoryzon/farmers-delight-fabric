@@ -115,7 +115,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         if (blockEntity != null) {
             NbtCompound tag = blockEntity.writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
-                itemStack.putSubTag("BlockEntityTag", tag);
+                itemStack.setSubNbt("BlockEntityTag", tag);
             } else {
                 itemStack.setCustomName(blockEntity.getCustomName());
             }
@@ -128,7 +128,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        NbtCompound tag = stack.getSubTag("BlockEntityTag");
+        NbtCompound tag = stack.getSubNbt("BlockEntityTag");
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound("Inventory");
             if (inventoryTag.contains("Items", 9)) {

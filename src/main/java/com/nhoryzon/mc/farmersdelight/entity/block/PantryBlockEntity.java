@@ -5,7 +5,7 @@ import com.nhoryzon.mc.farmersdelight.block.PantryBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestStateManager;
+import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -29,7 +29,7 @@ import java.util.Objects;
 public class PantryBlockEntity extends LootableContainerBlockEntity {
     private static final int MAX_INVENTORY_SIZE = 27;
 
-    private final ChestStateManager stateManager;
+    private final ViewerCountManager viewerManager;
     private DefaultedList<ItemStack> content;
 
     public PantryBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -39,18 +39,18 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     private PantryBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
         this.content = DefaultedList.ofSize(MAX_INVENTORY_SIZE, ItemStack.EMPTY);
-        this.stateManager = new ChestStateManager() {
-            protected void onChestOpened(World world, BlockPos pos, BlockState state) {
+        this.viewerManager = new ViewerCountManager() {
+            protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
                 PantryBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
                 PantryBlockEntity.this.setOpen(state, true);
             }
 
-            protected void onChestClosed(World world, BlockPos pos, BlockState state) {
+            protected void onContainerClose(World world, BlockPos pos, BlockState state) {
                 PantryBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 PantryBlockEntity.this.setOpen(state, false);
             }
 
-            protected void onInteracted(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+            protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
             }
 
             protected boolean isPlayerViewing(PlayerEntity player) {
@@ -92,14 +92,14 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     @Override
     public void onOpen(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openChest(player, this.getWorld(), this.getPos(), this.getCachedState());
+            this.viewerManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeChest(player, this.getWorld(), this.getPos(), this.getCachedState());
+            this.viewerManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
@@ -124,10 +124,10 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
 
     public void tick() {
         if (!this.removed) {
-            this.stateManager.updateViewerCount(this.getWorld(), this.getPos(), this.getCachedState());
+            this.viewerManager.updateViewerCount(this.getWorld(), this.getPos(), this.getCachedState());
         }
 
-        if (this.stateManager.getViewerCount() > 0) {
+        if (this.viewerManager.getViewerCount() > 0) {
             scheduleTick();
         } else {
             BlockState blockstate = getCachedState();
