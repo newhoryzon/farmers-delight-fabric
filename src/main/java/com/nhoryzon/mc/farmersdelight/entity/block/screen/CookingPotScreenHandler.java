@@ -62,6 +62,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
         // Bowl Input
         addSlot(new SlotItemHandler(inventoryHandler, 7, 92, 55) {
             @Environment(value= EnvType.CLIENT)
+            @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
                 return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, EMPTY_CONTAINER_SLOT_BOWL);
             }
@@ -117,7 +118,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
         int endPlayerInv = startPlayerInv + 36;
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
-        if (slot != null && slot.hasStack()) {
+        if (slot.hasStack()) {
             ItemStack slotItemStack = slot.getStack();
             itemStack = slotItemStack.copy();
             if (index == indexOutput) {

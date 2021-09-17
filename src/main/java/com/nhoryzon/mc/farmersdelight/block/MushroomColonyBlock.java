@@ -34,6 +34,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
     public static final int PLACING_LIGHT_LEVEL = 13;
 
     public static final IntProperty AGE = Properties.AGE_3;
+    public static final int MAX_AGE = 3;
 
     protected static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.createCuboidShape(4.d, .0d, 4.d, 12.d, 8.d, 12.d),
@@ -70,7 +71,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         super.scheduledTick(state, world, pos, random);
         int age = state.get(AGE);
         BlockState groundState = world.getBlockState(pos.down());
-        if (age < getMaxAge() && groundState.getBlock() == BlocksRegistry.RICH_SOIL.get() && world.getLightLevel(pos.up(), 0) <=
+        if (age < MAX_AGE && groundState.getBlock() == BlocksRegistry.RICH_SOIL.get() && world.getLightLevel(pos.up(), 0) <=
                 GROWING_LIGHT_LEVEL && random.nextInt(5) == 0) {
             world.setBlockState(pos, state.with(AGE, age + 1), BlockStateUtils.BLOCK_UPDATE);
         }
@@ -113,7 +114,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
             world.playSound(null, pos, SoundEvents.ENTITY_MOOSHROOM_SHEAR, SoundCategory.BLOCKS, 1.f, 1.f);
             world.setBlockState(pos, state.with(AGE, age - 1), BlockStateUtils.BLOCK_UPDATE);
             if (!world.isClient()) {
-                heldItem.damage(1, player, (playerIn) -> playerIn.sendToolBreakStatus(hand));
+                heldItem.damage(1, player, playerIn -> playerIn.sendToolBreakStatus(hand));
             }
             return ActionResult.SUCCESS;
         }
@@ -126,7 +127,4 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         return SHAPE_BY_AGE[state.get(AGE)];
     }
 
-    public int getMaxAge() {
-        return 3;
-    }
 }

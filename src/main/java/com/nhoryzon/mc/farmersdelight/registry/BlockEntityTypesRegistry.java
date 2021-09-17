@@ -29,7 +29,8 @@ public enum BlockEntityTypesRegistry {
     private final Supplier<BlockEntityType<? extends BlockEntity>> blockEntityTypeSupplier;
     private BlockEntityType<? extends BlockEntity> blockEntityType;
 
-    BlockEntityTypesRegistry(String pathName, Class<? extends BlockEntity> blockEntityClass, FabricBlockEntityTypeBuilder.Factory blockEntitySupplier, BlocksRegistry... blockRegistryArray) {
+    BlockEntityTypesRegistry(String pathName, Class<? extends BlockEntity> blockEntityClass,
+            FabricBlockEntityTypeBuilder.Factory<? extends BlockEntity> blockEntitySupplier, BlocksRegistry... blockRegistryArray) {
         this.pathName = pathName;
         this.blockEntityClass = blockEntityClass;
         this.blockEntityTypeSupplier = () -> FabricBlockEntityTypeBuilder.create(blockEntitySupplier, Arrays.stream(blockRegistryArray)

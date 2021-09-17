@@ -5,6 +5,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 
 public class RecipeWrapper implements Inventory {
+
     protected final ItemHandler inventory;
 
     public RecipeWrapper(ItemHandler inventory) {
@@ -76,15 +77,25 @@ public class RecipeWrapper implements Inventory {
         }
     }
 
-    //The following methods are never used by vanilla in crafting.  They are defunct as mods need not override them.
     @Override
     public int getMaxCountPerStack() { return 0; }
-    @Override
-    public void markDirty() {}
+
     @Override
     public boolean canPlayerUse(PlayerEntity player) { return false; }
+
     @Override
-    public void onOpen(PlayerEntity player) {}
+    public void markDirty() {
+        //The following methods are never used by vanilla in crafting.  They are defunct as mods need not override them.
+    }
+
     @Override
-    public void onClose(PlayerEntity player) {}
+    public void onOpen(PlayerEntity player) {
+        //The following methods are never used by vanilla in crafting.  They are defunct as mods need not override them.
+    }
+
+    @Override
+    public void onClose(PlayerEntity player) {
+        //The following methods are never used by vanilla in crafting.  They are defunct as mods need not override them.
+    }
+
 }

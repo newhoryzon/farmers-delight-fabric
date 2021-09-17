@@ -12,6 +12,7 @@ import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
@@ -41,6 +42,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+
+    public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
+
     private boolean isItemCarvingBoard;
     private final ItemStackHandler itemHandler = new ItemStackHandler() {
         @Override
@@ -78,15 +82,15 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        isItemCarvingBoard = tag.getBoolean("IsItemCarved");
-        itemHandler.fromTag(tag.getCompound("Inventory"));
+        isItemCarvingBoard = tag.getBoolean(TAG_KEY_IS_ITEM_CARVED);
+        itemHandler.fromTag(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.put("Inventory", itemHandler.toTag());
-        tag.putBoolean("IsItemCarved", isItemCarvingBoard);
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        tag.putBoolean(TAG_KEY_IS_ITEM_CARVED, isItemCarvingBoard);
 
         return tag;
     }
@@ -121,7 +125,7 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
                 world.spawnEntity(entity);
             }
             if (player != null) {
-                tool.damage(1, player, (user) -> user.sendToolBreakStatus(Hand.MAIN_HAND));
+                tool.damage(1, player, user -> user.sendToolBreakStatus(Hand.MAIN_HAND));
             } else {
                 if (tool.damage(1, world.getRandom(), null)) {
                     tool.setCount(0);
