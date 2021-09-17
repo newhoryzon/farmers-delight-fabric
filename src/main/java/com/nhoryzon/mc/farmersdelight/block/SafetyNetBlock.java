@@ -51,7 +51,7 @@ public class SafetyNetBlock extends Block implements Waterloggable {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
+        if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
@@ -78,7 +78,7 @@ public class SafetyNetBlock extends Block implements Waterloggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override

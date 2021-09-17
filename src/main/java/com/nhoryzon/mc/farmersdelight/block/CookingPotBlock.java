@@ -6,6 +6,7 @@ import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -131,7 +132,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         super.appendTooltip(stack, world, tooltip, options);
         NbtCompound tag = stack.getSubNbt("BlockEntityTag");
         if (tag != null) {
-            NbtCompound inventoryTag = tag.getCompound("Inventory");
+            NbtCompound inventoryTag = tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY);
             if (inventoryTag.contains("Items", 9)) {
                 ItemStackHandler handler = new ItemStackHandler();
                 handler.fromTag(inventoryTag);
@@ -229,7 +230,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
+        if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
@@ -247,7 +248,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(SUPPORTED) ? SHAPE_SUPPORTED : SHAPE;
+        return Boolean.TRUE.equals(state.get(SUPPORTED)) ? SHAPE_SUPPORTED : SHAPE;
     }
 
     @Override
@@ -262,7 +263,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override

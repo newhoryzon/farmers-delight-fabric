@@ -40,10 +40,9 @@ public class ConsumableItem extends Item {
         if (stack.isEmpty()) {
             return container;
         } else {
-            if (user instanceof PlayerEntity player && !((PlayerEntity) user).getAbilities().creativeMode) {
-                if (!player.getInventory().insertStack(container)) {
-                    player.dropItem(container, false);
-                }
+            if (user instanceof PlayerEntity player && !((PlayerEntity) user).getAbilities().creativeMode &&
+                    !player.getInventory().insertStack(container)) {
+                player.dropItem(container, false);
             }
 
             return stack;
@@ -51,5 +50,6 @@ public class ConsumableItem extends Item {
     }
 
     public void affectConsumer(ItemStack stack, World world, LivingEntity user) {
+        // Do nothing for basic consumable item
     }
 }

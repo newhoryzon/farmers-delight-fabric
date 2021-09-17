@@ -41,7 +41,7 @@ public class TatamiBlock extends Block {
         BlockPos targetPos = context.getBlockPos().offset(face.getOpposite());
         BlockState targetState = context.getWorld().getBlockState(targetPos);
         boolean pairing = context.getPlayer() != null && !context.getPlayer().isSneaking() && targetState.isOf(this) &&
-                !targetState.get(PAIRED);
+                !Boolean.TRUE.equals(targetState.get(PAIRED));
 
         return getDefaultState().with(FACING, face.getOpposite()).with(PAIRED, pairing);
     }
@@ -56,7 +56,7 @@ public class TatamiBlock extends Block {
 
             BlockPos facingPos = pos.offset(state.get(FACING));
             BlockState facingState = world.getBlockState(facingPos);
-            if (facingState.isOf(this) && !facingState.get(PAIRED)) {
+            if (facingState.isOf(this) && !Boolean.TRUE.equals(facingState.get(PAIRED))) {
                 world.setBlockState(facingPos, state.with(FACING, state.get(FACING).getOpposite()).with(PAIRED, true));
                 world.updateNeighbors(pos, Blocks.AIR);
                 state.updateNeighbors(world, pos, 3);
@@ -67,7 +67,7 @@ public class TatamiBlock extends Block {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
-        if (direction.equals(state.get(FACING)) && state.get(PAIRED) && world.getBlockState(posFrom).isOf(Blocks.AIR)) {
+        if (direction.equals(state.get(FACING)) && Boolean.TRUE.equals(state.get(PAIRED)) && world.getBlockState(posFrom).isOf(Blocks.AIR)) {
             return state.with(PAIRED, false);
         }
 

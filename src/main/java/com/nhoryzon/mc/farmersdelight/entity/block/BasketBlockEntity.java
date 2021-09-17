@@ -3,8 +3,11 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.Hopper;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -20,14 +23,28 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class BasketBlockEntity extends LootableContainerBlockEntity implements Basket {
+public class BasketBlockEntity extends LootableContainerBlockEntity implements Hopper {
+
+    public static final String TAG_KEY_TRANSFER_COOLDOWN = "TransferCooldown";
+
+    private static final VoxelShape[] COLLECTION_AREA_SHAPES = {
+            Block.createCuboidShape(.0d, -16.d, .0d, 16.d, 16.d, 16.d),    // down
+            Block.createCuboidShape(.0d, .0d, .0d, 16.d, 32.d, 16.d),       // up
+            Block.createCuboidShape(.0d, .0d, -16.d, 16.d, 16.d, 16.d),     // north
+            Block.createCuboidShape(.0d, .0d, .0d, 16.d, 16.d, 32.d),       // south
+            Block.createCuboidShape(-16.d, .0d, .0d, 16.d, 16.d, 16.d),     // west
+            Block.createCuboidShape(.0d, .0d, .0d, 32.d, 16.d, 16.d)        // east
+    };
+
     private static final int MAX_INVENTORY_SIZE = 27;
     private DefaultedList<ItemStack> content;
     private int transferCooldown = -1;
@@ -37,7 +54,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         this.content = DefaultedList.ofSize(MAX_INVENTORY_SIZE, ItemStack.EMPTY);
     }
 
-    public static boolean pullItems(World world, Basket basket, int facingIndex) {
+    public static boolean pullItems(World world, BasketBlockEntity basket, int facingIndex) {
         for (ItemEntity itementity : getCaptureItems(world, basket, facingIndex)) {
             if (captureItem(basket, itementity)) {
                 return true;
@@ -95,12 +112,10 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
             }
 
             if (flag) {
-                if (isDestinationEmpty && destination instanceof BasketBlockEntity firstBasket) {
-                    if (!firstBasket.mayTransfer()) {
-                        int k = 0;
+                if (isDestinationEmpty && destination instanceof BasketBlockEntity firstBasket && !firstBasket.mayTransfer()) {
+                    int k = 0;
 
-                        firstBasket.setTransferCooldown(8 - k);
-                    }
+                    firstBasket.setTransferCooldown(8 - k);
                 }
 
                 destination.markDirty();
@@ -124,9 +139,9 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         return flag;
     }
 
-    public static List<ItemEntity> getCaptureItems(World world, Basket basket, int facingIndex) {
+    public static List<ItemEntity> getCaptureItems(World world, BasketBlockEntity basket, int facingIndex) {
         return world == null ? new ArrayList<>() : basket.getFacingCollectionArea(facingIndex).getBoundingBoxes().stream()
-                .flatMap((boundingBoxe) -> world.getEntitiesByClass(ItemEntity.class,
+                .flatMap(boundingBoxe -> world.getEntitiesByClass(ItemEntity.class,
                         boundingBoxe.offset(basket.getHopperX() - .5d, basket.getHopperY() - .5d, basket.getHopperZ() - .5d),
                         EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
     }
@@ -207,7 +222,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         if (!serializeLootTable(tag)) {
             Inventories.writeNbt(tag, content);
         }
-        tag.putInt("TransferCooldown", transferCooldown);
+        tag.putInt(TAG_KEY_TRANSFER_COOLDOWN, transferCooldown);
 
         return tag;
     }
@@ -219,7 +234,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         if (!deserializeLootTable(tag)) {
             Inventories.readNbt(tag, content);
         }
-        transferCooldown = tag.getInt("TransferCooldown");
+        transferCooldown = tag.getInt(TAG_KEY_TRANSFER_COOLDOWN);
     }
 
     public void setTransferCooldown(int ticks) {
@@ -234,18 +249,16 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
         return transferCooldown > 8;
     }
 
-    private void updateHopper(Supplier<Boolean> supplier) {
-        if (world != null && !world.isClient()) {
-            if (isNotInTransferCooldown() && getCachedState().get(BasketBlock.ENABLED)) {
-                boolean flag = false;
-                if (!isFull()) {
-                    flag = supplier.get();
-                }
+    private void updateHopper(BooleanSupplier supplier) {
+        if (world != null && !world.isClient() && isNotInTransferCooldown() && Boolean.TRUE.equals(getCachedState().get(BasketBlock.ENABLED))) {
+            boolean flag = false;
+            if (!isFull()) {
+                flag = supplier.getAsBoolean();
+            }
 
-                if (flag) {
-                    setTransferCooldown(8);
-                    markDirty();
-                }
+            if (flag) {
+                setTransferCooldown(8);
+                markDirty();
             }
         }
     }
@@ -259,4 +272,9 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
 
         return true;
     }
+
+    private VoxelShape getFacingCollectionArea(int facingIndex) {
+        return COLLECTION_AREA_SHAPES[facingIndex];
+    }
+
 }

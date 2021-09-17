@@ -52,7 +52,7 @@ public class KnifeItem extends MiningToolItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damage(1, attacker, (user) -> user.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        stack.damage(1, attacker, user -> user.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
 
         return true;
     }
@@ -77,7 +77,7 @@ public class KnifeItem extends MiningToolItem {
                 itemEntity.setVelocity(.05d * (double) direction.getOffsetX() + world.getRandom().nextDouble() * .02d, .05d,
                         .05d * (double) direction.getOffsetZ() + world.getRandom().nextDouble() * 0.02D);
                 world.spawnEntity(itemEntity);
-                tool.damage(1, player, (playerIn) -> playerIn.sendToolBreakStatus(context.getHand()));
+                tool.damage(1, player, playerIn -> playerIn.sendToolBreakStatus(context.getHand()));
             }
             return ActionResult.success(world.isClient());
         } else {

@@ -38,16 +38,17 @@ public class BeforeInc extends InjectionPoint {
         boolean found = false;
 
         ListIterator<AbstractInsnNode> iter = insns.iterator();
-        for (int ordinal = 0; iter.hasNext(); ) {
+        int ord = 0;
+        while (iter.hasNext()) {
             AbstractInsnNode insn = iter.next();
 
             boolean matchesInsn = this.matchesIncInsn(insn);
             if (matchesInsn) {
-                if (this.ordinal == -1 || this.ordinal == ordinal) {
+                if (this.ordinal == -1 || this.ordinal == ord) {
                     nodes.add(insn);
                     found = true;
                 }
-                ordinal++;
+                ord++;
             }
         }
 

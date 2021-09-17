@@ -10,9 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.Fertilizable;
-import net.minecraft.block.PistonExtensionBlock;
 import net.minecraft.block.StemBlock;
 import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.entity.Entity;
@@ -76,12 +74,11 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
             }
 
             // If all else fails, and it's a plant, give it a growth boost now and then!
-            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f) {
-                if (growable.isFertilizable(world, pos.up(), aboveState, false)) {
-                    growable.grow(world, world.getRandom(), pos.up(), aboveState);
-                    if (!world.isClient()) {
-                        world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);
-                    }
+            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f &&
+                    growable.isFertilizable(world, pos.up(), aboveState, false)) {
+                growable.grow(world, world.getRandom(), pos.up(), aboveState);
+                if (!world.isClient()) {
+                    world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);
                 }
             }
         }

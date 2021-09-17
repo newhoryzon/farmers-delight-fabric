@@ -53,6 +53,7 @@ public class RiceUpperCropBlock extends CropBlock implements Fertilizable {
         return ItemsRegistry.RICE.get();
     }
 
+    @Override
     protected int getGrowthAmount(World world) {
         return MathHelper.nextInt(world.getRandom(), 1, 4);
     }

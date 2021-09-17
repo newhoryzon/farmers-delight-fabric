@@ -7,6 +7,10 @@ import java.util.Queue;
 import java.util.function.Predicate;
 
 public class RecipeMatcher {
+
+    private RecipeMatcher() {
+    }
+
     /**
      * Attempts to match inputs to the specified tests. In the best way that all inputs are used by one test.
      * Will return null in any of these cases:
@@ -53,10 +57,8 @@ public class RecipeMatcher {
             if (matched == 0)
                 return null; //We have an test that matched non of the inputs
 
-            if (matched == 1)
-            {
-                if (!claim(ret, data, x, elements))
-                    return null; //We failed to claim this index, which means it caused something else to go to 0 matches, which makes the whole thing fail
+            if (matched == 1 && !claim(ret, data, x, elements)) {
+                return null; //We failed to claim this index, which means it caused something else to go to 0 matches, which makes the whole thing fail
             }
         }
 
