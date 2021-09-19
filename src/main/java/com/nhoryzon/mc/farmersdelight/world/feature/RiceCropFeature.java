@@ -28,7 +28,6 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
         RandomPatchFeatureConfig config = context.getConfig();
         Random random = context.getRandom();
         BlockPos blockPos = world.getTopPosition(Heightmap.Type.OCEAN_FLOOR_WG, origin);
-        BlockState blockState = world.getBlockState(blockPos);
 
         int i = 0;
         BlockPos.Mutable blockPosMutable = new BlockPos.Mutable();
@@ -42,7 +41,7 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
             if (world.getBlockState(blockPosMutable).getBlock() == Blocks.WATER && world.getBlockState(blockPosMutable.up()).getBlock() == Blocks.AIR) {
                 BlockState bottomRiceState = BlocksRegistry.WILD_RICE.get().getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.LOWER);
                 if (bottomRiceState.canPlaceAt(world, blockPosMutable)) {
-                    TallPlantBlock.placeAt(world, blockState, blockPosMutable, 2);
+                    TallPlantBlock.placeAt(world, bottomRiceState, blockPosMutable, 2);
                     ++i;
                 }
             }
