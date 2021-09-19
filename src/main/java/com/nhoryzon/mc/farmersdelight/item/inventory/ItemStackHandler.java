@@ -3,8 +3,8 @@ package com.nhoryzon.mc.farmersdelight.item.inventory;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -204,32 +204,32 @@ public class ItemStackHandler implements ItemHandler {
         return Math.min(getMaxCountForSlot(slot), stack.getMaxCount());
     }
 
-    public CompoundTag toTag() {
-        ListTag itemListTag = new ListTag();
+    public NbtCompound toTag() {
+        NbtList itemListTag = new NbtList();
         for (int i = 0; i < inventory.size(); i++) {
             if (!inventory.get(i).isEmpty()) {
-                CompoundTag itemTag = new CompoundTag();
+                NbtCompound itemTag = new NbtCompound();
                 itemTag.putInt("Slot", i);
-                inventory.get(i).toTag(itemTag);
+                inventory.get(i).writeNbt(itemTag);
                 itemListTag.add(itemTag);
             }
         }
 
-        CompoundTag inventoryTag = new CompoundTag();
+        NbtCompound inventoryTag = new NbtCompound();
         inventoryTag.put("Items", itemListTag);
         inventoryTag.putInt("Size", inventory.size());
 
         return inventoryTag;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         setSize(tag.contains("Size", CompoundTagUtils.TAG_INT) ? tag.getInt("Size") : inventory.size());
-        ListTag itemListTag = tag.getList("Items", CompoundTagUtils.TAG_COMPOUND);
+        NbtList itemListTag = tag.getList("Items", CompoundTagUtils.TAG_COMPOUND);
         for (int i = 0; i < itemListTag.size(); i++) {
-            CompoundTag itemTag = itemListTag.getCompound(i);
+            NbtCompound itemTag = itemListTag.getCompound(i);
             int slot = itemTag.getInt("Slot");
             if (slot >= 0 && slot <= inventory.size()) {
-                inventory.set(slot, ItemStack.fromTag(itemTag));
+                inventory.set(slot, ItemStack.fromNbt(itemTag));
             }
         }
 

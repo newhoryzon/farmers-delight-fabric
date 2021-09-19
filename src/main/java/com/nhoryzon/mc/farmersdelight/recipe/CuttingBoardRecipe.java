@@ -68,7 +68,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public DefaultedList<Ingredient> getIngredients() {
         DefaultedList<Ingredient> ingredient = DefaultedList.of();
         ingredient.add(input);
 

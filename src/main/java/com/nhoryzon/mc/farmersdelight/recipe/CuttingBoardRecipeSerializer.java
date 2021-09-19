@@ -18,7 +18,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
 
         for (JsonElement ingredientJson : ingredientArray) {
             Ingredient ingredient = Ingredient.fromJson(ingredientJson);
-            if (ingredient.getMatchingStacksClient() != null && ingredient.getMatchingStacksClient().length > 0) {
+            if (!ingredient.isEmpty()) {
                 ingredientList.add(ingredient);
             }
         }
@@ -45,7 +45,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
         final Ingredient tool = Ingredient.fromJson(toolObject);
         if (inputItemsIn.isEmpty()) {
             throw new JsonParseException("No ingredients for cooking recipe");
-        } else if (tool.getMatchingStacksClient() == null || tool.getMatchingStacksClient().length == 0) {
+        } else if (tool.isEmpty()) {
             throw new JsonParseException("No tool for cutting recipe");
         } else if (inputItemsIn.size() > 1) {
             throw new JsonParseException("Too many ingredients for cooking recipe! Please define only one ingredient");
@@ -75,7 +75,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
     @Override
     public void write(PacketByteBuf buf, CuttingBoardRecipe recipe) {
         buf.writeString(recipe.getGroup());
-        recipe.getPreviewInputs().get(0).write(buf);
+        recipe.getIngredients().get(0).write(buf);
         recipe.getTool().write(buf);
 
         buf.writeVarInt(recipe.getResultList().size());

@@ -38,7 +38,7 @@ public class SlotItemHandler extends Slot {
     }
 
     @Override
-    public void onStackChanged(ItemStack oldStackIn, ItemStack newStackIn) {
+    public void onQuickTransfer(ItemStack newItem, ItemStack original) {
     }
 
     @Override

@@ -31,6 +31,7 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
@@ -45,11 +46,10 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
@@ -313,15 +313,15 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerExtraAnimalFeeding() {
-        List<ItemStack> chickenFood = new ArrayList<>();
-        Collections.addAll(chickenFood, ChickenEntityAccessorMixin.getFoodItems().getMatchingStacksClient());
+        List<ItemStack> chickenFood = ChickenEntityAccessorMixin.getFoodItems().getMatchingItemIds()
+                .stream().map(RecipeMatcher::getStackFromId).collect(Collectors.toList());
         chickenFood.add(new ItemStack(ItemsRegistry.CABBAGE_SEEDS.get()));
         chickenFood.add(new ItemStack(ItemsRegistry.TOMATO_SEED.get()));
         chickenFood.add(new ItemStack(ItemsRegistry.RICE.get()));
         ChickenEntityAccessorMixin.setFoodItems(Ingredient.ofStacks(chickenFood.stream()));
 
-        List<ItemStack> pigFood = new ArrayList<>();
-        Collections.addAll(pigFood, PigEntityAccessorMixin.getFoodItems().getMatchingStacksClient());
+        List<ItemStack> pigFood = PigEntityAccessorMixin.getFoodItems().getMatchingItemIds()
+                .stream().map(RecipeMatcher::getStackFromId).collect(Collectors.toList());
         pigFood.add(new ItemStack(ItemsRegistry.CABBAGE.get()));
         pigFood.add(new ItemStack(ItemsRegistry.TOMATO.get()));
         PigEntityAccessorMixin.setFoodItems(Ingredient.ofStacks(pigFood.stream()));

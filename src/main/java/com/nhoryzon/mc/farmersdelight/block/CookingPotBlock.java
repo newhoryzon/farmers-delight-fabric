@@ -26,7 +26,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.BlockSoundGroup;
@@ -105,7 +105,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         ItemStack itemStack = super.getPickStack(world, pos, state);
         CookingPotBlockEntity blockEntity = (CookingPotBlockEntity) world.getBlockEntity(pos);
         if (blockEntity != null) {
-            CompoundTag tag = blockEntity.writeMeal(new CompoundTag());
+            NbtCompound tag = blockEntity.writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
                 itemStack.putSubTag("BlockEntityTag", tag);
             } else {
@@ -120,9 +120,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        CompoundTag tag = stack.getSubTag("BlockEntityTag");
+        NbtCompound tag = stack.getSubTag("BlockEntityTag");
         if (tag != null) {
-            CompoundTag inventoryTag = tag.getCompound("Inventory");
+            NbtCompound inventoryTag = tag.getCompound("Inventory");
             if (inventoryTag.contains("Items", 9)) {
                 ItemStackHandler handler = new ItemStackHandler();
                 handler.fromTag(inventoryTag);
