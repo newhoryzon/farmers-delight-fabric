@@ -33,6 +33,10 @@ import java.util.Optional;
 import java.util.Random;
 
 public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable {
+
+    public static final String TAG_KEY_COOKING_TIMES = "CookingTimes";
+    public static final String TAG_KEY_COOKING_TOTAL_TIMES = "CookingTotalTimes";
+
     private static final VoxelShape GRILLING_AREA = Block.createCuboidShape(3.f, .0f, 3.f, 13.f, 1.f, 13.f);
     private static final int MAX_STACK_SIZE = 6;
 
@@ -58,12 +62,12 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     private void fromTag(NbtCompound tag) {
         inventory.clear();
         Inventories.readNbt(tag, inventory);
-        if (tag.contains("CookingTimes", 11)) {
-            int[] cookingTimeRead = tag.getIntArray("CookingTimes");
+        if (tag.contains(TAG_KEY_COOKING_TIMES, 11)) {
+            int[] cookingTimeRead = tag.getIntArray(TAG_KEY_COOKING_TIMES);
             System.arraycopy(cookingTimeRead, 0, cookingTimes, 0, Math.min(cookingTotalTimes.length, cookingTimeRead.length));
         }
-        if (tag.contains("CookingTotalTimes", 11)) {
-            int[] cookingTotalTimeRead = tag.getIntArray("CookingTotalTimes");
+        if (tag.contains(TAG_KEY_COOKING_TOTAL_TIMES, 11)) {
+            int[] cookingTotalTimeRead = tag.getIntArray(TAG_KEY_COOKING_TOTAL_TIMES);
             System.arraycopy(cookingTotalTimeRead, 0, cookingTotalTimes, 0, Math.min(cookingTotalTimes.length, cookingTotalTimeRead.length));
         }
     }
@@ -71,8 +75,8 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         Inventories.writeNbt(tag, inventory, true);
-        tag.putIntArray("CookingTimes", cookingTimes);
-        tag.putIntArray("CookingTotalTimes", cookingTotalTimes);
+        tag.putIntArray(TAG_KEY_COOKING_TIMES, cookingTimes);
+        tag.putIntArray(TAG_KEY_COOKING_TOTAL_TIMES, cookingTotalTimes);
 
         return super.writeNbt(tag);
     }
@@ -165,12 +169,12 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     public Vec2f getStoveItemOffset(int index) {
-        final float X_OFFSET = .3f;
-        final float Y_OFFSET = .2f;
-        final Vec2f[] OFFSETS = {new Vec2f(X_OFFSET, Y_OFFSET), new Vec2f(.0f, Y_OFFSET), new Vec2f(-X_OFFSET, Y_OFFSET), new Vec2f(
-                X_OFFSET, -Y_OFFSET), new Vec2f(.0f, -Y_OFFSET), new Vec2f(-X_OFFSET, -Y_OFFSET),};
+        final float xOffset = .3f;
+        final float yOffset = .2f;
+        final Vec2f[] offsets = {new Vec2f(xOffset, yOffset), new Vec2f(.0f, yOffset), new Vec2f(-xOffset, yOffset), new Vec2f(
+                xOffset, -yOffset), new Vec2f(.0f, -yOffset), new Vec2f(-xOffset, -yOffset),};
 
-        return OFFSETS[index];
+        return offsets[index];
     }
 
     private void inventoryChanged() {
@@ -187,9 +191,9 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
                 ++cookingTimes[i];
                 if (cookingTimes[i] >= cookingTotalTimes[i]) {
                     if (world != null) {
-                        Inventory inventory = new SimpleInventory(itemstack);
-                        ItemStack result = world.getRecipeManager().getAllMatches(RecipeType.CAMPFIRE_COOKING, inventory, world).stream()
-                                .map(recipe -> recipe.craft(inventory)).findAny().orElse(itemstack);
+                        Inventory cookInventory = new SimpleInventory(itemstack);
+                        ItemStack result = world.getRecipeManager().getAllMatches(RecipeType.CAMPFIRE_COOKING, cookInventory, world).stream()
+                                .map(recipe -> recipe.craft(cookInventory)).findAny().orElse(itemstack);
                         if (!result.isEmpty()) {
                             ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + 1., pos.getZ() + .5, result.copy());
                             entity.setVelocity(MathUtils.RAND.nextGaussian() * (double) .01f, .1f,

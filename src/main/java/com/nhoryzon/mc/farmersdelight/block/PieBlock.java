@@ -35,8 +35,10 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class PieBlock extends Block {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty BITES = IntProperty.of("bites", 0, 3);
+    public static final int MAX_BITES = 4;
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.d, .0d, 2.d, 14.d, 4.d, 14.d);
 
@@ -67,7 +69,7 @@ public class PieBlock extends Block {
         if (Tags.KNIVES.contains(player.getMainHandStack().getItem())) {
             PieBlock pieBlock = (PieBlock) state.getBlock();
             ItemStack pieSlices = pieBlock.getPieSliceStack();
-            pieSlices.setCount(pieBlock.getMaxBites() - state.get(PieBlock.BITES));
+            pieSlices.setCount(MAX_BITES - state.get(PieBlock.BITES));
             ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, pieSlices));
         }
     }
@@ -120,7 +122,7 @@ public class PieBlock extends Block {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return getMaxBites() - state.get(BITES);
+        return MAX_BITES - state.get(BITES);
     }
 
     @Override
@@ -130,10 +132,6 @@ public class PieBlock extends Block {
 
     public ItemStack getPieSliceStack() {
         return new ItemStack(pieSlice);
-    }
-
-    public int getMaxBites() {
-        return 4;
     }
 
     protected ActionResult consumeBite(World world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -153,7 +151,7 @@ public class PieBlock extends Block {
             }
 
             int bites = state.get(BITES);
-            if (bites < getMaxBites() - 1) {
+            if (bites < MAX_BITES - 1) {
                 world.setBlockState(pos, state.with(BITES, bites + 1), 3);
             } else {
                 world.removeBlock(pos, false);
@@ -165,7 +163,7 @@ public class PieBlock extends Block {
 
     protected ActionResult cutSlice(World world, BlockPos pos, BlockState state) {
         int bites = state.get(BITES);
-        if (bites < getMaxBites() - 1) {
+        if (bites < MAX_BITES - 1) {
             world.setBlockState(pos, state.with(BITES, bites + 1), 3);
         } else {
             world.removeBlock(pos, false);
@@ -175,4 +173,5 @@ public class PieBlock extends Block {
 
         return ActionResult.SUCCESS;
     }
+
 }

@@ -30,7 +30,7 @@ public class HotCocoaItem extends MilkBottleItem {
         Set<StatusEffect> compatibleEffectList = user.getStatusEffects().stream().filter(this::canEffectInstanceBeRemovedByMilk).map(
                 StatusEffectInstance::getEffectType).collect(Collectors.toSet());
 
-        if (compatibleEffectList.size() > 0) {
+        if (!compatibleEffectList.isEmpty()) {
             compatibleEffectList.stream().skip(world.getRandom().nextInt(compatibleEffectList.size())).findFirst().ifPresent(
                     user::removeStatusEffect);
         }

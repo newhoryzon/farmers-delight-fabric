@@ -15,7 +15,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -56,7 +55,7 @@ public class StoveBlock extends BlockWithEntity {
     public static final BooleanProperty LIT = Properties.LIT;
 
     public StoveBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.BRICKS).breakByTool(FabricToolTags.PICKAXES).luminance(state -> state.get(Properties.LIT) ? 13 : 0));
+        super(FabricBlockSettings.copyOf(Blocks.BRICKS).breakByTool(FabricToolTags.PICKAXES).luminance(state -> Boolean.TRUE.equals(state.get(Properties.LIT)) ? 13 : 0));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, false));
     }
 
@@ -81,7 +80,7 @@ public class StoveBlock extends BlockWithEntity {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         Item usedItem = itemStack.getItem();
-        if (state.get(LIT)) {
+        if (Boolean.TRUE.equals(state.get(LIT))) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof StoveBlockEntity stoveBlockEntity) {
                 Optional<CampfireCookingRecipe> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
@@ -148,7 +147,7 @@ public class StoveBlock extends BlockWithEntity {
     @Override
     @Environment(value= EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(CampfireBlock.LIT)) {
+        if (Boolean.TRUE.equals(state.get(CampfireBlock.LIT))) {
             double dx = (double) pos.getX() + .5d;
             double dy = pos.getY();
             double dz = (double) pos.getZ() + .5d;

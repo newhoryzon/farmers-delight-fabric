@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.item.inventory;
 
+import com.nhoryzon.mc.farmersdelight.exception.SlotInvalidRangeException;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -95,6 +96,7 @@ public class ItemStackHandler implements ItemHandler {
 
     @Override
     public void markDirty() {
+        // Do nothing when the itemstack handler is marked as dirty
     }
 
     @Override
@@ -132,10 +134,8 @@ public class ItemStackHandler implements ItemHandler {
 
         boolean reachedLimit = stack.getCount() > limit;
 
-        if (!simulate) {
-            if (invItemStack.isEmpty()) {
-                inventory.set(slot, reachedLimit ? copyStackWithNewSize(stack, limit) : stack);
-            }
+        if (!simulate && invItemStack.isEmpty()) {
+            inventory.set(slot, reachedLimit ? copyStackWithNewSize(stack, limit) : stack);
         }
 
         return reachedLimit ? copyStackWithNewSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
@@ -186,9 +186,11 @@ public class ItemStackHandler implements ItemHandler {
     }
 
     protected void onInventoryLoaded() {
+        // Do nothing on basic itemstack handler when inventory is loaded
     }
 
     protected void onInventorySlotChanged(int slot) {
+        // Do nothing on basic itemstack handler when inventory slot is changed
     }
 
     public void setSize(int size) {
@@ -197,7 +199,7 @@ public class ItemStackHandler implements ItemHandler {
 
     protected void validateSlotIndex(int slot) {
         if (slot < 0 || slot >= inventory.size())
-            throw new RuntimeException("Slot " + slot + " not in valid range - [0," + inventory.size() + ")");
+            throw new SlotInvalidRangeException(slot, inventory.size());
     }
 
     protected int getStackLimit(int slot, ItemStack stack) {

@@ -44,8 +44,7 @@ public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior 
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
-        if (block instanceof CuttingBoardBlock && blockEntity instanceof CuttingBoardBlockEntity) {
-            CuttingBoardBlockEntity cuttingBoardBlockEntity = (CuttingBoardBlockEntity) blockEntity;
+        if (block instanceof CuttingBoardBlock && blockEntity instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity) {
             ItemStack boardItem = cuttingBoardBlockEntity.getStoredItem().copy();
             if (!boardItem.isEmpty() && cuttingBoardBlockEntity.processItemUsingTool(stack, null)) {
                 CuttingBoardBlock.spawnCuttingParticles(world, blockPos, boardItem, 5);

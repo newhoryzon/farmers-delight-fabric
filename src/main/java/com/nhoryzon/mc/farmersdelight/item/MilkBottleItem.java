@@ -29,7 +29,7 @@ public class MilkBottleItem extends ConsumableItem {
     public void affectConsumer(ItemStack stack, World world, LivingEntity user) {
         Collection<StatusEffect> activeStatusEffectList = user.getActiveStatusEffects().keySet();
 
-        if (activeStatusEffectList.size() > 0) {
+        if (!activeStatusEffectList.isEmpty()) {
             activeStatusEffectList.stream().skip(world.getRandom().nextInt(activeStatusEffectList.size())).findFirst().ifPresent(user::removeStatusEffect);
         }
     }

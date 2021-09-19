@@ -117,17 +117,17 @@ public class FarmersDelightMod implements ModInitializer {
             BlockPos pos = hitResult.getBlockPos();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             ItemStack heldItem = player.getStackInHand(hand);
-            if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()) {
-                if (heldItem.getItem() instanceof ToolItem || heldItem.getItem() instanceof TridentItem ||
-                        heldItem.getItem() instanceof ShearsItem) {
-                    boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.getAbilities().creativeMode ? heldItem.copy() : heldItem);
+            if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()
+                    && (heldItem.getItem() instanceof ToolItem
+                        || heldItem.getItem() instanceof TridentItem
+                        || heldItem.getItem() instanceof ShearsItem)) {
+                boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.getAbilities().creativeMode ? heldItem.copy() : heldItem);
 
-                    if (success) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
-                                .8f);
+                if (success) {
+                    world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
+                            .8f);
 
-                        return ActionResult.SUCCESS;
-                    }
+                    return ActionResult.SUCCESS;
                 }
             }
 

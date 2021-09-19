@@ -1,7 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.nhoryzon.mc.farmersdelight.entity.block.BasketBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
@@ -136,7 +135,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
+        if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
@@ -180,7 +179,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
@@ -195,7 +194,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     private void updateState(World world, BlockPos pos, BlockState state) {
         boolean isPowered = !world.isReceivingRedstonePower(pos);
-        if (isPowered != state.get(ENABLED)) {
+        if (isPowered != Boolean.TRUE.equals(state.get(ENABLED))) {
             world.setBlockState(pos, state.with(ENABLED, isPowered), BlockStateUtils.BLOCK_UPDATE);
 
         }

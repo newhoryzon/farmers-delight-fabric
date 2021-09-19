@@ -14,7 +14,7 @@ public class PigEntityBreedingMixin {
 
     @Inject(method = "isBreedingItem", at = @At("TAIL"), cancellable = true)
     private void isBreedingItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue()) {
+        if (!Boolean.TRUE.equals(cir.getReturnValue())) {
             cir.setReturnValue(Ingredient.ofItems(
                     ItemsRegistry.CABBAGE.get(),
                     ItemsRegistry.TOMATO.get()).test(stack));

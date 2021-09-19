@@ -9,6 +9,7 @@ import com.nhoryzon.mc.farmersdelight.recipe.CookingPotRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
@@ -41,6 +42,10 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class CookingPotBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Nameable {
+
+    public static final String TAG_KEY_COOK_TIME = "CookTime";
+    public static final String TAG_KEY_COOK_TIME_TOTAL = "CookTimeTotal";
+
     public static final int MEAL_DISPLAY_SLOT = 6;
     public static final int CONTAINER_SLOT = 7;
     public static final int OUTPUT_SLOT = 8;
@@ -81,7 +86,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
 
         @Override
         protected void onInventoryLoaded() {
-
+            // Do nothing when inventory is loaded.
         }
 
         @Override
@@ -128,33 +133,33 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     private void fromTag(NbtCompound tag) {
-        itemHandler.fromTag(tag.getCompound("Inventory"));
-        cookTime = tag.getInt("CookTime");
-        cookTimeTotal = tag.getInt("CookTimeTotal");
-        container = ItemStack.fromNbt(tag.getCompound("Container"));
-        if (tag.contains("CustomName", 8)) {
-            customName = Text.Serializer.fromJson(tag.getString("CustomName"));
+        itemHandler.fromTag(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
+        cookTime = tag.getInt(TAG_KEY_COOK_TIME);
+        cookTimeTotal = tag.getInt(TAG_KEY_COOK_TIME_TOTAL);
+        container = ItemStack.fromNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_CONTAINER));
+        if (tag.contains(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, 8)) {
+            customName = Text.Serializer.fromJson(tag.getString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME));
         }
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.putInt("CookTime", cookTime);
-        tag.putInt("CookTimeTotal", cookTimeTotal);
-        tag.put("Container", container.writeNbt(new NbtCompound()));
+        tag.putInt(TAG_KEY_COOK_TIME, cookTime);
+        tag.putInt(TAG_KEY_COOK_TIME_TOTAL, cookTimeTotal);
+        tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
         if (customName != null) {
-            tag.putString("CustomName", Text.Serializer.toJson(customName));
+            tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
-        tag.put("Inventory", itemHandler.toTag());
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
 
         return tag;
     }
 
     public NbtCompound writeItems(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.put("Container", container.writeNbt(new NbtCompound()));
-        tag.put("Inventory", itemHandler.toTag());
+        tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
 
         return tag;
     }
@@ -167,20 +172,22 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         ItemStackHandler drops = new ItemStackHandler(INVENTORY_SIZE) {
             @Override
             protected void onInventoryLoaded() {
+                // Nothing to do on drops when inventory is loaded
             }
 
             @Override
             protected void onInventorySlotChanged(int slot) {
+                // Nothing to do on drops when inventory slot is changed
             }
         };
         for (int i = 0; i < INVENTORY_SIZE; ++i) {
             drops.setStack(i, i == MEAL_DISPLAY_SLOT ? itemHandler.getStack(i) : ItemStack.EMPTY);
         }
         if (customName != null) {
-            tag.putString("CustomName", Text.Serializer.toJson(customName));
+            tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
-        tag.put("Container", container.writeNbt(new NbtCompound()));
-        tag.put("Inventory", drops.toTag());
+        tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, drops.toTag());
 
         return tag;
     }

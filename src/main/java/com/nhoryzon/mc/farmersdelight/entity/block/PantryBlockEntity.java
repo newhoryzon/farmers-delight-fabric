@@ -51,6 +51,7 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
             }
 
             protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+                // Nothing to do when viewer count is updated
             }
 
             protected boolean isPlayerViewing(PlayerEntity player) {

@@ -34,8 +34,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFillable {
+
     public static final IntProperty AGE = Properties.AGE_3;
     public static final BooleanProperty SUPPORTING = BooleanProperty.of("supporting");
+    public static final int MAX_AGE = 3;
 
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[] {
             Block.createCuboidShape(3.d, .0d, 3.d, 13.d, 8.d, 13.d),
@@ -66,7 +68,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         int ageGrowth = Math.min(getAge(state) + getBonemealAgeIncrease(world), 7);
-        if (ageGrowth <= getMaxAge()) {
+        if (ageGrowth <= MAX_AGE) {
             world.setBlockState(pos, state.with(AGE, ageGrowth));
         } else {
             BlockState top = world.getBlockState(pos.up());
@@ -77,9 +79,9 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
                 }
             } else {
                 RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
-                int remainingGrowth = ageGrowth - getMaxAge() - 1;
+                int remainingGrowth = ageGrowth - MAX_AGE - 1;
                 if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
-                    world.setBlockState(pos, state.with(AGE, getMaxAge()));
+                    world.setBlockState(pos, state.with(AGE, MAX_AGE));
                     world.setBlockState(pos.up(), riceUpper.getDefaultState().with(RiceUpperCropBlock.RICE_AGE, remainingGrowth), 2);
                 }
             }
@@ -152,10 +154,10 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
         }
         if (world.getLightLevel(pos.up(), 0) >= 6) {
             int age = getAge(state);
-            if (age <= getMaxAge()) {
+            if (age <= MAX_AGE) {
                 float chance = 10;
                 if (random.nextInt((int) (25.f / chance) + 1) == 0) {
-                    if (age == getMaxAge()) {
+                    if (age == MAX_AGE) {
                         RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
                         if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
                             world.setBlockState(pos.up(), riceUpper.getDefaultState());
@@ -177,10 +179,6 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
         return topState.isOf(BlocksRegistry.RICE_UPPER_CROP.get());
     }
 
-    public int getMaxAge() {
-        return 3;
-    }
-
     public BlockState withAge(int age) {
         return getDefaultState().with(AGE, age);
     }
@@ -192,4 +190,5 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     protected int getBonemealAgeIncrease(World world) {
         return MathHelper.nextInt(world.getRandom(), 1, 4);
     }
+
 }
