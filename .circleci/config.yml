@@ -110,7 +110,7 @@ jobs:
       - run: git remote set-url origin ${CIRCLE_REPOSITORY_URL}
       - run: git config --global user.email "ci-pipeline@newhoryzon.com"
       - run: git config --global user.name "CI Pipeline"
-      - run: git checkout --force develop
+      - run: git checkout --force mc/1.16
       - run: gradle clean release
           -Prelease_commit_prefix="[skip ci][gradle-release-plugin] prepare release"
           -Pdevelopment_commit_prefix="[skip ci][gradle-release-plugin] prepare for next development iteration"
