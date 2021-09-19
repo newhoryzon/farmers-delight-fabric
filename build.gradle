@@ -51,9 +51,9 @@ release {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
 	tagTemplate = "${project.minecraft_version}".concat('-$version')
-	pushReleaseVersionBranch = 'master'
+	pushReleaseVersionBranch = 'mc/1.16'
     git {
-        requireBranch = /master|develop/
+        requireBranch = /mc\/1.16/
     }
 }
 

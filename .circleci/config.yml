@@ -10,13 +10,13 @@ workflows:
       - code_analysis:
           filters:
             branches:
-              only: /master|develop/
+              only: /mc\/1.16/
       - release:
           requires:
             - build_n_test
           filters:
             branches:
-              only: /master/
+              only: /mc\/1.16/
       - deploy:
           requires:
             - build_n_test
