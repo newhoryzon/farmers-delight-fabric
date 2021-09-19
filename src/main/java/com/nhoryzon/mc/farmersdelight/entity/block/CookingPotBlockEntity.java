@@ -18,7 +18,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
@@ -113,37 +113,37 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         return writeItems(tag);
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         fromTag(getCachedState(), tag);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
+    public void fromTag(BlockState state, NbtCompound tag) {
         super.fromTag(state, tag);
         fromTag(tag);
     }
 
-    private void fromTag(CompoundTag tag) {
+    private void fromTag(NbtCompound tag) {
         itemHandler.fromTag(tag.getCompound("Inventory"));
         cookTime = tag.getInt("CookTime");
         cookTimeTotal = tag.getInt("CookTimeTotal");
-        container = ItemStack.fromTag(tag.getCompound("Container"));
+        container = ItemStack.fromNbt(tag.getCompound("Container"));
         if (tag.contains("CustomName", 8)) {
             customName = Text.Serializer.fromJson(tag.getString("CustomName"));
         }
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putInt("CookTime", cookTime);
         tag.putInt("CookTimeTotal", cookTimeTotal);
-        tag.put("Container", container.toTag(new CompoundTag()));
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         if (customName != null) {
             tag.putString("CustomName", Text.Serializer.toJson(customName));
         }
@@ -152,15 +152,15 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         return tag;
     }
 
-    public CompoundTag writeItems(CompoundTag tag) {
-        super.toTag(tag);
-        tag.put("Container", container.toTag(new CompoundTag()));
+    public NbtCompound writeItems(NbtCompound tag) {
+        super.writeNbt(tag);
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         tag.put("Inventory", itemHandler.toTag());
 
         return tag;
     }
 
-    public CompoundTag writeMeal(CompoundTag tag) {
+    public NbtCompound writeMeal(NbtCompound tag) {
         if (getMeal().isEmpty()) {
             return tag;
         }
@@ -180,7 +180,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         if (customName != null) {
             tag.putString("CustomName", Text.Serializer.toJson(customName));
         }
-        tag.put("Container", container.toTag(new CompoundTag()));
+        tag.put("Container", container.writeNbt(new NbtCompound()));
         tag.put("Inventory", drops.toTag());
 
         return tag;

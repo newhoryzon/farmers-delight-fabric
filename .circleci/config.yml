@@ -29,7 +29,7 @@ jobs:
   code_analysis:
     name: Code Analysis
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: cimg/openjdk:11.0
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -53,7 +53,7 @@ jobs:
   build_n_test:
     name: Build and Test
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: cimg/openjdk:11.0
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -87,7 +87,7 @@ jobs:
   release:
     name: Release
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: cimg/openjdk:11.0
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -117,7 +117,7 @@ jobs:
   deploy:
     name: Deploy jar
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: cimg/openjdk:11.0
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m

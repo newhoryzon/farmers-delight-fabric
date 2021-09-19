@@ -12,7 +12,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -202,10 +202,10 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, content);
+            Inventories.writeNbt(tag, content);
         }
         tag.putInt("TransferCooldown", transferCooldown);
 
@@ -213,11 +213,11 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements B
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
+    public void fromTag(BlockState state, NbtCompound tag) {
         super.fromTag(state, tag);
         content = DefaultedList.ofSize(size(), ItemStack.EMPTY);
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, content);
+            Inventories.readNbt(tag, content);
         }
         transferCooldown = tag.getInt("TransferCooldown");
     }

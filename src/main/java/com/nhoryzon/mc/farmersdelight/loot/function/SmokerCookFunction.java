@@ -22,7 +22,7 @@ public class SmokerCookFunction extends ConditionalLootFunction {
             return stack;
         } else {
             Optional<SmokingRecipe> recipe = context.getWorld().getRecipeManager().listAllOfType(RecipeType.SMOKING).stream()
-                    .filter(smokingRecipe -> smokingRecipe.getPreviewInputs().get(0).test(stack)).findFirst();
+                    .filter(smokingRecipe -> smokingRecipe.getIngredients().get(0).test(stack)).findFirst();
             if (recipe.isPresent()) {
                 ItemStack result = recipe.get().getOutput().copy();
                 result.setCount(result.getCount() * stack.getCount());

@@ -92,7 +92,7 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public DefaultedList<Ingredient> getPreviewInputs() {
+    public DefaultedList<Ingredient> getIngredients() {
         return ingredientList;
     }
 

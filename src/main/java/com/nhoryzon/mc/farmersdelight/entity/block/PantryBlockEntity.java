@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
@@ -91,21 +91,21 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, content);
+            Inventories.writeNbt(tag, content);
         }
 
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
+    public void fromTag(BlockState state, NbtCompound tag) {
         super.fromTag(state, tag);
         content = DefaultedList.ofSize(size(), ItemStack.EMPTY);
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, content);
+            Inventories.readNbt(tag, content);
         }
     }
 

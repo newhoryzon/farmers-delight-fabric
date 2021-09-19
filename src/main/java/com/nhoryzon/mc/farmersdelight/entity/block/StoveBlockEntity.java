@@ -13,7 +13,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -51,14 +51,14 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
+    public void fromTag(BlockState state, NbtCompound tag) {
         super.fromTag(state, tag);
         fromTag(tag);
     }
 
-    private void fromTag(CompoundTag tag) {
+    private void fromTag(NbtCompound tag) {
         inventory.clear();
-        Inventories.fromTag(tag, inventory);
+        Inventories.readNbt(tag, inventory);
         if (tag.contains("CookingTimes", 11)) {
             int[] cookingTimeRead = tag.getIntArray("CookingTimes");
             System.arraycopy(cookingTimeRead, 0, cookingTimes, 0, Math.min(cookingTotalTimes.length, cookingTimeRead.length));
@@ -70,22 +70,22 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        Inventories.toTag(tag, inventory, true);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        Inventories.writeNbt(tag, inventory, true);
         tag.putIntArray("CookingTimes", cookingTimes);
         tag.putIntArray("CookingTotalTimes", cookingTotalTimes);
 
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         fromTag(tag);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return super.toTag(Inventories.toTag(tag, inventory, true));
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return super.writeNbt(Inventories.writeNbt(tag, inventory, true));
     }
 
     @Override

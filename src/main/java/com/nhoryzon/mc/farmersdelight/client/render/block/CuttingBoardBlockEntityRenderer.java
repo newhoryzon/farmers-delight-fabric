@@ -11,11 +11,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<CuttingBoardBlockEntity> {
@@ -55,10 +55,10 @@ public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<Cutting
 
         // Rotate item to face the cutting board's front side
         float f = -direction.asRotation();
-        matrixStackIn.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
 
         // Rotate item flat on the cutting board. Use X and Y from now on
-        matrixStackIn.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.f));
+        matrixStackIn.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.f));
 
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);
@@ -70,7 +70,7 @@ public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<Cutting
 
         // Rotate block to face the cutting board's front side
         float f = -direction.asRotation();
-        matrixStackIn.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
 
         // Resize the block
         matrixStackIn.scale(.8f, .8f, .8f);
@@ -82,10 +82,10 @@ public class CuttingBoardBlockEntityRenderer extends BlockEntityRenderer<Cutting
 
         // Rotate item to face the cutting board's front side
         float f = -direction.asRotation();
-        matrixStackIn.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
 
         // Rotate item to be carved on the surface, A little less so for hoes and pickaxes.
-        matrixStackIn.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(
+        matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
                 itemStack.getItem() instanceof PickaxeItem || itemStack.getItem() instanceof HoeItem ? 225.f : 180.f));
 
         // Resize the item

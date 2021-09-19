@@ -11,11 +11,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class StoveBlockEntityRenderer extends BlockEntityRenderer<StoveBlockEntity> {
@@ -37,8 +37,8 @@ public class StoveBlockEntityRenderer extends BlockEntityRenderer<StoveBlockEnti
                 matrices.translate(.5d, 1.02d, .5d);
 
                 float angle = -direction.asRotation();
-                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
-                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.f));
+                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
+                matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.f));
 
                 Vec2f itemOffset = entity.getStoveItemOffset(i);
                 matrices.translate(itemOffset.x, itemOffset.y, .0d);
