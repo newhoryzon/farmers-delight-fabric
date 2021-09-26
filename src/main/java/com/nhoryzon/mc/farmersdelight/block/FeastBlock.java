@@ -64,11 +64,12 @@ public class FeastBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient() && takeServing(world, pos, state, player, hand).isAccepted()) {
+        ActionResult actionResult = takeServing(world, pos, state, player, hand);
+        if (world.isClient() && actionResult.isAccepted()) {
             return ActionResult.SUCCESS;
         }
 
-        return takeServing(world, pos, state, player, hand);
+        return actionResult;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class FeastBlock extends Block {
                 }
                 world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
                 return ActionResult.SUCCESS;
-            } else {
+            } else if (world.isClient()) {
                 player.sendMessage(FarmersDelightMod.i18n("block.feast.use_container", servingContainerItem.getName()), true);
             }
         }
