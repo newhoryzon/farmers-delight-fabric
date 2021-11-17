@@ -93,13 +93,13 @@ publishing {
 
 	repositories {
 		maven {
-			def snapshotsUrl = 'https://nexus.beaucoralk.fr/repository/maven-snapshots/'
-			def releasesUrl = 'https://nexus.beaucoralk.fr/repository/maven-releases/'
-			url = version.endsWith('-SNAPSHOT') ? snapshotsUrl : releasesUrl
-			if (project.hasProperty("publish_maven_repo_username") && project.hasProperty("publish_maven_repo_password")) {
-				credentials {
-					username = project.publish_maven_repo_username
-					password = project.publish_maven_repo_password
+			if (project.hasProperty("publish_maven_repo_releases_url") && project.hasProperty("publish_maven_repo_snapshots_url")) {
+				url = version.endsWith('-SNAPSHOT') ? project.publish_maven_repo_snapshots_url : project.publish_maven_repo_releases_url
+				if (project.hasProperty("publish_maven_repo_username") && project.hasProperty("publish_maven_repo_password")) {
+					credentials {
+						username = project.publish_maven_repo_username
+						password = project.publish_maven_repo_password
+					}
 				}
 			}
 		}
@@ -109,7 +109,9 @@ publishing {
 sonarqube {
 	properties {
 		if (project.hasProperty('git_branch')) {
-			property 'sonar.projectName', "${project.name}.${project.git_branch}"
+			var git_branch_valid = project.git_branch.replaceAll(/((?![a-z0-9\-\_\.\:]).)+/, '-')
+			property "sonar.projectKey", "${group}:${archivesBaseName}:${git_branch_valid}"
+			property "sonar.projectName", "${archivesBaseName}.${project.git_branch}"
 		}
 	}
 }
