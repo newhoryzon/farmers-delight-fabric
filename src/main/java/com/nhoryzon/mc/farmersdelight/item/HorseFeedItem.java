@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Lists;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -35,9 +36,7 @@ public class HorseFeedItem extends LivingEntityFeedItem {
 
     @Override
     public boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand) {
-        if (entity instanceof HorseEntity) {
-            HorseEntity horse = (HorseEntity) entity;
-
+        if (entity instanceof HorseEntity horse && entity.getType().isIn(Tags.HORSE_FEED_USERS)) {
             return horse.isAlive() && horse.isTame();
         }
 

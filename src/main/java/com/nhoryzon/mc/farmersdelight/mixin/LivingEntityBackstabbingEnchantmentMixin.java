@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin({LivingEntity.class, PlayerEntity.class})
-public abstract class LivingEntityBackstabbingEnchantmentMixin {
+public class LivingEntityBackstabbingEnchantmentMixin {
 
     @ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
     private float takeDamage(float amount, DamageSource source, float originalAmount) {
         Entity attacker = source.getAttacker();
-        if (attacker instanceof PlayerEntity) {
-            ItemStack weapon = ((PlayerEntity) attacker).getMainHandStack();
+        if (attacker instanceof PlayerEntity player) {
+            ItemStack weapon = player.getMainHandStack();
             int level = EnchantmentHelper.getLevel(EnchantmentsRegistry.BACKSTABBING.get(), weapon);
             if (level > 0 && BackstabbingEnchantment.isLookingBehindTarget((LivingEntity)(Object)this, source.getPosition())) {
                 World world = attacker.getEntityWorld();

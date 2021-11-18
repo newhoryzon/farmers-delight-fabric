@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Lists;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -37,9 +38,7 @@ public class DogFoodItem extends LivingEntityFeedItem {
 
     @Override
     public boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand) {
-        if (entity instanceof WolfEntity) {
-            WolfEntity wolf = (WolfEntity) entity;
-
+        if (entity instanceof WolfEntity wolf && entity.getType().isIn(Tags.DOG_FOOD_USERS)) {
             return wolf.isAlive() && wolf.isTamed();
         }
 

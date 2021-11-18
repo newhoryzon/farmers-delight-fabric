@@ -118,28 +118,37 @@ public class FeastBlock extends Block {
             return ActionResult.SUCCESS;
         }
 
-        ItemStack servingItemStack = getServingStack();
         ItemStack heldItem = player.getStackInHand(hand);
 
         if (servings > 0 && servingItem.hasRecipeRemainder()) {
             Item servingContainerItem = servingItem.getRecipeRemainder();
             if (heldItem.getItem() == servingContainerItem) {
                 world.setBlockState(pos, state.with(SERVINGS, servings - 1), 3);
-                if (!player.getAbilities().creativeMode) {
-                    heldItem.decrement(1);
-                }
-                if (!player.getInventory().insertStack(servingItemStack)) {
-                    player.dropItem(servingItemStack, false);
-                }
-                if (world.getBlockState(pos).get(SERVINGS) == 0 && !hasLeftovers) {
-                    world.removeBlock(pos, false);
-                }
-                world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
+                serveToPlayerFromHand(world, pos, player, hand);
+
                 return ActionResult.SUCCESS;
             } else {
                 player.sendMessage(FarmersDelightMod.i18n("block.feast.use_container", servingContainerItem.getName()), true);
             }
         }
+
         return ActionResult.PASS;
     }
+
+    private void serveToPlayerFromHand(World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        ItemStack servingItemStack = getServingStack();
+
+        if (!player.getAbilities().creativeMode) {
+            player.getStackInHand(hand).decrement(1);
+        }
+        if (!player.getInventory().insertStack(servingItemStack)) {
+            player.dropItem(servingItemStack, false);
+        }
+        if (world.getBlockState(pos).get(SERVINGS) == 0 && !hasLeftovers) {
+            world.removeBlock(pos, false);
+        }
+
+        world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
+    }
+
 }

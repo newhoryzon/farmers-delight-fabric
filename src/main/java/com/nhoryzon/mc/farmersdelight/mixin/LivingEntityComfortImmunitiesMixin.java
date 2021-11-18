@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityComfortImmunitiesMixin {
+
     @Shadow public abstract Map<StatusEffect, StatusEffectInstance> getActiveStatusEffects();
 
     @Inject(at = @At("HEAD"), method = "canHaveStatusEffect", cancellable = true)
@@ -23,4 +24,5 @@ public abstract class LivingEntityComfortImmunitiesMixin {
             callbackInfoReturnable.setReturnValue(false);
         }
     }
+
 }

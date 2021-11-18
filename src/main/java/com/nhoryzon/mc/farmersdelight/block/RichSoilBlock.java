@@ -25,6 +25,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.Set;
 
 public class RichSoilBlock extends Block {
     public static final int COLONY_FORMING_LIGHT_LEVEL = 12;
@@ -63,25 +64,26 @@ public class RichSoilBlock extends Block {
             }
 
             // Convert mushrooms to colonies if it's dark enough
-            if (aboveBlock == Blocks.BROWN_MUSHROOM) {
-                if (world.getLightLevel(pos.up(), 0) <= COLONY_FORMING_LIGHT_LEVEL) {
-                    world.setBlockState(pos.up(), BlocksRegistry.BROWN_MUSHROOM_COLONY.get().getDefaultState());
-                }
-                return;
-            }
-            if (aboveBlock == Blocks.RED_MUSHROOM) {
-                if (world.getLightLevel(pos.up(), 0) <= COLONY_FORMING_LIGHT_LEVEL) {
-                    world.setBlockState(pos.up(), BlocksRegistry.RED_MUSHROOM_COLONY.get().getDefaultState());
-                }
-                return;
-            }
-
-            // If all else fails, and it's a plant, give it a growth boost now and then!
-            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f &&
-                    growable.isFertilizable(world, pos.up(), aboveState, false)) {
+            if (!tryConvertToColonies(world, pos, aboveBlock) && (aboveBlock instanceof Fertilizable growable
+                    && MathUtils.RAND.nextFloat() <= .2f && growable.isFertilizable(world, pos.up(), aboveState, false))) {
                 growable.grow(world, world.getRandom(), pos.up(), aboveState);
                 world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);
             }
         }
     }
+
+    private boolean tryConvertToColonies(World world, BlockPos pos, Block block) {
+        if (!Set.of(Blocks.BROWN_MUSHROOM, Blocks.RED_MUSHROOM).contains(block)) {
+            return false;
+        }
+
+        BlocksRegistry colonyBlock =
+                (block == Blocks.BROWN_MUSHROOM) ? BlocksRegistry.BROWN_MUSHROOM_COLONY : BlocksRegistry.RED_MUSHROOM_COLONY;
+        if (world.getLightLevel(pos.up(), 0) <= COLONY_FORMING_LIGHT_LEVEL) {
+            world.setBlockState(pos.up(), colonyBlock.get().getDefaultState());
+        }
+
+        return true;
+    }
+
 }

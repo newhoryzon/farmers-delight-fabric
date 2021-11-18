@@ -78,7 +78,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         if (!inventoryIn.isValid(index, stack)) {
             return false;
         } else {
-            return !(inventoryIn instanceof SidedInventory) || ((SidedInventory) inventoryIn).canInsert(index, stack, null);
+            return !(inventoryIn instanceof SidedInventory sidedInventory) || sidedInventory.canInsert(index, stack, null);
         }
     }
 
@@ -143,7 +143,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         return world == null ? new ArrayList<>() : basket.getFacingCollectionArea(facingIndex).getBoundingBoxes().stream()
                 .flatMap(boundingBoxe -> world.getEntitiesByClass(ItemEntity.class,
                         boundingBoxe.offset(basket.getHopperX() - .5d, basket.getHopperY() - .5d, basket.getHopperZ() - .5d),
-                        EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
+                        EntityPredicates.VALID_ENTITY).stream()).toList();
     }
 
     public BasketBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -190,6 +190,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         return getPos().getZ() + .5d;
     }
 
+    @SuppressWarnings("unused")
     public static void tick(World world, BlockPos pos, BlockState state, BasketBlockEntity blockEntity) {
         if (world != null && !world.isClient()) {
             --blockEntity.transferCooldown;

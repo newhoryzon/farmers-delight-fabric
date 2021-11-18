@@ -1,6 +1,5 @@
 package com.nhoryzon.mc.farmersdelight.effect;
 
-import com.google.common.collect.Sets;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
@@ -10,7 +9,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import java.util.Set;
 
 public class ComfortEffect extends StatusEffect {
-    public static final Set<StatusEffect> COMFORT_IMMUNITIES = Sets.newHashSet(StatusEffects.SLOWNESS, StatusEffects.WEAKNESS, StatusEffects.HUNGER);
+    public static final Set<StatusEffect> COMFORT_IMMUNITIES = Set.of(StatusEffects.SLOWNESS, StatusEffects.WEAKNESS, StatusEffects.HUNGER);
 
     public ComfortEffect() {
         super(StatusEffectCategory.BENEFICIAL, 0);
