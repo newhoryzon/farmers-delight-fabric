@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Sets;
+import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,9 +28,11 @@ import net.minecraft.world.World;
 import java.util.Set;
 
 public class KnifeItem extends MiningToolItem {
+    public static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Sets.newHashSet(Enchantments.SHARPNESS, Enchantments.SMITE,
+            Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, EnchantmentsRegistry.BACKSTABBING.get());
+    public static final Set<Enchantment> DENIED_ENCHANTMENTS = Sets.newHashSet(Enchantments.FORTUNE);
+
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Sets.newHashSet(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
-    private static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Sets.newHashSet(Enchantments.SHARPNESS, Enchantments.SMITE,
-            Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING);
 
     public KnifeItem(ToolMaterial material, Settings settings) {
         super(.5f, -1.8f, material, Tags.KNIVES_CUTTABLE, settings);
