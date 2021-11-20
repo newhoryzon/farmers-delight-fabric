@@ -1,7 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.world.feature;
 
 import com.mojang.serialization.Codec;
-import com.nhoryzon.mc.farmersdelight.block.WildRiceCropBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

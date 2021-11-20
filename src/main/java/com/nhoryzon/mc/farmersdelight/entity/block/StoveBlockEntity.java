@@ -193,8 +193,8 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
                                 .map(recipe -> recipe.craft(cookInventory)).findAny().orElse(itemstack);
                         if (!result.isEmpty()) {
                             ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + 1., pos.getZ() + .5, result.copy());
-                            entity.setVelocity(MathUtils.RAND.nextGaussian() * (double) .01f, .1f,
-                                    MathUtils.RAND.nextGaussian() * (double) .01f);
+                            entity.setVelocity(MathUtils.RAND.nextGaussian() * .01f, .1f,
+                                    MathUtils.RAND.nextGaussian() * .01f);
                             world.spawnEntity(entity);
                         }
                     }
