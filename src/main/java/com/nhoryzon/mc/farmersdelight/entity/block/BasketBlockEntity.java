@@ -5,7 +5,6 @@ import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -29,8 +28,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class BasketBlockEntity extends LootableContainerBlockEntity implements Hopper {
 

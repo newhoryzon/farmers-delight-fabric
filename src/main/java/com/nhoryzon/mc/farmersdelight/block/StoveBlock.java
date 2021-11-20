@@ -51,6 +51,7 @@ import java.util.Optional;
 import java.util.Random;
 
 public class StoveBlock extends BlockWithEntity {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = Properties.LIT;
 
@@ -186,9 +187,8 @@ public class StoveBlock extends BlockWithEntity {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof StoveBlockEntity) {
-                ItemScatterer.spawn(world, pos, ((StoveBlockEntity) blockEntity).getInventory());
+            if (world.getBlockEntity(pos) instanceof StoveBlockEntity stoveBlockEntity) {
+                ItemScatterer.spawn(world, pos, stoveBlockEntity.getInventory());
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
@@ -202,4 +202,5 @@ public class StoveBlock extends BlockWithEntity {
         double dz = pos.getZ() + .5d;
         world.playSound(dx, dy, dz, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, .5f, 2.6f, false);
     }
+
 }

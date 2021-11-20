@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class PantryBlock extends InventoryBlockWithEntity implements Waterloggable {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = Properties.OPEN;
 
@@ -54,19 +55,15 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof PantryBlockEntity) {
-            ((PantryBlockEntity) blockEntity).tick();
+        if (world.getBlockEntity(pos) instanceof PantryBlockEntity pantryBlockEntity) {
+            pantryBlockEntity.tick();
         }
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof PantryBlockEntity) {
-                ((PantryBlockEntity) blockEntity).setCustomName(itemStack.getName());
-            }
+        if (itemStack.hasCustomName() && world.getBlockEntity(pos) instanceof PantryBlockEntity pantryBlockEntity) {
+            pantryBlockEntity.setCustomName(itemStack.getName());
         }
     }
 
@@ -84,11 +81,8 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof PantryBlockEntity) {
-                player.openHandledScreen((PantryBlockEntity) blockEntity);
-            }
+        if (!world.isClient() && world.getBlockEntity(pos) instanceof PantryBlockEntity pantryBlockEntity) {
+            player.openHandledScreen(pantryBlockEntity);
         }
 
         return ActionResult.SUCCESS;
@@ -113,4 +107,5 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
+
 }

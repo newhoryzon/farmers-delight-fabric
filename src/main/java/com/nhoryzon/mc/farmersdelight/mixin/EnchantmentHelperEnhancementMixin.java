@@ -1,7 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.mixin;
 
 import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;

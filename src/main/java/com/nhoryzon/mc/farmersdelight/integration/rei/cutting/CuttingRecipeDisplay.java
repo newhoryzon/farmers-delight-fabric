@@ -12,7 +12,6 @@ import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class CuttingRecipeDisplay extends BasicDisplay {
@@ -20,8 +19,7 @@ public class CuttingRecipeDisplay extends BasicDisplay {
     private final EntryIngredient toolInput;
 
     public CuttingRecipeDisplay(CuttingBoardRecipe recipe) {
-        super(EntryIngredients.ofIngredients(recipe.getIngredients()),
-                recipe.getResultList().stream().map(EntryIngredients::of).collect(Collectors.toList()));
+        super(EntryIngredients.ofIngredients(recipe.getIngredients()), recipe.getResultList().stream().map(EntryIngredients::of).toList());
         toolInput = EntryIngredients.ofIngredient(recipe.getTool());
     }
 

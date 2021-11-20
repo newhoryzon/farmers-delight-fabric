@@ -16,16 +16,15 @@ public class RecipeMatcher {
      * Will return null in any of these cases:
      *   input/test lengths don't match. This is only for matching paired outputs.
      *   any input doesn't match a test
-     *   any test doesn't match a input
+     *   any test doesn't match an input
      *   If we are unable to determine a proper pair
      *
      * @param inputs list of recipe that should be tested
      * @param tests list of predicate applied to the inputs to find which matches
      * @param <T> the recipe type
-     * @return An array mapping inputs to tests. ret[x] = y means input[x] = test[y]
+     * @return An array mapping inputs to test. ret[x] = y means input[x] = test[y]
      */
-    public static <T> int[] findMatches(List<T> inputs, List<? extends Predicate<T>> tests)
-    {
+    public static <T> int[] findMatches(List<T> inputs, List<? extends Predicate<T>> tests) {
         int elements = inputs.size();
         if (elements != tests.size())
             return null; // There will not be a 1:1 mapping of inputs -> tests
@@ -36,26 +35,23 @@ public class RecipeMatcher {
 
         // [UnusedInputs] [UnusedIngredients] [IngredientMatchMask]...
         BitSet data = new BitSet((elements + 2) * elements);
-        for (int x = 0; x < elements; x++)
-        {
+        for (int x = 0; x < elements; x++) {
             int matched = 0;
             int offset = (x + 2) * elements;
             Predicate<T> test = tests.get(x);
 
-            for (int y = 0; y < elements; y++)
-            {
+            for (int y = 0; y < elements; y++) {
                 if (data.get(y))
                     continue;
 
-                if (test.test(inputs.get(y)))
-                {
+                if (test.test(inputs.get(y))) {
                     data.set(offset + y);
                     matched++;
                 }
             }
 
             if (matched == 0)
-                return null; //We have an test that matched non of the inputs
+                return null; //We have a test that matched none of the inputs
 
             if (matched == 1 && !claim(ret, data, x, elements)) {
                 return null; //We failed to claim this index, which means it caused something else to go to 0 matches, which makes the whole thing fail
@@ -66,7 +62,7 @@ public class RecipeMatcher {
             return ret;
 
         // We should be in a state where multiple tests are satisfied by multiple inputs. So we need to try a branching recursive test.
-        // However for performance reasons, we should probably make that check a sub-set of the entire graph.
+        // However, for performance reasons, we should probably make that check a sub-set of the entire graph.
         if (backtrack(data, ret, 0, elements))
             return ret;
 
@@ -74,13 +70,11 @@ public class RecipeMatcher {
     }
 
     // This is bad... need to think of a better cascade, recursion instead of stack?
-    private static boolean claim(int[] ret, BitSet data, int claimed, int elements)
-    {
+    private static boolean claim(int[] ret, BitSet data, int claimed, int elements) {
         Queue<Integer> pending = new LinkedList<>();
         pending.add(claimed);
 
-        while (pending.peek() != null)
-        {
+        while (pending.peek() != null) {
             int test = pending.poll();
             int offset = (test + 2) * elements;
             int used = data.nextSetBit(offset) - offset;
@@ -92,11 +86,9 @@ public class RecipeMatcher {
             data.set(elements + test);
             ret[used] = test;
 
-            for (int x = 0; x < elements; x++)
-            {
+            for (int x = 0; x < elements; x++) {
                 offset = (x + 2) * elements;
-                if (data.get(offset + used) && !data.get(elements + x))
-                {
+                if (data.get(offset + used) && !data.get(elements + x)) {
                     data.clear(offset + used);
                     int count = 0;
                     for (int y = offset; y < offset + elements; y++)
@@ -104,7 +96,7 @@ public class RecipeMatcher {
                             count++;
 
                     if (count == 0)
-                        return false; //Claiming this caused another test to lose its last match..
+                        return false; //Claiming this caused another test to lose its last match
 
                     if (count == 1)
                         pending.add(x);
@@ -115,9 +107,8 @@ public class RecipeMatcher {
         return true;
     }
 
-    //We use recursion here, why? Because I feel like it. Also because we should only ever be working in data sets < 9
-    private static boolean backtrack(BitSet data, int[] ret, int start, int elements)
-    {
+    //We use recursion here, why? Because I feel like it. Also, because we should only ever be working in data sets < 9
+    private static boolean backtrack(BitSet data, int[] ret, int start, int elements) {
         int test = data.nextClearBit(elements + start) - elements;
         if (test >= elements)
             return true; //Could not find the next unused test.
@@ -126,15 +117,13 @@ public class RecipeMatcher {
             throw new IllegalStateException("This should never happen, negative test in backtrack!");
 
         int offset = (test + 2) * elements;
-        for (int x = 0; x < elements; x++)
-        {
+        for (int x = 0; x < elements; x++) {
             if (!data.get(offset + x) || data.get(x))
                 continue;
 
             data.set(x);
 
-            if (backtrack(data, ret, test + 1, elements))
-            {
+            if (backtrack(data, ret, test + 1, elements)) {
                 ret[x] = test;
                 return true;
             }
@@ -144,4 +133,5 @@ public class RecipeMatcher {
 
         return false;
     }
+
 }

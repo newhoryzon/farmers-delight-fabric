@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(1.d, .0d, 1.d, 15.d, 1.d, 15.d);
@@ -164,9 +165,8 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CuttingBoardBlockEntity) {
-                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ((CuttingBoardBlockEntity) blockEntity).getStoredItem());
+            if (world.getBlockEntity(pos) instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity) {
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), cuttingBoardBlockEntity.getStoredItem());
                 world.updateComparators(pos, this);
             }
 
@@ -211,4 +211,5 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
+
 }

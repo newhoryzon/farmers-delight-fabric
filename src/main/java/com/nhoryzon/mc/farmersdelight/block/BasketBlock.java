@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BasketBlock extends InventoryBlockWithEntity implements Waterloggable {
+
     public static final DirectionProperty FACING = Properties.FACING;
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -107,21 +108,15 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BasketBlockEntity) {
-                ((BasketBlockEntity) blockEntity).setCustomName(itemStack.getName());
-            }
+        if (itemStack.hasCustomName() && world.getBlockEntity(pos) instanceof BasketBlockEntity basketBlockEntity) {
+            basketBlockEntity.setCustomName(itemStack.getName());
         }
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BasketBlockEntity) {
-                player.openHandledScreen((BasketBlockEntity) blockEntity);
-            }
+        if (!world.isClient() && world.getBlockEntity(pos) instanceof BasketBlockEntity basketBlockEntity) {
+            player.openHandledScreen(basketBlockEntity);
         }
 
         return ActionResult.SUCCESS;
@@ -199,4 +194,5 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
 
         }
     }
+    
 }
