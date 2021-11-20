@@ -154,11 +154,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CookingPotBlockEntity) {
-                ((CookingPotBlockEntity) blockEntity).setCustomName(itemStack.getName());
-            }
+        if (itemStack.hasCustomName() && world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            cookingPotBlockEntity.setCustomName(itemStack.getName());
         }
     }
 

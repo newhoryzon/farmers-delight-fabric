@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
 import org.jetbrains.annotations.Nullable;
 
-// TODO
 public class MushroomColonyBlockItem extends ModBlockItem {
     public MushroomColonyBlockItem(Block block) {
         super(block);
