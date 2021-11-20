@@ -165,10 +165,10 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value=EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CookingPotBlockEntity && ((CookingPotBlockEntity) blockEntity).isAboveLitHeatSource()) {
-            double dX = (double) pos.getX() + .5d;
+        if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity && cookingPotBlockEntity.isAboveLitHeatSource()) {
+            double dX = pos.getX() + .5d;
             double dY = pos.getY();
-            double dZ = (double) pos.getZ() + .5d;
+            double dZ = pos.getZ() + .5d;
             if (random.nextInt(10) == 0) {
                 world.playSound(dX, dY, dZ, SoundsRegistry.BLOCK_COOKING_POT_BOIL.get(), SoundCategory.BLOCKS, .5f, random.nextFloat() * .2f + .9f, false);
             }

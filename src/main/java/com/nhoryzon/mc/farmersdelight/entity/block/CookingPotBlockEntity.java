@@ -212,49 +212,57 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         return new CookingPotScreenHandler(syncId, inv, this, cookingPotData);
     }
 
+    @SuppressWarnings("unused")
     public static void tick(World world, BlockPos pos, BlockState state, CookingPotBlockEntity blockEntity) {
-        boolean isHeated = blockEntity.isAboveLitHeatSource();
+        if (!world.isClient()) {
+            serverTick(world, blockEntity);
+        } else {
+            clientTick(blockEntity);
+        }
+    }
+
+    protected static void serverTick(World world, CookingPotBlockEntity blockEntity) {
         boolean dirty = false;
 
-        if (!Objects.requireNonNull(world).isClient()) {
-            if (isHeated && blockEntity.hasInput()) {
-                CookingPotRecipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, new RecipeWrapper(blockEntity.itemHandler), world).orElse(
-                        null);
-                if (blockEntity.canCook(recipe)) {
-                    ++blockEntity.cookTime;
-                    if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
-                        blockEntity.cookTime = 0;
-                        blockEntity.cookTimeTotal = blockEntity.getCookTime();
-                        blockEntity.cook(recipe);
-                        dirty = true;
-                    }
-                } else {
+        if (blockEntity.isAboveLitHeatSource() && blockEntity.hasInput()) {
+            CookingPotRecipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType,
+                    new RecipeWrapper(blockEntity.itemHandler), world).orElse(null);
+            if (blockEntity.canCook(recipe)) {
+                ++blockEntity.cookTime;
+                if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
-                }
-            } else if (blockEntity.cookTime > 0) {
-                blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
-            }
-
-            ItemStack meal = blockEntity.getMeal();
-            if (!meal.isEmpty()) {
-                if (!blockEntity.doesMealHaveContainer(meal)) {
-                    blockEntity.moveMealToOutput();
-                    dirty = true;
-                } else if (!blockEntity.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
-                    blockEntity.useStoredContainersOnMeal();
+                    blockEntity.cookTimeTotal = blockEntity.getCookTime();
+                    blockEntity.cook(recipe);
                     dirty = true;
                 }
+            } else {
+                blockEntity.cookTime = 0;
             }
+        } else if (blockEntity.cookTime > 0) {
+            blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
+        }
 
-        } else {
-            if (isHeated) {
-                blockEntity.animate();
+        ItemStack meal = blockEntity.getMeal();
+        if (!meal.isEmpty()) {
+            if (!blockEntity.doesMealHaveContainer(meal)) {
+                blockEntity.moveMealToOutput();
+                dirty = true;
+            } else if (!blockEntity.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
+                blockEntity.useStoredContainersOnMeal();
+                dirty = true;
             }
         }
 
         if (dirty) {
             blockEntity.inventoryChanged();
         }
+    }
+
+    protected static void clientTick(CookingPotBlockEntity blockEntity) {
+        if (blockEntity.isAboveLitHeatSource()) {
+            blockEntity.animate();
+        }
+
     }
 
     @Nullable
@@ -326,7 +334,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         }
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
             ItemStack itemStack = itemHandler.getStack(i);
-            if (itemStack.getItem().hasRecipeRemainder()) {
+            if (itemStack.getItem().hasRecipeRemainder() && world != null) {
                 Direction direction = getCachedState().get(CookingPotBlock.FACING).rotateYCounterclockwise();
                 double dropX = pos.getX() + .5d + (direction.getOffsetX() * .25d);
                 double dropY = pos.getY() + .7d;
@@ -334,7 +342,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
                 ItemEntity entity = new ItemEntity(world, dropX, dropY, dropZ, new ItemStack(itemHandler.getStack(i).getItem()
                         .getRecipeRemainder()));
                 entity.setVelocity(direction.getOffsetX() * .08f, .25f, direction.getOffsetZ() * .08f);
-                Objects.requireNonNull(world).spawnEntity(entity);
+                world.spawnEntity(entity);
             }
 
             if (!itemHandler.getStack(i).isEmpty()) {
@@ -349,15 +357,15 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
             BlockPos blockpos = getPos();
             Random random = world.random;
             if (random.nextFloat() < .2f) {
-                double baseX = (double) blockpos.getX() + .5d + (random.nextDouble() * .6d - .3d);
-                double baseY = (double) blockpos.getY() + .7d;
-                double baseZ = (double) blockpos.getZ() + .5d + (random.nextDouble() * .6d - .3d);
+                double baseX = blockpos.getX() + .5d + (random.nextDouble() * .6d - .3d);
+                double baseY = blockpos.getY() + .7d;
+                double baseZ = blockpos.getZ() + .5d + (random.nextDouble() * .6d - .3d);
                 world.addParticle(ParticleTypes.BUBBLE_POP, baseX, baseY, baseZ, .0d, .0d, .0d);
             }
             if (random.nextFloat() < .05f) {
-                double baseX = (double) blockpos.getX() + .5d + (random.nextDouble() * .4d - .2d);
-                double baseY = (double) blockpos.getY() + .7d;
-                double baseZ = (double) blockpos.getZ() + .5d + (random.nextDouble() * .4d - .2d);
+                double baseX = blockpos.getX() + .5d + (random.nextDouble() * .4d - .2d);
+                double baseY = blockpos.getY() + .7d;
+                double baseZ = blockpos.getZ() + .5d + (random.nextDouble() * .4d - .2d);
                 world.addParticle(ParticleTypes.EFFECT, baseX, baseY, baseZ, .0d, .0d, .0d);
             }
         }

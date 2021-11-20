@@ -48,8 +48,11 @@ public class OrganicCompostBlock extends Block {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
         if (random.nextInt(10) == 0) {
-            world.addParticle(ParticleTypes.MYCELIUM, (double) pos.getX() + (double) random.nextFloat(), (double) pos.getY() + 1.1d,
-                    (double) pos.getZ() + (double) random.nextFloat(), .0d, .0d, .0d);
+            world.addParticle(ParticleTypes.MYCELIUM,
+                    (double) pos.getX() + (double) random.nextFloat(),
+                    pos.getY() + 1.1d,
+                    (double) pos.getZ() + (double) random.nextFloat(),
+                    .0d, .0d, .0d);
         }
     }
 

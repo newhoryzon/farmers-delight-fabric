@@ -24,24 +24,20 @@ public class ConsumableItem extends Item {
 
         if (stack.isFood()) {
             super.finishUsing(stack, world, user);
-        } else {
-            PlayerEntity player = (user instanceof PlayerEntity ? (PlayerEntity) user : null);
-            if (player instanceof ServerPlayerEntity) {
-                Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity) player, stack);
+        } else if (user instanceof PlayerEntity player) {
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                Criteria.CONSUME_ITEM.trigger(serverPlayer, stack);
             }
-            if (player != null) {
-                player.incrementStat(Stats.USED.getOrCreateStat(this));
-                if (!player.getAbilities().creativeMode) {
-                    stack.decrement(1);
-                }
+            player.incrementStat(Stats.USED.getOrCreateStat(this));
+            if (!player.getAbilities().creativeMode) {
+                stack.decrement(1);
             }
         }
 
         if (stack.isEmpty()) {
             return container;
         } else {
-            if (user instanceof PlayerEntity player && !((PlayerEntity) user).getAbilities().creativeMode &&
-                    !player.getInventory().insertStack(container)) {
+            if (user instanceof PlayerEntity player && !player.getAbilities().creativeMode && !player.getInventory().insertStack(container)) {
                 player.dropItem(container, false);
             }
 

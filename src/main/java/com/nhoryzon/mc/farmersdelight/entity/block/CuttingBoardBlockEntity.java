@@ -134,8 +134,8 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
             playProcessingSound(recipe.getSoundEvent(), tool.getItem(), getStoredItem().getItem());
             removeItem();
             inventoryChanged();
-            if (player instanceof ServerPlayerEntity) {
-                ((CuttingBoardTrigger) AdvancementsRegistry.CUTTING_BOARD.get()).trigger((ServerPlayerEntity) player);
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                ((CuttingBoardTrigger) AdvancementsRegistry.CUTTING_BOARD.get()).trigger(serverPlayer);
             }
             return true;
         }
@@ -152,8 +152,8 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
             playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.f, 1.f);
         } else if (Tags.KNIVES.contains(tool)) {
             playSound(SoundsRegistry.BLOCK_CUTTING_BOARD_KNIFE.get(), .8f, 1.f);
-        } else if (boardItem instanceof BlockItem) {
-            Block block = ((BlockItem) boardItem).getBlock();
+        } else if (boardItem instanceof BlockItem boardBlockItem) {
+            Block block = boardBlockItem.getBlock();
             BlockSoundGroup soundType = block.getDefaultState().getSoundGroup();
             playSound(soundType.getBreakSound(), 1.f, .8f);
         } else {
@@ -227,4 +227,5 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
         markDirty();
         Objects.requireNonNull(world).updateListeners(getPos(), getCachedState(), getCachedState(), 3);
     }
+
 }

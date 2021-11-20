@@ -55,8 +55,8 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
             }
 
             protected boolean isPlayerViewing(PlayerEntity player) {
-                if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
-                    Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
+                if (player.currentScreenHandler instanceof GenericContainerScreenHandler genericContainerScreenHandler) {
+                    Inventory inventory = genericContainerScreenHandler.getInventory();
                     return inventory == PantryBlockEntity.this;
                 } else {
                     return false;
@@ -156,9 +156,9 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     private void playSound(BlockState state, SoundEvent sound) {
         Vec3i vec3i = state.get(PantryBlock.FACING).getVector();
         BlockPos pos = getPos();
-        double dX = (double) pos.getX() + .5d + (double) vec3i.getX() / 2.d;
-        double dT = (double) pos.getY() + .5d + (double) vec3i.getY() / 2.d;
-        double dZ = (double) pos.getZ() + .5d + (double) vec3i.getZ() / 2.d;
+        double dX = pos.getX() + .5d + vec3i.getX() / 2.d;
+        double dT = pos.getY() + .5d + vec3i.getY() / 2.d;
+        double dZ = pos.getZ() + .5d + vec3i.getZ() / 2.d;
         World world = Objects.requireNonNull(getWorld());
         world.playSound(null, dX, dT, dZ, sound, SoundCategory.BLOCKS, .5f, world.getRandom().nextFloat() * .1f + .9f);
     }

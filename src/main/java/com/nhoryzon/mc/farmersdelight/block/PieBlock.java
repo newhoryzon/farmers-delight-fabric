@@ -137,28 +137,29 @@ public class PieBlock extends Block {
     protected ActionResult consumeBite(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!player.canConsume(false)) {
             return ActionResult.PASS;
-        } else {
-            ItemStack slice = getPieSliceStack();
-            FoodComponent sliceFood = slice.getItem().getFoodComponent();
+        }
 
-            player.getHungerManager().eat(slice.getItem(), slice);
-            if (getPieSliceStack().getItem().isFood() && sliceFood != null) {
-                for (Pair<StatusEffectInstance, Float> pair : sliceFood.getStatusEffects()) {
-                    if (!world.isClient() && pair.getFirst() != null && world.getRandom().nextFloat() < pair.getSecond()) {
-                        player.addStatusEffect(new StatusEffectInstance(pair.getFirst()));
-                    }
+        ItemStack slice = getPieSliceStack();
+        FoodComponent sliceFood = slice.getItem().getFoodComponent();
+
+        player.getHungerManager().eat(slice.getItem(), slice);
+        if (getPieSliceStack().getItem().isFood() && sliceFood != null) {
+            for (Pair<StatusEffectInstance, Float> pair : sliceFood.getStatusEffects()) {
+                if (!world.isClient() && pair.getFirst() != null && world.getRandom().nextFloat() < pair.getSecond()) {
+                    player.addStatusEffect(new StatusEffectInstance(pair.getFirst()));
                 }
             }
-
-            int bites = state.get(BITES);
-            if (bites < MAX_BITES - 1) {
-                world.setBlockState(pos, state.with(BITES, bites + 1), 3);
-            } else {
-                world.removeBlock(pos, false);
-            }
-            world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 0.8F, 0.8F);
-            return ActionResult.SUCCESS;
         }
+
+        int bites = state.get(BITES);
+        if (bites < MAX_BITES - 1) {
+            world.setBlockState(pos, state.with(BITES, bites + 1), 3);
+        } else {
+            world.removeBlock(pos, false);
+        }
+        world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT, SoundCategory.PLAYERS, 0.8F, 0.8F);
+
+        return ActionResult.SUCCESS;
     }
 
     protected ActionResult cutSlice(World world, BlockPos pos, BlockState state) {

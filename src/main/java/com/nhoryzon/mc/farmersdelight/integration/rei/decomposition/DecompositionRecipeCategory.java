@@ -42,7 +42,6 @@ public class DecompositionRecipeCategory implements DisplayCategory<Decompositio
 
     @Override
     public List<Widget> setupDisplay(DecompositionRecipeDisplay display, Rectangle bounds) {
-        Point origin = bounds.getLocation();
         final List<Widget> widgets = new ArrayList<>();
 
         Rectangle baseBounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height + 6);

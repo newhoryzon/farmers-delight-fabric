@@ -78,48 +78,64 @@ public class StoveBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        Item usedItem = itemStack.getItem();
-        if (Boolean.TRUE.equals(state.get(LIT))) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof StoveBlockEntity stoveBlockEntity) {
-                Optional<CampfireCookingRecipe> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
-                if (optional.isPresent()) {
-                    if (!world.isClient() && !stoveBlockEntity.isStoveBlockedAbove() && stoveBlockEntity.addItem(
-                            player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
-                        player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
+        if (!Boolean.TRUE.equals(state.get(LIT))) {
+            return tryLightUpByPlayerHand(state, world, pos, player, hand);
+        }
 
-                        return ActionResult.SUCCESS;
-                    }
-
-                    return ActionResult.CONSUME;
-                } else {
-                    if (usedItem instanceof ShovelItem) {
-                        extinguish(state, world, pos);
-
-                        return ActionResult.SUCCESS;
-                    } else if (usedItem == Items.WATER_BUCKET) {
-                        extinguish(state, world, pos);
-                        if (!player.isCreative()) {
-                            player.setStackInHand(hand, new ItemStack(Items.BUCKET));
-                        }
-
-                        return ActionResult.SUCCESS;
-                    }
-                }
-            }
-        } else {
-            if (usedItem instanceof FlintAndSteelItem) {
-                world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.f,
-                        MathUtils.RAND.nextFloat() * .4f + .8f);
-                world.setBlockState(pos, state.with(LIT, Boolean.TRUE), BlockStateUtils.DEFAULT_AND_RERENDER);
-                itemStack.damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-
-                return ActionResult.SUCCESS;
-            }
+        if (world.getBlockEntity(pos) instanceof StoveBlockEntity stoveBlockEntity) {
+            return onUseByPlayerHand(stoveBlockEntity, state, world, pos, player, hand);
         }
 
         return ActionResult.PASS;
+    }
+
+    protected ActionResult onUseByPlayerHand(StoveBlockEntity stoveBlockEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        Optional<CampfireCookingRecipe> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
+
+        if (optional.isEmpty()) {
+            return tryExtinguishByPlayerHand(state, world, pos, player, hand);
+        }
+
+        if (!world.isClient() && !stoveBlockEntity.isStoveBlockedAbove() && stoveBlockEntity.addItem(
+                player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+            player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
+
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.CONSUME;
+    }
+
+    protected ActionResult tryLightUpByPlayerHand(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        ItemStack stackHand = player.getStackInHand(hand);
+
+        if (!(stackHand.getItem() instanceof FlintAndSteelItem)) {
+            return ActionResult.PASS;
+        }
+
+        world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.f,
+                MathUtils.RAND.nextFloat() * .4f + .8f);
+        world.setBlockState(pos, state.with(LIT, Boolean.TRUE), BlockStateUtils.DEFAULT_AND_RERENDER);
+        stackHand.damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+
+        return ActionResult.SUCCESS;
+    }
+
+    protected ActionResult tryExtinguishByPlayerHand(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        ItemStack stackHand = player.getStackInHand(hand);
+        Item usedItem = stackHand.getItem();
+
+        if (!(usedItem instanceof ShovelItem) && usedItem != Items.WATER_BUCKET) {
+            return ActionResult.PASS;
+        }
+
+        extinguish(state, world, pos);
+        if (!player.isCreative() && usedItem == Items.WATER_BUCKET) {
+            player.setStackInHand(hand, new ItemStack(Items.BUCKET));
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -137,7 +153,8 @@ public class StoveBlock extends BlockWithEntity {
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         boolean isLit = world.getBlockState(pos).get(LIT);
-        if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+        if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity livingEntity &&
+                !EnchantmentHelper.hasFrostWalker(livingEntity)) {
             entity.damage(DamageSource.HOT_FLOOR, 1.f);
         }
 
@@ -148,9 +165,9 @@ public class StoveBlock extends BlockWithEntity {
     @Environment(value= EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (Boolean.TRUE.equals(state.get(CampfireBlock.LIT))) {
-            double dx = (double) pos.getX() + .5d;
+            double dx = pos.getX() + .5d;
             double dy = pos.getY();
-            double dz = (double) pos.getZ() + .5d;
+            double dz = pos.getZ() + .5d;
             if (random.nextInt(10) == 0) {
                 world.playSound(dx, dy, dz, SoundsRegistry.BLOCK_STOVE_CRACKLE.get(), SoundCategory.BLOCKS, 1.f, 1.f, false);
             }
@@ -158,9 +175,9 @@ public class StoveBlock extends BlockWithEntity {
             Direction direction = state.get(FACING);
             Direction.Axis axis = direction.getAxis();
             double d0 = random.nextDouble() * .6d - .3d;
-            double d1 = (axis == Direction.Axis.X ? (double) direction.getOffsetX() * .52d : d0);
+            double d1 = (axis == Direction.Axis.X ? direction.getOffsetX() * .52d : d0);
             double d2 = random.nextDouble() * 6.d / 16.d;
-            double d3 = (axis == Direction.Axis.Z ? (double) direction.getOffsetZ() * .52d : d0);
+            double d3 = (axis == Direction.Axis.Z ? direction.getOffsetZ() * .52d : d0);
             world.addParticle(ParticleTypes.SMOKE, dx + d1, dy + d2, dz + d3, .0d, .0d, .0d);
             world.addParticle(ParticleTypes.FLAME, dx + d1, dy + d2, dz + d3, .0d, .0d, .0d);
         }
@@ -180,9 +197,9 @@ public class StoveBlock extends BlockWithEntity {
 
     private void extinguish(BlockState state, World world, BlockPos pos) {
         world.setBlockState(pos, state.with(LIT, false));
-        double dx = (double) pos.getX() + .5d;
+        double dx = pos.getX() + .5d;
         double dy = pos.getY();
-        double dz = (double) pos.getZ() + .5d;
+        double dz = pos.getZ() + .5d;
         world.playSound(dx, dy, dz, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, .5f, 2.6f, false);
     }
 }

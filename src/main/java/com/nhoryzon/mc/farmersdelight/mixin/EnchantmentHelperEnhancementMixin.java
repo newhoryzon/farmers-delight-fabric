@@ -20,6 +20,10 @@ import java.util.List;
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperEnhancementMixin {
 
+    private EnchantmentHelperEnhancementMixin() {
+        // Not instantiable class
+    }
+
     @Inject(method = "getPossibleEntries", at = @At("RETURN"))
     private static void getPossibleEntriesEnhanced(int power, ItemStack stack, boolean treasureAllowed,
             CallbackInfoReturnable<List<EnchantmentLevelEntry>> returnCallback) {

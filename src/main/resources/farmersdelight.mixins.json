@@ -20,11 +20,7 @@
     "accessors.PlayerExhaustionAccessorMixin"
   ],
   "injectors": {
-    "defaultRequire": 1,
-    "maxShiftBy": 2,
-    "injectionPoints": [
-      "com.nhoryzon.mc.farmersdelight.mixin.util.BeforeInc"
-    ]
+    "defaultRequire": 1
   },
   "minVersion": "0.8"
 }
