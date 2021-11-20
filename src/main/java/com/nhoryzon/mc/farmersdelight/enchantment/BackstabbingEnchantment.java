@@ -1,6 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.enchantment;
 
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
@@ -9,13 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 public class BackstabbingEnchantment extends Enchantment {
+
     public BackstabbingEnchantment() {
         super(Rarity.COMMON, EnchantmentTarget.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem().isIn(Tags.KNIVES);
+        return stack.getItem() instanceof KnifeItem;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class BackstabbingEnchantment extends Enchantment {
      */
     public static boolean isLookingBehindTarget(LivingEntity target, Vec3d attackerLocation) {
         if (attackerLocation != null) {
-            Vec3d vec3d = target.getOppositeRotationVector(1.f);
+            Vec3d vec3d = target.getRotationVec(1.f);
             Vec3d vec3d1 = attackerLocation.subtract(target.getPos()).normalize();
             vec3d1 = new Vec3d(vec3d1.x, .0d, vec3d1.z);
             return vec3d1.dotProduct(vec3d) < -.5d;
@@ -59,4 +60,5 @@ public class BackstabbingEnchantment extends Enchantment {
         float multiplier = ((level * .4f) + 1.f);
         return amount * multiplier;
     }
+
 }
