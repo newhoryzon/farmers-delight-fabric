@@ -22,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class LivingEntityFeedItem extends ConsumableItem {
-    public LivingEntityFeedItem(Settings settings) {
+
+    protected LivingEntityFeedItem(Settings settings) {
         super(settings);
     }
 
@@ -78,4 +79,5 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
 
         return ActionResult.PASS;
     }
+
 }

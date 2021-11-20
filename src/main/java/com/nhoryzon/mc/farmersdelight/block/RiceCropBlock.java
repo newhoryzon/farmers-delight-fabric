@@ -54,9 +54,10 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     @Override
     public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
         BlockState upperState = world.getBlockState(pos.up());
-        if (upperState.getBlock() instanceof RiceUpperCropBlock) {
-            return !((RiceUpperCropBlock) upperState.getBlock()).isMature(upperState);
+        if (upperState.getBlock() instanceof RiceUpperCropBlock riceUpperCropBlock) {
+            return !riceUpperCropBlock.isMature(upperState);
         }
+
         return true;
     }
 
@@ -149,24 +150,25 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.randomTick(state, world, pos, random);
+
         if (!world.isRegionLoaded(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
             return;
         }
-        if (world.getLightLevel(pos.up(), 0) >= 6) {
-            int age = getAge(state);
-            if (age <= MAX_AGE) {
-                float chance = 10;
-                if (random.nextInt((int) (25.f / chance) + 1) == 0) {
-                    if (age == MAX_AGE) {
-                        RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
-                        if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
-                            world.setBlockState(pos.up(), riceUpper.getDefaultState());
-                        }
-                    } else {
-                        world.setBlockState(pos, withAge(age + 1), 2);
-                    }
-                }
+
+        if (world.getLightLevel(pos.up(), 0) >= 6 && getAge(state) <= MAX_AGE && random.nextInt(3) == 0) {
+            randomGrowTick(state, world, pos);
+        }
+    }
+
+    private void randomGrowTick(BlockState state, ServerWorld world, BlockPos pos) {
+        int currentAge = getAge(state);
+        if (currentAge == MAX_AGE) {
+            RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
+            if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
+                world.setBlockState(pos.up(), riceUpper.getDefaultState());
             }
+        } else {
+            world.setBlockState(pos, withAge(currentAge + 1), 2);
         }
     }
 

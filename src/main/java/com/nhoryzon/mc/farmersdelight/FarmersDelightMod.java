@@ -1,12 +1,10 @@
 package com.nhoryzon.mc.farmersdelight;
 
-import com.google.common.collect.Sets;
-import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
-import com.nhoryzon.mc.farmersdelight.item.LivingEntityFeedItem;
+import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
+import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
+import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.registry.*;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
-import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -16,26 +14,14 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.CakeBlock;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.Heightmap;
@@ -52,8 +38,9 @@ import java.util.Set;
 /**
  * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
  * <ul>
+ *     <li>the "Nourished Hunger" overlay</li>
  *     <li>the possibility to disable vanilla "Crops Crates"</li>
- *     <li>the integrations of others mods like : CraftTweaker, JEI, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
+ *     <li>the integrations of others mods like : CraftTweaker, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
@@ -105,94 +92,10 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerEventListeners() {
-        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
-            ItemStack heldItem = player.getMainHandStack();
-            if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
-                ItemScatterer.spawn(world, pos,
-                        DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
-            }
-        });
-
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            BlockPos pos = hitResult.getBlockPos();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            ItemStack heldItem = player.getStackInHand(hand);
-            if (player.isSneaking() && blockEntity instanceof CuttingBoardBlockEntity && !heldItem.isEmpty()
-                    && (heldItem.getItem() instanceof ToolItem
-                        || heldItem.getItem() instanceof TridentItem
-                        || heldItem.getItem() instanceof ShearsItem)) {
-                boolean success = ((CuttingBoardBlockEntity) blockEntity).carveToolOnBoard(player.getAbilities().creativeMode ? heldItem.copy() : heldItem);
-
-                if (success) {
-                    world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f,
-                            .8f);
-
-                    return ActionResult.SUCCESS;
-                }
-            }
-
-            return ActionResult.PASS;
-        });
-
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            BlockPos pos = hitResult.getBlockPos();
-            BlockState state = world.getBlockState(pos);
-            ItemStack heldItem = player.getStackInHand(hand);
-
-            if (state.getBlock() instanceof CakeBlock && Tags.KNIVES.contains(heldItem.getItem())) {
-                int bites = state.get(CakeBlock.BITES);
-                if (bites < 6) {
-                    world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), 3);
-                } else {
-                    world.removeBlock(pos, false);
-                }
-                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
-                world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, .8f, .8f);
-
-                return ActionResult.SUCCESS;
-            }
-
-            return ActionResult.PASS;
-        });
-
-        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            ItemStack itemStack = player.getStackInHand(hand);
-
-            if (entity instanceof LivingEntity livingEntity && (Tags.DOG_FOOD_USERS.contains(entity.getType()) || Tags.HORSE_FEED_USERS.contains(
-                    entity.getType()))) {
-                boolean isTameable = livingEntity instanceof TameableEntity;
-
-                if (livingEntity.isAlive() && (!isTameable || ((TameableEntity) livingEntity).isTamed()) &&
-                        itemStack.getItem() instanceof LivingEntityFeedItem livingEntityFeedItem &&
-                        ((LivingEntityFeedItem) itemStack.getItem()).canFeed(itemStack, player, livingEntity, hand)) {
-                    livingEntity.setHealth(livingEntity.getMaxHealth());
-                    for (StatusEffectInstance effect : livingEntityFeedItem.getStatusEffectApplied()) {
-                        livingEntity.addStatusEffect(new StatusEffectInstance(effect));
-                    }
-                    livingEntity.getEntityWorld().playSound(null, entity.getBlockPos(), SoundEvents.ENTITY_GENERIC_EAT,
-                            SoundCategory.PLAYERS, .8f, .8f);
-
-                    for (int i = 0; i < 5; ++i) {
-                        double d0 = MathUtils.RAND.nextGaussian() * .02d;
-                        double d1 = MathUtils.RAND.nextGaussian() * .02d;
-                        double d2 = MathUtils.RAND.nextGaussian() * .02d;
-                        livingEntity.getEntityWorld().addParticle(ParticleTypesRegistry.STAR.get(), livingEntity.getParticleX(1.d),
-                                livingEntity.getRandomBodyY() + .5d, livingEntity.getParticleZ(1.d), d0, d1, d2);
-                    }
-
-                    if (!player.isCreative()) {
-                        if (itemStack.getItem().getRecipeRemainder() != null) {
-                            player.giveItemStack(new ItemStack(itemStack.getItem().getRecipeRemainder()));
-                        }
-                        itemStack.decrement(1);
-                    }
-
-                    return ActionResult.SUCCESS;
-                }
-            }
-
-            return ActionResult.PASS;
-        });
+        PlayerBlockBreakEvents.AFTER.register(KnivesEventListener.INSTANCE);
+        UseBlockCallback.EVENT.register(KnivesEventListener.INSTANCE);
+        UseBlockCallback.EVENT.register(CuttingBoardEventListener.INSTANCE);
+        UseEntityCallback.EVENT.register(LivingEntityFeedItemEventListener.INSTANCE);
     }
 
     @SuppressWarnings("deprecation")
@@ -255,13 +158,13 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerLootTable() {
-        Set<Identifier> villageHouseChestsId = Sets.newHashSet(
+        Set<Identifier> villageHouseChestsId = Set.of(
                 LootTables.VILLAGE_PLAINS_CHEST,
                 LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
                 LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
                 LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
                 LootTables.VILLAGE_DESERT_HOUSE_CHEST);
-        Set<Identifier> scavengingEntityIdList = Sets.newHashSet(
+        Set<Identifier> scavengingEntityIdList = Set.of(
                 EntityType.PIG.getLootTableId(),
                 EntityType.HOGLIN.getLootTableId(),
                 EntityType.CHICKEN.getLootTableId(),
@@ -273,7 +176,7 @@ public class FarmersDelightMod implements ModInitializer {
                 EntityType.RABBIT.getLootTableId(),
                 EntityType.SHULKER.getLootTableId(),
                 EntityType.SPIDER.getLootTableId());
-        Set<Identifier> addItemLootBlockIdList = Sets.newHashSet(
+        Set<Identifier> addItemLootBlockIdList = Set.of(
                 Blocks.GRASS.getLootTableId(),
                 Blocks.TALL_GRASS.getLootTableId(),
                 Blocks.WHEAT.getLootTableId());

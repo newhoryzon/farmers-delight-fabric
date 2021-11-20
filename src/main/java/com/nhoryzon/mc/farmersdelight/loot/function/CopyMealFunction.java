@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.loot.function;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.LootFunctionsRegistry;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.context.LootContext;
@@ -22,9 +21,8 @@ public class CopyMealFunction extends ConditionalLootFunction {
 
     @Override
     protected ItemStack process(ItemStack stack, LootContext context) {
-        BlockEntity blockEntity = context.get(LootContextParameters.BLOCK_ENTITY);
-        if (blockEntity instanceof CookingPotBlockEntity) {
-            NbtCompound tag = ((CookingPotBlockEntity) blockEntity).writeMeal(new NbtCompound());
+        if (context.get(LootContextParameters.BLOCK_ENTITY) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            NbtCompound tag = cookingPotBlockEntity.writeMeal(new NbtCompound());
             if (!tag.isEmpty()) {
                 stack.setSubNbt("BlockEntityTag", tag);
             }

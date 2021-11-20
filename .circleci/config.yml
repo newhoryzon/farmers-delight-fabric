@@ -8,16 +8,21 @@ workflows:
             tags:
               only: /.*/
       - code_analysis:
+          context:
+            - sonar-analysis
           filters:
             branches:
               only: /master|develop/
       - release:
           requires:
             - build_n_test
+            - code_analysis
           filters:
             branches:
               only: /master/
       - deploy:
+          context:
+            - maven-public
           requires:
             - build_n_test
           filters:
@@ -53,7 +58,7 @@ jobs:
           paths:
             - ~/.gradle/caches
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
-      - run: gradle sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=https://sonar.beaucoralk.fr -Pgit_branch="${CIRCLE_BRANCH}"
+      - run: gradle sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Pgit_branch="${CIRCLE_BRANCH}"
   build_n_test:
     name: Build and Test
     docker:
@@ -155,4 +160,5 @@ jobs:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: gradle clean publish
           -Pscm_project_url=https://bitbucket.org/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -Pscm_connection_url=${CIRCLE_REPOSITORY_URL}
-          -Ppublish_maven_repo_username=${NEXUS_CI_USERNAME} -Ppublish_maven_repo_password=${NEXUS_CI_PASSWORD}
+          -Ppublish_maven_repo_releases_url=${MVN_REPO_RELEASES_URL} -Ppublish_maven_repo_snapshots_url=${MVN_REPO_SNAPSHOTS_URL}
+          -Ppublish_maven_repo_username=${MVN_REPO_CI_USERNAME} -Ppublish_maven_repo_password=${MVN_REPO_CI_PASSWORD}

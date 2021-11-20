@@ -63,6 +63,7 @@ import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class CookingPotBlock extends BlockWithEntity implements InventoryProvider, Waterloggable {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty SUPPORTED = Properties.DOWN;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -153,11 +154,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CookingPotBlockEntity) {
-                ((CookingPotBlockEntity) blockEntity).setCustomName(itemStack.getName());
-            }
+        if (itemStack.hasCustomName() && world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            cookingPotBlockEntity.setCustomName(itemStack.getName());
         }
     }
 
@@ -165,10 +163,10 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Environment(value=EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CookingPotBlockEntity && ((CookingPotBlockEntity) blockEntity).isAboveLitHeatSource()) {
-            double dX = (double) pos.getX() + .5d;
+        if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity && cookingPotBlockEntity.isAboveLitHeatSource()) {
+            double dX = pos.getX() + .5d;
             double dY = pos.getY();
-            double dZ = (double) pos.getZ() + .5d;
+            double dZ = pos.getZ() + .5d;
             if (random.nextInt(10) == 0) {
                 world.playSound(dX, dY, dZ, SoundsRegistry.BLOCK_COOKING_POT_BOIL.get(), SoundCategory.BLOCKS, .5f, random.nextFloat() * .2f + .9f, false);
             }
@@ -192,24 +190,19 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CookingPotBlockEntity) {
-                ItemStack serving = ((CookingPotBlockEntity) blockEntity).useHeldItemOnMeal(player.getStackInHand(hand));
-                if (serving != ItemStack.EMPTY) {
-                    if (!player.getInventory().insertStack(serving)) {
-                        player.dropItem(serving, false);
-                    }
-                    world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
-                } else {
-                    NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
-                    if (screenHandlerFactory != null) {
-                        player.openHandledScreen(screenHandlerFactory);
-                    }
+        if (!world.isClient() && world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            ItemStack serving = cookingPotBlockEntity.useHeldItemOnMeal(player.getStackInHand(hand));
+            if (serving != ItemStack.EMPTY) {
+                if (!player.getInventory().insertStack(serving)) {
+                    player.dropItem(serving, false);
+                }
+                world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
+            } else {
+                NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+                if (screenHandlerFactory != null) {
+                    player.openHandledScreen(screenHandlerFactory);
                 }
             }
-
-            return ActionResult.SUCCESS;
         }
 
         return ActionResult.SUCCESS;
@@ -218,9 +211,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CookingPotBlockEntity) {
-                ItemScatterer.spawn(world, pos, ((CookingPotBlockEntity) blockEntity).getDroppableInventory());
+            if (world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+                ItemScatterer.spawn(world, pos, cookingPotBlockEntity.getDroppableInventory());
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
@@ -268,9 +260,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CookingPotBlockEntity) {
-            return ((CookingPotBlockEntity) blockEntity).getInventory();
+        if (world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            return cookingPotBlockEntity.getInventory();
         }
 
         return null;
@@ -279,4 +270,5 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     private boolean needsTrayForHeatSource(BlockState state) {
         return Tags.TRAY_HEAT_SOURCES.contains(state.getBlock());
     }
+
 }

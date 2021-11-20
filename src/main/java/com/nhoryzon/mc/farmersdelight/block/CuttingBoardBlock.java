@@ -47,16 +47,17 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected static final VoxelShape SHAPE = Block.createCuboidShape(1.d, .0d, 1.d, 15.d, 1.d, 15.d);
 
     public static void spawnCuttingParticles(World worldIn, BlockPos pos, ItemStack stack, int count) {
         for (int i = 0; i < count; ++i) {
-            Vec3d vec3d = new Vec3d(((double) worldIn.getRandom().nextFloat() - .5d) * .1d, Math.random() * .1d + .1d,
-                    ((double) worldIn.getRandom().nextFloat() - .5d) * .1d);
-            if (worldIn instanceof ServerWorld) {
-                ((ServerWorld) worldIn).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.getX() + .5f,
+            Vec3d vec3d = new Vec3d((worldIn.getRandom().nextFloat() - .5d) * .1d, Math.random() * .1d + .1d,
+                    (worldIn.getRandom().nextFloat() - .5d) * .1d);
+            if (worldIn instanceof ServerWorld serverWorld) {
+                serverWorld.spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.getX() + .5f,
                         pos.getY() + .1f, pos.getZ() + .5f, 1, vec3d.x, vec3d.y + .05d, vec3d.z, .0d);
             } else {
                 worldIn.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.getX() + .5f, pos.getY() + .1f,
@@ -102,53 +103,70 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ActionResult result = ActionResult.PASS;
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity) {
-            ItemStack itemHeld = player.getStackInHand(hand);
-            ItemStack itemOffhand = player.getOffHandStack();
+        if (!(blockEntity instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity)) {
+            return result;
+        }
 
-            if (cuttingBoardBlockEntity.isEmpty()) {
-                if (!itemOffhand.isEmpty() && hand.equals(Hand.MAIN_HAND) && !(itemHeld.getItem() instanceof BlockItem)) {
-                    return ActionResult.PASS;
-                }
-                if (itemHeld.isEmpty()) {
-                    return ActionResult.PASS;
-                } else if (cuttingBoardBlockEntity.addItem(player.getAbilities().creativeMode ? itemHeld.copy() : itemHeld)) {
-                    world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
+        ItemStack itemHeld = player.getStackInHand(hand);
 
-                    return ActionResult.SUCCESS;
-                }
-            } else if (!itemHeld.isEmpty()) {
-                ItemStack boardItem = cuttingBoardBlockEntity.getStoredItem().copy();
-                if (cuttingBoardBlockEntity.processItemUsingTool(itemHeld, player)) {
-                    spawnCuttingParticles(world, pos, boardItem, 5);
-                    return ActionResult.SUCCESS;
-                }
+        if (cuttingBoardBlockEntity.isEmpty()) {
+            result = tryAddItemFromPlayerHand(world, cuttingBoardBlockEntity, player, hand);
+        } else if (!itemHeld.isEmpty()) {
+            result = tryProcessCuttingUsingToolInHand(world, cuttingBoardBlockEntity, player, hand);
+        } else if (hand.equals(Hand.MAIN_HAND)) {
+            pullOutItemWithPlayer(world, cuttingBoardBlockEntity, player);
+            return ActionResult.SUCCESS;
+        }
 
-                return ActionResult.CONSUME;
-            } else if (hand.equals(Hand.MAIN_HAND)) {
-                if (!player.isCreative()) {
-                    if (!player.getInventory().insertStack(cuttingBoardBlockEntity.removeItem())) {
-                        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), cuttingBoardBlockEntity.removeItem());
-                    }
-                } else {
-                    cuttingBoardBlockEntity.removeItem();
-                }
-                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_HIT, SoundCategory.BLOCKS, .25f, .5f);
+        return result;
+    }
 
-                return ActionResult.SUCCESS;
-            }
+    private ActionResult tryAddItemFromPlayerHand(World world, CuttingBoardBlockEntity cuttingBoardBlockEntity, PlayerEntity player, Hand hand) {
+        ItemStack itemHeld = player.getStackInHand(hand);
+        ItemStack itemOffhand = player.getOffHandStack();
+
+        boolean canAddItemForHand = (itemOffhand.isEmpty() || !hand.equals(Hand.MAIN_HAND) || (itemHeld.getItem() instanceof BlockItem))
+                && !itemHeld.isEmpty();
+        if (canAddItemForHand && cuttingBoardBlockEntity.addItem(player.getAbilities().creativeMode ? itemHeld.copy() : itemHeld)) {
+            world.playSound(null, cuttingBoardBlockEntity.getPos(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
+
+            return ActionResult.SUCCESS;
         }
 
         return ActionResult.PASS;
     }
 
+    private ActionResult tryProcessCuttingUsingToolInHand(World world, CuttingBoardBlockEntity cuttingBoardBlockEntity, PlayerEntity player, Hand hand) {
+        ItemStack itemHeld = player.getStackInHand(hand);
+        ItemStack boardItem = cuttingBoardBlockEntity.getStoredItem().copy();
+        if (cuttingBoardBlockEntity.processItemUsingTool(itemHeld, player)) {
+            spawnCuttingParticles(world, cuttingBoardBlockEntity.getPos(), boardItem, 5);
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.CONSUME;
+    }
+
+    private void pullOutItemWithPlayer(World world, CuttingBoardBlockEntity cuttingBoardBlockEntity, PlayerEntity player) {
+        BlockPos pos = cuttingBoardBlockEntity.getPos();
+
+        if (player.isCreative()) {
+            cuttingBoardBlockEntity.removeItem();
+        } else if (!player.getInventory().insertStack(cuttingBoardBlockEntity.removeItem())) {
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), cuttingBoardBlockEntity.removeItem());
+        }
+
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_HIT, SoundCategory.BLOCKS, .25f, .5f);
+    }
+
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CuttingBoardBlockEntity) {
-                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ((CuttingBoardBlockEntity) blockEntity).getStoredItem());
+            if (world.getBlockEntity(pos) instanceof CuttingBoardBlockEntity cuttingBoardBlockEntity) {
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), cuttingBoardBlockEntity.getStoredItem());
                 world.updateComparators(pos, this);
             }
 
@@ -193,4 +211,5 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
+
 }

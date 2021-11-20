@@ -91,6 +91,7 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
         return super.writeNbt(Inventories.writeNbt(tag, inventory, true));
     }
 
+    @SuppressWarnings("unused")
     public static void tick(World world, BlockPos pos, BlockState state, StoveBlockEntity blockEntity) {
         boolean isStoveLit = blockEntity.getCachedState().get(StoveBlock.LIT);
         boolean isStoveBlocked = blockEntity.isStoveBlockedAbove();
@@ -107,11 +108,7 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
             if (isStoveLit && !isStoveBlocked) {
                 blockEntity.cookAndDrop();
             } else {
-                for (int i = 0; i < blockEntity.inventory.size(); ++i) {
-                    if (blockEntity.cookingTimes[i] > 0) {
-                        blockEntity.cookingTimes[i] = MathHelper.clamp(blockEntity.cookingTimes[i] - 2, 0, blockEntity.cookingTotalTimes[i]);
-                    }
-                }
+                blockEntity.fadeCooking();
             }
         }
     }
@@ -148,9 +145,9 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
 
             for (int j = 0; j < inventory.size(); ++j) {
                 if (!inventory.get(j).isEmpty() && random.nextFloat() < .2f) {
-                    double d0 = (double) blockpos.getX() + .5d;
-                    double d1 = (double) blockpos.getY() + 1.d;
-                    double d2 = (double) blockpos.getZ() + .5d;
+                    double d0 = blockpos.getX() + .5d;
+                    double d1 = blockpos.getY() + 1.d;
+                    double d2 = blockpos.getZ() + .5d;
                     Vec2f v1 = getStoveItemOffset(j);
 
                     Direction direction = getCachedState().get(StoveBlock.FACING);
@@ -196,14 +193,22 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
                                 .map(recipe -> recipe.craft(cookInventory)).findAny().orElse(itemstack);
                         if (!result.isEmpty()) {
                             ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + 1., pos.getZ() + .5, result.copy());
-                            entity.setVelocity(MathUtils.RAND.nextGaussian() * (double) .01f, .1f,
-                                    MathUtils.RAND.nextGaussian() * (double) .01f);
+                            entity.setVelocity(MathUtils.RAND.nextGaussian() * .01f, .1f,
+                                    MathUtils.RAND.nextGaussian() * .01f);
                             world.spawnEntity(entity);
                         }
                     }
                     inventory.set(i, ItemStack.EMPTY);
                     inventoryChanged();
                 }
+            }
+        }
+    }
+
+    private void fadeCooking() {
+        for (int i = 0; i < inventory.size(); ++i) {
+            if (cookingTimes[i] > 0) {
+                cookingTimes[i] = MathHelper.clamp(cookingTimes[i] - 2, 0, cookingTotalTimes[i]);
             }
         }
     }

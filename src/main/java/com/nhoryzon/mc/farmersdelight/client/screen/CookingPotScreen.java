@@ -62,7 +62,7 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
     @Override
     protected void drawForeground(MatrixStack ms, int mouseX, int mouseY) {
         super.drawForeground(ms, mouseX, mouseY);
-        textRenderer.draw(ms, playerInventoryTitle, 8.f, (float) (backgroundHeight - 96 + 2), 4210752);
+        textRenderer.draw(ms, playerInventoryTitle, 8.f, backgroundHeight - 94.f, 4210752);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class StarParticle extends SpriteBillboardParticle {
 
     @Override
     public float getSize(float tickDelta) {
-        return scale * MathHelper.clamp(((float) age + tickDelta) / (float) maxAge * 32.f, .0f, 1.f);
+        return scale * MathHelper.clamp((age + tickDelta) / maxAge * 32.f, .0f, 1.f);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.Hopper;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -29,8 +28,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class BasketBlockEntity extends LootableContainerBlockEntity implements Hopper {
 
@@ -78,7 +75,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         if (!inventoryIn.isValid(index, stack)) {
             return false;
         } else {
-            return !(inventoryIn instanceof SidedInventory) || ((SidedInventory) inventoryIn).canInsert(index, stack, null);
+            return !(inventoryIn instanceof SidedInventory sidedInventory) || sidedInventory.canInsert(index, stack, null);
         }
     }
 
@@ -143,7 +140,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         return world == null ? new ArrayList<>() : basket.getFacingCollectionArea(facingIndex).getBoundingBoxes().stream()
                 .flatMap(boundingBoxe -> world.getEntitiesByClass(ItemEntity.class,
                         boundingBoxe.offset(basket.getHopperX() - .5d, basket.getHopperY() - .5d, basket.getHopperZ() - .5d),
-                        EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
+                        EntityPredicates.VALID_ENTITY).stream()).toList();
     }
 
     public BasketBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -190,6 +187,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         return getPos().getZ() + .5d;
     }
 
+    @SuppressWarnings("unused")
     public static void tick(World world, BlockPos pos, BlockState state, BasketBlockEntity blockEntity) {
         if (world != null && !world.isClient()) {
             --blockEntity.transferCooldown;

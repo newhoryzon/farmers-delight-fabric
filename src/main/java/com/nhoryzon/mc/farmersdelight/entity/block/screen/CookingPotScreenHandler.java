@@ -28,7 +28,14 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class CookingPotScreenHandler extends ScreenHandler {
+
     public static final Identifier EMPTY_CONTAINER_SLOT_BOWL = new Identifier(FarmersDelightMod.MOD_ID, "item/empty_container_slot_bowl");
+
+    private static final int INV_INDEX_MEAL_DISPLAY = 6;
+    private static final int INV_INDEX_CONTAINER_INPUT = INV_INDEX_MEAL_DISPLAY + 1;
+    private static final int INV_INDEX_OUTPUT = INV_INDEX_CONTAINER_INPUT + 1;
+    private static final int INV_INDEX_START_PLAYER_INV = INV_INDEX_OUTPUT + 1;
+    private static final int INV_INDEX_END_PLAYER_INV = INV_INDEX_START_PLAYER_INV + 36;
 
     public final CookingPotBlockEntity tileEntity;
     public final ItemStackHandler inventoryHandler;
@@ -97,8 +104,8 @@ public class CookingPotScreenHandler extends ScreenHandler {
         Objects.requireNonNull(data, "data cannot be null");
         final BlockEntity tileAtPos = playerInventory.player.world.getBlockEntity(data.readBlockPos());
 
-        if (tileAtPos instanceof CookingPotBlockEntity) {
-            return (CookingPotBlockEntity) tileAtPos;
+        if (tileAtPos instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            return cookingPotBlockEntity;
         }
 
         throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
@@ -111,44 +118,40 @@ public class CookingPotScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack transferSlot(PlayerEntity playerIn, int index) {
-        int indexMealDisplay = 6;
-        int indexContainerInput = 7;
-        int indexOutput = 8;
-        int startPlayerInv = indexOutput + 1;
-        int endPlayerInv = startPlayerInv + 36;
-        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
-        if (slot.hasStack()) {
-            ItemStack slotItemStack = slot.getStack();
-            itemStack = slotItemStack.copy();
-            if (index == indexOutput) {
-                if (!insertItem(slotItemStack, startPlayerInv, endPlayerInv, true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (index > indexOutput) {
-                if (slotItemStack.getItem() == Items.BOWL && !insertItem(slotItemStack, indexContainerInput, indexContainerInput + 1, false)) {
-                    return ItemStack.EMPTY;
-                } else if (!insertItem(slotItemStack, 0, indexMealDisplay, false)) {
-                    return ItemStack.EMPTY;
-                } else if (!insertItem(slotItemStack, indexContainerInput, indexOutput, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!insertItem(slotItemStack, startPlayerInv, endPlayerInv, false)) {
-                return ItemStack.EMPTY;
-            }
 
-            if (slotItemStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
-            } else {
-                slot.markDirty();
-            }
-
-            if (slotItemStack.getCount() == itemStack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTakeItem(playerIn, slotItemStack);
+        if (!slot.hasStack()) {
+            return ItemStack.EMPTY;
         }
+
+        ItemStack slotItemStack = slot.getStack();
+        ItemStack itemStack = slotItemStack.copy();
+        if (index == INV_INDEX_OUTPUT) {
+            if (!insertItem(slotItemStack, INV_INDEX_START_PLAYER_INV, INV_INDEX_END_PLAYER_INV, true)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (index > INV_INDEX_OUTPUT) {
+            if ((slotItemStack.getItem() == Items.BOWL && !insertItem(slotItemStack, INV_INDEX_CONTAINER_INPUT, INV_INDEX_OUTPUT, false))
+                    || !insertItem(slotItemStack, 0, INV_INDEX_MEAL_DISPLAY, false)
+                    || !insertItem(slotItemStack, INV_INDEX_CONTAINER_INPUT, INV_INDEX_OUTPUT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (!insertItem(slotItemStack, INV_INDEX_START_PLAYER_INV, INV_INDEX_END_PLAYER_INV, false)) {
+            return ItemStack.EMPTY;
+        }
+
+        if (slotItemStack.isEmpty()) {
+            slot.setStack(ItemStack.EMPTY);
+        } else {
+            slot.markDirty();
+        }
+
+        if (slotItemStack.getCount() == itemStack.getCount()) {
+            return ItemStack.EMPTY;
+        }
+
+        slot.onTakeItem(playerIn, slotItemStack);
+
         return itemStack;
     }
 
@@ -163,4 +166,5 @@ public class CookingPotScreenHandler extends ScreenHandler {
     public boolean isHeated() {
         return tileEntity.isAboveLitHeatSource();
     }
+
 }

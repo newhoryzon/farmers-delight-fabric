@@ -30,4 +30,5 @@ public enum AdvancementsRegistry {
 
         return criterion;
     }
+
 }
