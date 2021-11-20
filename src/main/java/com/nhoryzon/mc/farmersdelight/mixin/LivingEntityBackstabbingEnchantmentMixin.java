@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin({LivingEntity.class, PlayerEntity.class})
 public abstract class LivingEntityBackstabbingEnchantmentMixin {
+
     @ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
     private float takeDamage(float amount, DamageSource source, float originalAmount) {
         Entity attacker = source.getAttacker();
@@ -24,15 +25,16 @@ public abstract class LivingEntityBackstabbingEnchantmentMixin {
             ItemStack weapon = ((PlayerEntity) attacker).getMainHandStack();
             int level = EnchantmentHelper.getLevel(EnchantmentsRegistry.BACKSTABBING.get(), weapon);
             if (level > 0 && BackstabbingEnchantment.isLookingBehindTarget((LivingEntity)(Object)this, source.getPosition())) {
-                World world = ((LivingEntity)(Object)this).getEntityWorld();
+                World world = attacker.getEntityWorld();
                 if (!world.isClient()) {
                     world.playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.BLOCKS, 1.f, 1.f);
 
-                    return BackstabbingEnchantment.getBackstabbingDamagePerLevel(amount, level);
+                    return BackstabbingEnchantment.getBackstabbingDamagePerLevel(originalAmount, level);
                 }
             }
         }
 
         return amount;
     }
+
 }
