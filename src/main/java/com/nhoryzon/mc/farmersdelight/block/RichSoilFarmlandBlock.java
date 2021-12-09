@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class RichSoilFarmlandBlock extends FarmlandBlock {
     public RichSoilFarmlandBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.FARMLAND).breakByTool(FabricToolTags.SHOVELS));
+        super(FabricBlockSettings.copyOf(Blocks.FARMLAND));
     }
 
     private static boolean hasWater(WorldView world, BlockPos pos) {

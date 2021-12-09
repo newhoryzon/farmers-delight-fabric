@@ -24,13 +24,9 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.HeightmapDecoratorConfig;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -44,12 +40,6 @@ import java.util.Set;
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
-    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP = Decorator.HEIGHTMAP.configure(
-            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
-    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP_SPREAD_DOUBLE = Decorator.HEIGHTMAP_SPREAD_DOUBLE.configure(
-            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
-    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP = HEIGHTMAP.spreadHorizontally();
-    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP_SPREAD_DOUBLE = HEIGHTMAP_SPREAD_DOUBLE.spreadHorizontally();
 
     public static final String MOD_ID = "farmersdelight";
 
@@ -73,7 +63,7 @@ public class FarmersDelightMod implements ModInitializer {
         ExtendedScreenTypesRegistry.registerAll();
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
-        ConfiguredFeaturesRegistry.registerAll();
+        /* ConfiguredFeaturesRegistry.registerAll(); */
 
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
                 factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26), new ItemStack(Items.EMERALD), 16, 2, .05f));
@@ -100,6 +90,7 @@ public class FarmersDelightMod implements ModInitializer {
 
     @SuppressWarnings("deprecation")
     protected void registerBiomeModifications() {
+        /*
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
@@ -114,6 +105,7 @@ public class FarmersDelightMod implements ModInitializer {
                 GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_ONIONS.key());
         BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .0f && context.getBiome().getTemperature() < .3f,
                 GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_POTATOES.key());
+        */
     }
 
     protected void registerCompostables() {

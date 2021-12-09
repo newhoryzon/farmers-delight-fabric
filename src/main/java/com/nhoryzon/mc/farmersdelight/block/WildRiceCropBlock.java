@@ -31,6 +31,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -103,7 +104,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
         BlockState blockstate = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         DoubleBlockHalf half = state.get(HALF);
         if (!blockstate.isAir()) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
         if (direction.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (direction == Direction.UP) ||
                 newState.getBlock() == this && newState.get(HALF) != half) {

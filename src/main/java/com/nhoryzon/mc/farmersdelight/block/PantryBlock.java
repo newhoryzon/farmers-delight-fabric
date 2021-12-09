@@ -38,7 +38,7 @@ public class PantryBlock extends InventoryBlockWithEntity implements Waterloggab
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     public PantryBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.BARREL).breakByTool(FabricToolTags.AXES));
+        super(FabricBlockSettings.copyOf(Blocks.BARREL));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
     }
 

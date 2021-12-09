@@ -31,7 +31,7 @@ public class RichSoilBlock extends Block {
     public static final int COLONY_FORMING_LIGHT_LEVEL = 12;
 
     public RichSoilBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS).ticksRandomly());
+        super(FabricBlockSettings.copyOf(Blocks.DIRT).ticksRandomly());
     }
 
     @Override

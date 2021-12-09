@@ -8,7 +8,6 @@ import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -56,7 +55,7 @@ public class StoveBlock extends BlockWithEntity {
     public static final BooleanProperty LIT = Properties.LIT;
 
     public StoveBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.BRICKS).breakByTool(FabricToolTags.PICKAXES).luminance(state -> Boolean.TRUE.equals(state.get(Properties.LIT)) ? 13 : 0));
+        super(FabricBlockSettings.copyOf(Blocks.BRICKS).luminance(state -> Boolean.TRUE.equals(state.get(Properties.LIT)) ? 13 : 0));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, false));
     }
 

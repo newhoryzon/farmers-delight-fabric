@@ -13,6 +13,9 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
@@ -23,6 +26,8 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.OrderedTick;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -105,13 +110,11 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         if (!serializeLootTable(tag)) {
             Inventories.writeNbt(tag, content);
         }
-
-        return tag;
     }
 
     @Override
@@ -121,6 +124,20 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
         if (!deserializeLootTable(tag)) {
             Inventories.readNbt(tag, content);
         }
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbtCompound = new NbtCompound();
+        Inventories.writeNbt(nbtCompound, content, true);
+
+        return nbtCompound;
     }
 
     public void tick() {
@@ -146,7 +163,7 @@ public class PantryBlockEntity extends LootableContainerBlockEntity {
     }
 
     private void scheduleTick() {
-        Objects.requireNonNull(getWorld()).getBlockTickScheduler().schedule(getPos(), getCachedState().getBlock(), 5);
+        Objects.requireNonNull(getWorld()).getBlockTickScheduler().scheduleTick(OrderedTick.create(getCachedState().getBlock(), getPos()));
     }
 
     private void setOpen(BlockState state, boolean open) {

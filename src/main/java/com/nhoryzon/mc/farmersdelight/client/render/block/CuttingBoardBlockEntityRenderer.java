@@ -34,7 +34,7 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
             matrices.push();
 
             ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-            boolean blockItem = itemRenderer.getHeldItemModel(itemStack, entity.getWorld(), null, intPos).hasDepth();
+            boolean blockItem = itemRenderer.getModel(itemStack, entity.getWorld(), null, intPos).hasDepth();
 
             if (entity.getIsItemCarvingBoard()) {
                 renderItemCarved(matrices, direction, itemStack);
