@@ -56,6 +56,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     protected static final VoxelShape SHAPE_SUPPORTED = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
 
     public CookingPotBlock() {
-        super(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES).hardness(2.f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
+        super(FabricBlockSettings.of(Material.METAL).hardness(2.f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORTED, false).with(WATERLOGGED, false));
     }
 
@@ -223,7 +224,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
 
         if (direction == Direction.DOWN) {

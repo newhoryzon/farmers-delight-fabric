@@ -13,7 +13,6 @@ import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,10 +20,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
@@ -37,11 +40,12 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
-public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class CuttingBoardBlockEntity extends BlockEntity {
 
     public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
 
@@ -70,16 +74,6 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
-    }
-
-    @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         isItemCarvingBoard = tag.getBoolean(TAG_KEY_IS_ITEM_CARVED);
@@ -87,12 +81,24 @@ public class CuttingBoardBlockEntity extends BlockEntity implements BlockEntityC
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
         tag.putBoolean(TAG_KEY_IS_ITEM_CARVED, isItemCarvingBoard);
+    }
 
-        return tag;
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbtCompound = new NbtCompound();
+        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+
+        return nbtCompound;
     }
 
     /**

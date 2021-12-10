@@ -16,6 +16,7 @@ import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ import java.util.Random;
 
 public class RichSoilFarmlandBlock extends FarmlandBlock {
     public RichSoilFarmlandBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.FARMLAND).breakByTool(FabricToolTags.SHOVELS));
+        super(FabricBlockSettings.copyOf(Blocks.FARMLAND).sounds(BlockSoundGroup.ROOTED_DIRT));
     }
 
     private static boolean hasWater(WorldView world, BlockPos pos) {

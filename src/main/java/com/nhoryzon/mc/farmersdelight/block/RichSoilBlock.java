@@ -15,6 +15,7 @@ import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -31,7 +32,7 @@ public class RichSoilBlock extends Block {
     public static final int COLONY_FORMING_LIGHT_LEVEL = 12;
 
     public RichSoilBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS).ticksRandomly());
+        super(FabricBlockSettings.copyOf(Blocks.DIRT).ticksRandomly().sounds(BlockSoundGroup.ROOTED_DIRT));
     }
 
     @Override

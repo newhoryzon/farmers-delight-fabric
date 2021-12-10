@@ -23,6 +23,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 public class SafetyNetBlock extends Block implements Waterloggable {
@@ -52,7 +53,7 @@ public class SafetyNetBlock extends Block implements Waterloggable {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
 
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);

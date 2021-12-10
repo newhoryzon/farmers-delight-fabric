@@ -34,7 +34,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HayBlock;
@@ -53,15 +52,15 @@ public enum BlocksRegistry {
     BASKET("basket", BasketBlock::new, true),
     CUTTING_BOARD("cutting_board", CuttingBoardBlock::new, true),
 
-    CARROT_CRATE("carrot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    POTATO_CRATE("potato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    BEETROOT_CRATE("beetroot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    CABBAGE_CRATE("cabbage_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    TOMATO_CRATE("tomato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
-    ONION_CRATE("onion_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    CARROT_CRATE("carrot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    POTATO_CRATE("potato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    BEETROOT_CRATE("beetroot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    CABBAGE_CRATE("cabbage_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    TOMATO_CRATE("tomato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
+    ONION_CRATE("onion_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
     RICE_BALE("rice_bale", RiceBaleBlock::new, false, flammable(20, 60)),
-    RICE_BAG("rice_bag", () -> new Block(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).breakByTool(FabricToolTags.HOES))),
-    STRAW_BALE("straw_bale", () -> new HayBlock(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES)), true, flammable(20, 60)),
+    RICE_BAG("rice_bag", () -> new Block(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL))),
+    STRAW_BALE("straw_bale", () -> new HayBlock(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK)), true, flammable(20, 60)),
 
     ROPE("rope", RopeBlock::new, true),
     SAFETY_NET("safety_net", SafetyNetBlock::new, true),
