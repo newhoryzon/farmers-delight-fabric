@@ -22,14 +22,20 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.PlacedFeature;
 
 import java.util.Arrays;
 import java.util.Set;
+
+import static com.nhoryzon.mc.farmersdelight.registry.PlacedFeaturesRegistry.*;
 
 /**
  * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
@@ -50,6 +56,8 @@ public class FarmersDelightMod implements ModInitializer {
         return new TranslatableText(MOD_ID + "." + key, args);
     }
 
+
+
     @Override
     public void onInitialize() {
         BlocksRegistry.registerAll();
@@ -63,7 +71,7 @@ public class FarmersDelightMod implements ModInitializer {
         ExtendedScreenTypesRegistry.registerAll();
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
-        /* ConfiguredFeaturesRegistry.registerAll(); */
+
 
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
                 factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26), new ItemStack(Items.EMERALD), 16, 2, .05f));
@@ -74,8 +82,24 @@ public class FarmersDelightMod implements ModInitializer {
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
                 factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get(), 20), new ItemStack(Items.EMERALD), 16, 5, .05f));
 
+
+        if (BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_POTATOES_DECORATED).isPresent()) {
+        BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
+                BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_BEETROOTS_DECORATED).get());
+        BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
+                BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_CABBAGES_DECORATED).get());
+        BiomeModifications.addFeature(context -> Arrays.asList(Biome.Category.SWAMP, Biome.Category.JUNGLE).contains(context.getBiome().getCategory()),
+                GenerationStep.Feature.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_RICE_DECORATED).get());
+        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
+                BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_TOMATOES_DECORATED).get());
+        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
+                GenerationStep.Feature.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_CARROTS_DECORATED).get());
+        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
+                GenerationStep.Feature.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_ONIONS_DECORATED).get());
+        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .0f && context.getBiome().getTemperature() < .3f,
+                GenerationStep.Feature.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.getKey(PATCH_WILD_POTATOES_DECORATED).get());
+}
         registerCompostables();
-        registerBiomeModifications();
         registerEventListeners();
         registerLootTable();
         registerDispenserBehavior();
@@ -88,25 +112,6 @@ public class FarmersDelightMod implements ModInitializer {
         UseEntityCallback.EVENT.register(LivingEntityFeedItemEventListener.INSTANCE);
     }
 
-    @SuppressWarnings("deprecation")
-    protected void registerBiomeModifications() {
-        /*
-        BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
-                ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
-        BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
-                ConfiguredFeaturesRegistry.PATCH_WILD_CABBAGES.key());
-        BiomeModifications.addFeature(context -> Arrays.asList(Biome.Category.SWAMP, Biome.Category.JUNGLE).contains(context.getBiome().getCategory()),
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
-                ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_CARROTS.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_ONIONS.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .0f && context.getBiome().getTemperature() < .3f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_POTATOES.key());
-        */
-    }
 
     protected void registerCompostables() {
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.TREE_BARK.get(), .3f);

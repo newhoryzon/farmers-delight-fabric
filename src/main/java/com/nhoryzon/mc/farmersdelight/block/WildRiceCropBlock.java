@@ -20,6 +20,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -40,7 +41,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public WildRiceCropBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS));
+        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.WET_GRASS));
         setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, true).with(HALF, DoubleBlockHalf.LOWER));
     }
 

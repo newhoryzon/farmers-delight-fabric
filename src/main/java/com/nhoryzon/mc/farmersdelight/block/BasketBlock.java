@@ -69,7 +69,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
                     .build();
 
     public BasketBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.WOOD));
+        super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.SCAFFOLDING).nonOpaque());
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, false));
     }
 
