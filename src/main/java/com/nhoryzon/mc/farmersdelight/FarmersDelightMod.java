@@ -24,19 +24,15 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.HeightmapDecoratorConfig;
 
 import java.util.Arrays;
 import java.util.Set;
 
 /**
- * This fabric port of Farmer's Delight will <b>NOT</b> implement these features :
+ * This fabric port of Farmer's Delight is <b>NOT</b> implementing these features :
  * <ul>
  *     <li>the "Nourished Hunger" overlay</li>
  *     <li>the possibility to disable vanilla "Crops Crates"</li>
@@ -44,12 +40,6 @@ import java.util.Set;
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
-    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP = Decorator.HEIGHTMAP.configure(
-            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
-    public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP_SPREAD_DOUBLE = Decorator.HEIGHTMAP_SPREAD_DOUBLE.configure(
-            new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
-    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP = HEIGHTMAP.spreadHorizontally();
-    public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP_SPREAD_DOUBLE = HEIGHTMAP_SPREAD_DOUBLE.spreadHorizontally();
 
     public static final String MOD_ID = "farmersdelight";
 
@@ -59,6 +49,8 @@ public class FarmersDelightMod implements ModInitializer {
     public static TranslatableText i18n(String key, Object... args) {
         return new TranslatableText(MOD_ID + "." + key, args);
     }
+
+
 
     @Override
     public void onInitialize() {
@@ -75,20 +67,12 @@ public class FarmersDelightMod implements ModInitializer {
         EnchantmentsRegistry.registerAll();
         ConfiguredFeaturesRegistry.registerAll();
 
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26), new ItemStack(Items.EMERALD), 16, 2, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.TOMATO.get(), 26), new ItemStack(Items.EMERALD), 16, 2, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.CABBAGE.get(), 16), new ItemStack(Items.EMERALD), 16, 5, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get(), 20), new ItemStack(Items.EMERALD), 16, 5, .05f));
-
-        registerCompostables();
         registerBiomeModifications();
+        registerCompostables();
         registerEventListeners();
         registerLootTable();
         registerDispenserBehavior();
+        registerVillagerTradeOffer();
     }
 
     protected void registerEventListeners() {
@@ -98,7 +82,6 @@ public class FarmersDelightMod implements ModInitializer {
         UseEntityCallback.EVENT.register(LivingEntityFeedItemEventListener.INSTANCE);
     }
 
-    @SuppressWarnings("deprecation")
     protected void registerBiomeModifications() {
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
@@ -226,5 +209,21 @@ public class FarmersDelightMod implements ModInitializer {
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.DIAMOND_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
+    }
+
+    protected void registerVillagerTradeOffer() {
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
+                factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26),
+                        new ItemStack(Items.EMERALD), 16, 2, .05f));
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
+                factories -> new TradeOffer(new ItemStack(ItemsRegistry.TOMATO.get(), 26),
+                        new ItemStack(Items.EMERALD), 16, 2, .05f));
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
+                factories -> new TradeOffer(new ItemStack(ItemsRegistry.CABBAGE.get(), 16),
+                        new ItemStack(Items.EMERALD), 16, 5, .05f));
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
+                factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get(), 20),
+                        new ItemStack(Items.EMERALD), 16, 5, .05f));
+
     }
 }

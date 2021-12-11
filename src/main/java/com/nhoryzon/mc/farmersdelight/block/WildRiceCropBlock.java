@@ -20,6 +20,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -31,6 +32,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -39,7 +41,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public WildRiceCropBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS));
+        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.WET_GRASS));
         setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, true).with(HALF, DoubleBlockHalf.LOWER));
     }
 
@@ -103,7 +105,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
         BlockState blockstate = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         DoubleBlockHalf half = state.get(HALF);
         if (!blockstate.isAir()) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
         if (direction.getAxis() != Direction.Axis.Y || half == DoubleBlockHalf.LOWER != (direction == Direction.UP) ||
                 newState.getBlock() == this && newState.get(HALF) != half) {

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RiceBaleBlock extends FacingBlock {
     public RiceBaleBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES));
+        super(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP));
     }
 

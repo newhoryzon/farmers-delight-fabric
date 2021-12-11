@@ -33,7 +33,6 @@ public class StoveBlockEntityRenderer implements BlockEntityRenderer<StoveBlockE
             ItemStack itemStack = inventory.get(i);
             if (!itemStack.isEmpty()) {
                 matrices.push();
-
                 matrices.translate(.5d, 1.02d, .5d);
 
                 float angle = -direction.asRotation();

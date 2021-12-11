@@ -10,7 +10,6 @@ import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,7 +19,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
@@ -41,7 +43,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class CookingPotBlockEntity extends BlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Nameable {
+public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Nameable {
 
     public static final String TAG_KEY_COOK_TIME = "CookTime";
     public static final String TAG_KEY_COOK_TIME_TOTAL = "CookTimeTotal";
@@ -117,16 +119,6 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeItems(tag);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        fromTag(tag);
-    }
-
-    @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         fromTag(tag);
@@ -143,7 +135,7 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
         tag.putInt(TAG_KEY_COOK_TIME, cookTime);
         tag.putInt(TAG_KEY_COOK_TIME_TOTAL, cookTimeTotal);
@@ -152,16 +144,6 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
             tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
         tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
-
-        return tag;
-    }
-
-    public NbtCompound writeItems(NbtCompound tag) {
-        super.writeNbt(tag);
-        tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
-
-        return tag;
     }
 
     public NbtCompound writeMeal(NbtCompound tag) {
@@ -190,6 +172,21 @@ public class CookingPotBlockEntity extends BlockEntity implements BlockEntityCli
         tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, drops.toTag());
 
         return tag;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbtCompound = new NbtCompound();
+        nbtCompound.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
+        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+
+        return nbtCompound;
     }
 
     @Override

@@ -3,116 +3,107 @@ package com.nhoryzon.mc.farmersdelight.registry;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.world.feature.RiceCropFeature;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
+import net.minecraft.world.gen.decorator.BiomePlacementModifier;
+import net.minecraft.world.gen.decorator.PlacementModifier;
+import net.minecraft.world.gen.decorator.RarityFilterPlacementModifier;
+import net.minecraft.world.gen.decorator.SquarePlacementModifier;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.feature.RandomPatchFeature;
+import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
-import net.minecraft.world.gen.placer.SimpleBlockPlacer;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.SimpleBlockFeatureConfig;
+import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public enum ConfiguredFeaturesRegistry {
 
-    PATCH_WILD_CABBAGES("patch_wild_cabbages", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_CABBAGES.get(), 64, 2, 2, Blocks.SAND),
-            "cabbages", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_ONIONS("patch_wild_onions", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_ONIONS.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
-            "onions", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_TOMATOES("patch_wild_tomatoes", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_TOMATOES.get(), 64, 2, 2, Blocks.GRASS_BLOCK, Blocks.SAND, Blocks.RED_SAND),
-            "tomatoes", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_CARROTS("patch_wild_carrots", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_CARROTS.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
-            "carrots", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_POTATOES("patch_wild_potatoes", FarmersDelightMod.SQUARE_HEIGHTMAP_SPREAD_DOUBLE, 8,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_POTATOES.get(), 64, 2, 2, Blocks.GRASS_BLOCK),
-            "potatoes", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_BEETROOTS("patch_wild_beetroots", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_BEETROOTS.get(), 64, 2, 2, Blocks.SAND),
-            "beetroots", () -> new RandomPatchFeature(RandomPatchFeatureConfig.CODEC)),
-    PATCH_WILD_RICE("patch_wild_rice", FarmersDelightMod.SQUARE_HEIGHTMAP, 10,
-            () -> buildFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, 4, Blocks.DIRT),
-            "rice", () -> new RiceCropFeature(RandomPatchFeatureConfig.CODEC));
+    PATCH_WILD_CABBAGES("patch_wild_cabbages",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_CABBAGES.get(), 64, 2, 2)),
+            "cabbages", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_ONIONS("patch_wild_onions",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_ONIONS.get(), 64, 2, 2)),
+            "onions", RarityFilterPlacementModifier.of(48), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_TOMATOES("patch_wild_tomatoes",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_TOMATOES.get(), 64, 2, 2)),
+            "tomatoes", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_CARROTS("patch_wild_carrots",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_CARROTS.get(), 64, 2, 2)),
+            "carrots", RarityFilterPlacementModifier.of(48), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_POTATOES("patch_wild_potatoes",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_POTATOES.get(), 64, 2, 2)),
+            "potatoes", RarityFilterPlacementModifier.of(48), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_BEETROOTS("patch_wild_beetroots",
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_BEETROOTS.get(), 64, 2, 2)),
+            "beetroots", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_WILD_RICE("patch_wild_rice",
+            () -> RiceCropFeature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, 4, BlockPredicate.not(BlockPredicate.IS_AIR))),
+            "rice", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
 
-    private final String pathName;
-    private final ConfiguredDecorator<?> decorator;
-    private final int chance;
-    private final Supplier<? extends FeatureConfig> featureConfigSupplier;
+    private final String configPathName;
     private final String featurePathName;
-    private final Supplier<? extends Feature<? extends FeatureConfig>> featureSupplier;
-    private FeatureConfig config;
-    private Feature<? extends FeatureConfig> feature;
-    private RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureRegistryKey;
-    private ConfiguredFeature<?, ?> configuredFeature;
+    private final Supplier<? extends ConfiguredFeature<?, ?>> featureConfigSupplier;
+    private final PlacementModifier[] placementModifierList;
 
-    ConfiguredFeaturesRegistry(String pathName, ConfiguredDecorator<?> decorator, int chance,
-            Supplier<? extends FeatureConfig> featureConfigSupplier,
-            String featurePathName, Supplier<? extends Feature<? extends FeatureConfig>> featureSupplier) {
-        this.pathName = pathName;
-        this.decorator = decorator;
-        this.chance = chance;
+    private ConfiguredFeature<?, ?> configuredFeature;
+    private RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureRegistryKey;
+    private PlacedFeature feature;
+    private RegistryKey<PlacedFeature> featureRegistryKey;
+
+    ConfiguredFeaturesRegistry(String configPathName,
+            Supplier<? extends ConfiguredFeature<?, ?>> featureConfigSupplier,
+            String featurePathName, PlacementModifier... placementModifierList) {
+        this.configPathName = configPathName;
         this.featureConfigSupplier = featureConfigSupplier;
         this.featurePathName = featurePathName;
-        this.featureSupplier = featureSupplier;
+        this.placementModifierList = placementModifierList;
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static RandomPatchFeatureConfig buildFeatureConfig(Block block, int tries, int spreadX, int spreadZ, Block... allowedList) {
-        return new RandomPatchFeatureConfig.Builder(new SimpleBlockStateProvider(block.getDefaultState()), new SimpleBlockPlacer())
-                .tries(tries).spreadX(spreadX).spreadZ(spreadZ)
-                .whitelist(Collections.unmodifiableSet(Arrays.stream(allowedList).collect(Collectors.toSet())))
-                .cannotProject().build();
+    private static RandomPatchFeatureConfig createRandomPatchFeatureConfig(Block block, int tries, int spreadX, int spreadZ) {
+        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, () -> Feature.SIMPLE_BLOCK.configure(
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(block))).withInAirFilter());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static RandomPatchFeatureConfig createRandomPatchFeatureConfig(Block block, int tries, int spreadX, int spreadZ, BlockPredicate blockPredicate) {
+        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, () -> Feature.SIMPLE_BLOCK.configure(
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(block))).withBlockPredicateFilter(blockPredicate));
     }
 
     public static void registerAll() {
         for (ConfiguredFeaturesRegistry value : values()) {
-            Registry.register(Registry.FEATURE, new Identifier(FarmersDelightMod.MOD_ID, value.featurePathName), value.feature());
-            Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, value.key().getValue(), value.get());
+            Identifier configId = new Identifier(FarmersDelightMod.MOD_ID, value.configPathName);
+            value.configuredFeature = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, configId, value.featureConfigSupplier.get());
+            value.configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, configId);
+
+            Identifier featureId = new Identifier(FarmersDelightMod.MOD_ID, value.featurePathName);
+            value.feature = Registry.register(BuiltinRegistries.PLACED_FEATURE, featureId, value.configuredFeature.withPlacement(value.placementModifierList));
+            value.featureRegistryKey = RegistryKey.of(Registry.PLACED_FEATURE_KEY, featureId);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends FeatureConfig> T config() {
-        if (config == null) {
-            config = featureConfigSupplier.get();
-        }
-
-        return (T) config;
+    public ConfiguredFeature<? extends FeatureConfig, ?> config() {
+        return configuredFeature;
     }
 
-    public Feature<? extends FeatureConfig> feature() {
-        if (feature == null) {
-            feature = featureSupplier.get();
-        }
-
-        return feature;
-    }
-
-    public RegistryKey<ConfiguredFeature<?, ?>> key() {
-        if (configuredFeatureRegistryKey == null) {
-            configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(FarmersDelightMod.MOD_ID, pathName));
-        }
-
+    public RegistryKey<ConfiguredFeature<? extends FeatureConfig, ?>> configKey() {
         return configuredFeatureRegistryKey;
     }
 
-    public ConfiguredFeature<?, ?> get() {
-        if (configuredFeature == null) {
-            configuredFeature = feature().configure(config()).decorate(decorator).applyChance(chance);
-        }
-
-        return configuredFeature;
+    public PlacedFeature get() {
+        return feature;
     }
+
+    public RegistryKey<PlacedFeature> key() {
+        return featureRegistryKey;
+    }
+
 }
