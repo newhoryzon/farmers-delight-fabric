@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
