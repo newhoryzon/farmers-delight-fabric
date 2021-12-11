@@ -44,7 +44,7 @@ public enum ConfiguredFeaturesRegistry {
             () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_BEETROOTS.get(), 64, 2, 2)),
             "beetroots", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
     PATCH_WILD_RICE("patch_wild_rice",
-            () -> RiceCropFeature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, 4, BlockPredicate.not(BlockPredicate.IS_AIR))),
+            () -> Feature.RANDOM_PATCH.configure(createRandomPatchFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, 4, BlockPredicate.not(BlockPredicate.IS_AIR))),
             "rice", RarityFilterPlacementModifier.of(32), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
 
     private final String configPathName;
