@@ -34,7 +34,7 @@ jobs:
   code_analysis:
     name: Code Analysis
     docker:
-      - image: gradle:7.0.2-jdk16-openj9
+      - image: gradle:7.3-jdk17
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -62,7 +62,7 @@ jobs:
   build_n_test:
     name: Build and Test
     docker:
-      - image: gradle:7.0.2-jdk16-openj9
+      - image: gradle:7.3-jdk17
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -100,7 +100,7 @@ jobs:
   release:
     name: Release
     docker:
-      - image: gradle:7.0.2-jdk16-openj9
+      - image: gradle:7.3-jdk17
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
@@ -134,7 +134,7 @@ jobs:
   deploy:
     name: Deploy jar
     docker:
-      - image: gradle:7.0.2-jdk16-openj9
+      - image: gradle:7.3-jdk17
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1024m
