@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.block.StoveBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,6 +13,9 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -28,11 +30,12 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
 
-public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable {
+public class StoveBlockEntity extends BlockEntity implements Clearable {
 
     public static final String TAG_KEY_COOKING_TIMES = "CookingTimes";
     public static final String TAG_KEY_COOKING_TOTAL_TIMES = "CookingTotalTimes";
@@ -56,10 +59,6 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        fromTag(tag);
-    }
-
-    private void fromTag(NbtCompound tag) {
         inventory.clear();
         Inventories.readNbt(tag, inventory);
         if (tag.contains(TAG_KEY_COOKING_TIMES, 11)) {
@@ -73,22 +72,11 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         Inventories.writeNbt(tag, inventory, true);
         tag.putIntArray(TAG_KEY_COOKING_TIMES, cookingTimes);
         tag.putIntArray(TAG_KEY_COOKING_TOTAL_TIMES, cookingTotalTimes);
-
-        return super.writeNbt(tag);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        fromTag(tag);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return super.writeNbt(Inventories.writeNbt(tag, inventory, true));
     }
 
     @SuppressWarnings("unused")
@@ -120,6 +108,20 @@ public class StoveBlockEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public void clear() {
         inventory.clear();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbtCompound = new NbtCompound();
+        Inventories.writeNbt(nbtCompound, inventory, true);
+
+        return nbtCompound;
     }
 
     public Optional<CampfireCookingRecipe> findMatchingRecipe(ItemStack itemStack) {

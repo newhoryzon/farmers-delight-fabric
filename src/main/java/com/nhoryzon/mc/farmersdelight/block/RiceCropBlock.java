@@ -29,6 +29,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -133,7 +134,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
             BlockPos posFrom) {
         BlockState superState = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         if (!superState.isAir()) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
             if (direction == Direction.UP) {
                 return superState.with(SUPPORTING, isSupportingRiceUpper(newState));
             }

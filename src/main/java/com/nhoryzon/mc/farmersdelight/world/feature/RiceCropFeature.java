@@ -31,11 +31,11 @@ public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
         int i = 0;
         BlockPos.Mutable blockPosMutable = new BlockPos.Mutable();
 
-        for (int j = 0; j < config.tries; ++j) {
+        for (int j = 0; j < config.tries(); ++j) {
             blockPosMutable.set(blockPos).move(
-                    random.nextInt(config.spreadX + 1) - random.nextInt(config.spreadX + 1),
-                    random.nextInt(config.spreadY + 1) - random.nextInt(config.spreadY + 1),
-                    random.nextInt(config.spreadZ + 1) - random.nextInt(config.spreadZ + 1));
+                    random.nextInt(config.xzSpread() + 1) - random.nextInt(config.xzSpread() + 1),
+                    random.nextInt(config.ySpread() + 1) - random.nextInt(config.ySpread() + 1),
+                    random.nextInt(config.xzSpread() + 1) - random.nextInt(config.xzSpread() + 1));
 
             if (world.getBlockState(blockPosMutable).getBlock() == Blocks.WATER && world.getBlockState(blockPosMutable.up()).getBlock() == Blocks.AIR) {
                 BlockState bottomRiceState = BlocksRegistry.WILD_RICE.get().getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.LOWER);

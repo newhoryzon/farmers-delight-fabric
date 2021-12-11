@@ -6,7 +6,6 @@ import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,8 +26,7 @@ public class OrganicCompostBlock extends Block {
     public static final IntProperty COMPOSTING = IntProperty.of("composting", 0, MAX_COMPOSTING_STAGE);
 
     public OrganicCompostBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.2f).resistance(1.2f).sounds(BlockSoundGroup.CROP)
-                .breakByTool(FabricToolTags.SHOVELS));
+        super(FabricBlockSettings.copyOf(Blocks.DIRT).hardness(1.2f).resistance(1.2f).sounds(BlockSoundGroup.CROP));
         setDefaultState(getStateManager().getDefaultState().with(COMPOSTING, 0));
     }
 

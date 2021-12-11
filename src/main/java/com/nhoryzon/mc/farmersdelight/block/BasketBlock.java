@@ -40,6 +40,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
@@ -68,7 +69,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
                     .build();
 
     public BasketBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.WOOD));
+        super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.SCAFFOLDING).nonOpaque());
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, false));
     }
 
@@ -131,7 +132,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
 
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);

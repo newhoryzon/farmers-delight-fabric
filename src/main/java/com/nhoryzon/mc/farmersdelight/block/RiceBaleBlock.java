@@ -1,7 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RiceBaleBlock extends FacingBlock {
     public RiceBaleBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK).breakByTool(FabricToolTags.HOES));
+        super(FabricBlockSettings.copyOf(Blocks.HAY_BLOCK));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP));
     }
 
