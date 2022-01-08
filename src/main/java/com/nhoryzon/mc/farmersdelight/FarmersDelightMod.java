@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.nhoryzon.mc.farmersdelight.client.gui.NourishmentHungerOverlay;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
 import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
@@ -34,7 +35,6 @@ import java.util.Set;
 /**
  * This fabric port of Farmer's Delight is <b>NOT</b> implementing these features :
  * <ul>
- *     <li>the "Nourished Hunger" overlay</li>
  *     <li>the possibility to disable vanilla "Crops Crates"</li>
  *     <li>the integrations of others mods like : CraftTweaker, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
  * </ul>
@@ -66,6 +66,7 @@ public class FarmersDelightMod implements ModInitializer {
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
         ConfiguredFeaturesRegistry.registerAll();
+        NourishmentHungerOverlay.init();
 
         registerBiomeModifications();
         registerCompostables();

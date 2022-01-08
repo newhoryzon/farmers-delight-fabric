@@ -16,6 +16,9 @@ group = project.maven_group
 repositories {
 	/* REI Integration */
 	maven { url "https://maven.shedaniel.me/" }
+
+	/* Appleskin Integration */
+	maven { url "https://maven.ryanliptak.com/" }
 }
 
 dependencies {
@@ -27,6 +30,14 @@ dependencies {
 	/* REI Integration */
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+
+	/* Appleskin Integration */
+	modCompileOnly("squeek.appleskin:appleskin-fabric:${project.appleskin_version}:api") {
+		exclude module: 'modmenu'
+	}
+	modRuntimeOnly("squeek.appleskin:appleskin-fabric:${project.appleskin_version}") {
+		exclude module: 'modmenu'
+	}
 }
 
 processResources {

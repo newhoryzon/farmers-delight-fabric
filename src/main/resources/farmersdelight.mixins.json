@@ -19,8 +19,15 @@
     "StemBlockOnRichSoilFarmlandMixin",
     "accessors.PlayerExhaustionAccessorMixin"
   ],
+  "client": [
+    "InGameHudMixin"
+  ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 1,
+    "maxShiftBy": 2,
+    "injectionPoints": [
+      "com.nhoryzon.mc.farmersdelight.mixin.util.BeforeInc"
+    ]
   },
   "minVersion": "0.8"
 }
