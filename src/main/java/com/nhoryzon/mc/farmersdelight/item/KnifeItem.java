@@ -41,7 +41,7 @@ public class KnifeItem extends MiningToolItem {
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         Material material = state.getMaterial();
-        if (Tags.KNIVES_CUTTABLE.contains(state.getBlock()) || EFFECTIVE_ON_MATERIAL.contains(material)) {
+        if (state.isIn(Tags.KNIVES_CUTTABLE) || EFFECTIVE_ON_MATERIAL.contains(material)) {
             return this.miningSpeed;
         } else {
             return super.getMiningSpeedMultiplier(stack, state);
@@ -68,7 +68,7 @@ public class KnifeItem extends MiningToolItem {
         BlockState state = world.getBlockState(pos);
         Direction facing = context.getSide();
 
-        if (state.getBlock() == Blocks.PUMPKIN && Tags.KNIVES.contains(tool.getItem())) {
+        if (state.getBlock() == Blocks.PUMPKIN && tool.isIn(Tags.KNIVES)) {
             PlayerEntity player = context.getPlayer();
             if (player != null && !world.isClient()) {
                 Direction direction = facing.getAxis() == Direction.Axis.Y ? player.getHorizontalFacing().getOpposite() : facing;

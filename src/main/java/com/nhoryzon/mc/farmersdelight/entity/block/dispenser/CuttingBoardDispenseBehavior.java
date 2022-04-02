@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.entity.block.dispenser;
 
 import com.nhoryzon.mc.farmersdelight.block.CuttingBoardBlock;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.DispenserBehaviorsAccessorMixin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,11 +19,10 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 
 public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior {
-    private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
     private static final HashMap<Item, DispenserBehavior> DISPENSE_ITEM_BEHAVIOR_HASH_MAP = new HashMap<>();
 
     public static void registerBehaviour(Item item, CuttingBoardDispenseBehavior behavior) {
-        DISPENSE_ITEM_BEHAVIOR_HASH_MAP.put(item, BEHAVIOUR_LOOKUP.getBehaviorForItem(new ItemStack(item))); // Save the old behaviours so they can be used later
+        DISPENSE_ITEM_BEHAVIOR_HASH_MAP.put(item, DispenserBehaviorsAccessorMixin.getBehaviors().get(item)); // Save the old behaviours so they can be used later
         DispenserBlock.registerBehavior(item, behavior);
     }
 
@@ -55,18 +55,5 @@ public class CuttingBoardDispenseBehavior extends FallibleItemDispenserBehavior 
         }
 
         return false;
-    }
-
-    private static class DispenserLookup extends DispenserBlock {
-
-        protected DispenserLookup() {
-            super(Settings.copy(Blocks.DISPENSER));
-        }
-
-        @Override
-        protected DispenserBehavior getBehaviorForItem(ItemStack stack) {
-            return super.getBehaviorForItem(stack);
-        }
-
     }
 }

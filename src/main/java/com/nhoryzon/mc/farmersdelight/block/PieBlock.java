@@ -66,7 +66,7 @@ public class PieBlock extends Block {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
 
-        if (Tags.KNIVES.contains(player.getMainHandStack().getItem())) {
+        if (player.getMainHandStack().isIn(Tags.KNIVES)) {
             PieBlock pieBlock = (PieBlock) state.getBlock();
             ItemStack pieSlices = pieBlock.getPieSliceStack();
             pieSlices.setCount(MAX_BITES - state.get(PieBlock.BITES));
@@ -78,7 +78,7 @@ public class PieBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemstack = player.getStackInHand(hand);
         if (world.isClient()) {
-            if (Tags.KNIVES.contains(itemstack.getItem())) {
+            if (itemstack.isIn(Tags.KNIVES)) {
                 return cutSlice(world, pos, state);
             }
 
@@ -91,7 +91,7 @@ public class PieBlock extends Block {
             }
         }
 
-        if (Tags.KNIVES.contains(itemstack.getItem())) {
+        if (itemstack.isIn(Tags.KNIVES)) {
             return cutSlice(world, pos, state);
         }
 
