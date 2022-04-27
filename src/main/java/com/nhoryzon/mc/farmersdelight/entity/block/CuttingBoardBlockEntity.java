@@ -13,7 +13,6 @@ import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.tag.Tags;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -24,6 +23,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -154,9 +154,9 @@ public class CuttingBoardBlockEntity extends BlockEntity {
 
         if (sound != null) {
             playSound(sound, 1.f, 1.f);
-        } else if (FabricToolTags.SHEARS.contains(tool)) {
+        } else if (tool instanceof ShearsItem) {
             playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.f, 1.f);
-        } else if (Tags.KNIVES.contains(tool)) {
+        } else if (tool.getDefaultStack().isIn(Tags.KNIVES)) {
             playSound(SoundsRegistry.BLOCK_CUTTING_BOARD_KNIFE.get(), .8f, 1.f);
         } else if (boardItem instanceof BlockItem boardBlockItem) {
             Block block = boardBlockItem.getBlock();

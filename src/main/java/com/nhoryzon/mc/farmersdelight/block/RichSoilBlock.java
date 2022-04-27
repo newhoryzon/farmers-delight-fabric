@@ -6,13 +6,13 @@ import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import com.nhoryzon.mc.farmersdelight.util.WorldEventUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.block.TallFlowerBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
@@ -38,7 +38,7 @@ public class RichSoilBlock extends Block {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
-        if (FabricToolTags.HOES.contains(itemStack.getItem()) && state.getBlock() == BlocksRegistry.RICH_SOIL.get() &&
+        if (itemStack.getItem() instanceof HoeItem && state.getBlock() == BlocksRegistry.RICH_SOIL.get() &&
                 hit.getSide() != Direction.DOWN && world.getBlockState(pos.up()).isAir()) {
             world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.f, 1.f);
             if (!world.isClient()) {
@@ -60,7 +60,7 @@ public class RichSoilBlock extends Block {
             Block aboveBlock = aboveState.getBlock();
 
             // Do nothing if the plant is unaffected by rich soil
-            if (Tags.UNAFFECTED_BY_RICH_SOIL.contains(aboveBlock) || aboveBlock instanceof TallFlowerBlock) {
+            if (aboveState.isIn(Tags.UNAFFECTED_BY_RICH_SOIL) || aboveBlock instanceof TallFlowerBlock) {
                 return;
             }
 

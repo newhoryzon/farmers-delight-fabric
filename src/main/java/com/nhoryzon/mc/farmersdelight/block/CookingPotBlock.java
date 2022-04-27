@@ -268,7 +268,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     }
 
     private boolean needsTrayForHeatSource(BlockState state) {
-        return Tags.TRAY_HEAT_SOURCES.contains(state.getBlock());
+        return state.isIn(Tags.TRAY_HEAT_SOURCES);
     }
 
 }

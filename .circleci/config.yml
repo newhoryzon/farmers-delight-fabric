@@ -7,16 +7,16 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - code_analysis:
-          context:
-            - sonar-analysis
-          filters:
-            branches:
-              only: /master|develop/
+#      - code_analysis:
+#          context:
+#            - sonar-analysis
+#          filters:
+#            branches:
+#              only: /master|develop/
       - release:
           requires:
             - build_n_test
-            - code_analysis
+#            - code_analysis
           filters:
             branches:
               only: /master/

@@ -7,6 +7,7 @@ import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -20,6 +21,7 @@ import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.tag.BiomeTags;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
@@ -87,7 +89,7 @@ public class FarmersDelightMod implements ModInitializer {
                 ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_CABBAGES.key());
-        BiomeModifications.addFeature(context -> Arrays.asList(Biome.Category.SWAMP, Biome.Category.JUNGLE).contains(context.getBiome().getCategory()),
+        BiomeModifications.addFeature(context -> BiomeSelectors.categories(Biome.Category.SWAMP, Biome.Category.JUNGLE).test(context),
                 GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
         BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());

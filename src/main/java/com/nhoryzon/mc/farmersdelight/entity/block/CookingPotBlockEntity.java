@@ -377,7 +377,7 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
             return false;
         }
         BlockState checkState = world.getBlockState(pos.down());
-        if (Tags.HEAT_SOURCES.contains(checkState.getBlock())) {
+        if (checkState.isIn(Tags.HEAT_SOURCES)) {
             if (checkState.contains(Properties.LIT)) {
                 return checkState.get(Properties.LIT);
             }

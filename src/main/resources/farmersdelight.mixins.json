@@ -17,7 +17,8 @@
     "PigEntityBreedingMixin",
     "PlantBlockOnRichSoilMixin",
     "StemBlockOnRichSoilFarmlandMixin",
-    "accessors.PlayerExhaustionAccessorMixin"
+    "accessors.PlayerExhaustionAccessorMixin",
+    "accessors.DispenserBehaviorsAccessorMixin"
   ],
   "injectors": {
     "defaultRequire": 1
