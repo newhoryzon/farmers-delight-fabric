@@ -17,9 +17,7 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
 
         for (int i = 0; i < ingredientArray.size(); ++i) {
             Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
-            if (ingredient.getMatchingStacks() != null && ingredient.getMatchingStacks().length > 0) {
-                ingredientList.add(ingredient);
-            }
+            ingredientList.add(ingredient);
         }
 
         return ingredientList;
@@ -29,9 +27,7 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
     public CookingPotRecipe read(Identifier id, JsonObject json) {
         final String groupIn = JsonHelper.getString(json, "group", "");
         final DefaultedList<Ingredient> inputItemsIn = readIngredients(JsonHelper.getArray(json, "ingredients"));
-        if (inputItemsIn.isEmpty()) {
-            throw new JsonParseException("No ingredients for cooking recipe");
-        } else if (inputItemsIn.size() > CookingPotRecipe.INPUT_SLOTS) {
+        if (inputItemsIn.size() > CookingPotRecipe.INPUT_SLOTS) {
             throw new JsonParseException("Too many ingredients for cooking recipe! The max is " + CookingPotRecipe.INPUT_SLOTS);
         } else {
             final JsonObject jsonResult = JsonHelper.getObject(json, "result");

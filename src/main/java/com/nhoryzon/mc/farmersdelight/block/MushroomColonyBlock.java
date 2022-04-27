@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
@@ -11,6 +10,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -109,7 +109,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         int age = state.get(AGE);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (age > 0 && FabricToolTags.SHEARS.contains(heldItem.getItem())) {
+        if (age > 0 && heldItem.getItem() instanceof ShearsItem) {
             dropStack(world, pos, getPickStack(world, pos, state));
             world.playSound(null, pos, SoundEvents.ENTITY_MOOSHROOM_SHEAR, SoundCategory.BLOCKS, 1.f, 1.f);
             world.setBlockState(pos, state.with(AGE, age - 1), BlockStateUtils.BLOCK_UPDATE);

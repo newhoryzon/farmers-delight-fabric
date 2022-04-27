@@ -69,7 +69,7 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
             Block aboveBlock = aboveState.getBlock();
 
             // Do nothing if the plant is unaffected by rich soil farmland
-            if (Tags.UNAFFECTED_BY_RICH_SOIL.contains(aboveBlock) || aboveBlock instanceof TallFlowerBlock) {
+            if (aboveState.isIn(Tags.UNAFFECTED_BY_RICH_SOIL) || aboveBlock instanceof TallFlowerBlock) {
                 return;
             }
 

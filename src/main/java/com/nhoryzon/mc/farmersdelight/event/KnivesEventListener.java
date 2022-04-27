@@ -30,7 +30,7 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         ItemStack heldItem = player.getMainHandStack();
-        if (Tags.KNIVES.contains(heldItem.getItem()) && state.getBlock() instanceof CakeBlock) {
+        if (heldItem.isIn(Tags.KNIVES) && state.getBlock() instanceof CakeBlock) {
             ItemScatterer.spawn(world, pos,
                     DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
         }
@@ -42,7 +42,7 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
         BlockState state = world.getBlockState(pos);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (state.getBlock() instanceof CakeBlock && Tags.KNIVES.contains(heldItem.getItem())) {
+        if (state.getBlock() instanceof CakeBlock && heldItem.isIn(Tags.KNIVES)) {
             int bites = state.get(CakeBlock.BITES);
             if (bites < 6) {
                 world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), 3);

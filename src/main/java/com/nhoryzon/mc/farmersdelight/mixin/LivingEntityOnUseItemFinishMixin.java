@@ -17,8 +17,7 @@ public class LivingEntityOnUseItemFinishMixin {
 
     @Inject(method = "finishUsing", at = @At("HEAD"))
     private void canHaveStatusEffect(World world, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir) {
-        Item food = entity.getActiveItem().getItem();
-        if (Tags.COMFORT_FOODS.contains(food)) {
+        if (entity.getActiveItem().isIn(Tags.COMFORT_FOODS)) {
             entity.addStatusEffect(new StatusEffectInstance(EffectsRegistry.COMFORT.get(), 6000, 0));
         }
     }

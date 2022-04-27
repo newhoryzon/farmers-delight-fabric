@@ -94,7 +94,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
         }
 
         world.syncWorldEvent(player, WorldEventUtils.BREAK_BLOCK_EFFECTS, pos, getRawIdFromState(state));
-        if (BlockTags.GUARDED_BY_PIGLINS.contains(this)) {
+        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinBrain.onGuardedBlockInteracted(player, false);
         }
     }
