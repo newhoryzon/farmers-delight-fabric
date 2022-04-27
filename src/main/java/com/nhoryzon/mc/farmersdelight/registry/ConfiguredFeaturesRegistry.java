@@ -16,6 +16,7 @@ import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 public enum ConfiguredFeaturesRegistry {
@@ -63,12 +64,14 @@ public enum ConfiguredFeaturesRegistry {
 
     @SuppressWarnings("SameParameterValue")
     private static RandomPatchFeatureConfig createRandomPatchFeatureConfig(Block block, int tries, int spreadX, int spreadZ) {
-        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(block))));
+        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(block))));
     }
 
     @SuppressWarnings("SameParameterValue")
     private static RandomPatchFeatureConfig createRandomPatchFeatureConfig(Block block, int tries, int spreadX, int spreadZ, BlockPredicate blockPredicate) {
-        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(block)), blockPredicate));
+        return new RandomPatchFeatureConfig(tries, spreadX, spreadZ, PlacedFeatures.createEntry(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(block)), blockPredicate));
     }
 
     public static void registerAll() {
@@ -78,7 +81,8 @@ public enum ConfiguredFeaturesRegistry {
             value.configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, configId);
 
             Identifier featureId = new Identifier(FarmersDelightMod.MOD_ID, value.featurePathName);
-            value.feature = Registry.register(BuiltinRegistries.PLACED_FEATURE, featureId, new PlacedFeature(RegistryEntry.of(value.configuredFeature), Arrays.stream(value.placementModifierList).toList()));
+            value.feature = Registry.register(BuiltinRegistries.PLACED_FEATURE, featureId,
+                    new PlacedFeature(RegistryEntry.of(value.configuredFeature), List.of(value.placementModifierList)));
             value.featureRegistryKey = RegistryKey.of(Registry.PLACED_FEATURE_KEY, featureId);
         }
     }
