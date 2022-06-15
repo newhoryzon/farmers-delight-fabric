@@ -15,7 +15,6 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -75,8 +74,8 @@ public class CookingRecipeCategory implements DisplayCategory<CookingRecipeDispl
         widgets.add(cookArrow);
         widgets.add(Widgets.createLabel(new Point(
                 cookArrow.getBounds().x + cookArrow.getBounds().width / 2, cookArrow.getBounds().y - 8),
-                new LiteralText(display.getCookTime() + " t"))
-                .noShadow().centered().tooltipLine("Ticks")
+                Text.literal(display.getCookTime() + " t"))
+                .noShadow().centered().tooltip(Text.literal("Ticks"))
                 .color(Formatting.DARK_GRAY.getColorValue(), Formatting.GRAY.getColorValue()));
 
         return widgets;

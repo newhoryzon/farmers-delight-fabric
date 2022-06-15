@@ -9,7 +9,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Hand;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class HorseFeedItem extends LivingEntityFeedItem {
     }
 
     @Override
-    public TranslatableText getTooltipTextWhenFeeding() {
+    public MutableText getTooltipTextWhenFeeding() {
         return FarmersDelightMod.i18n("tooltip.horse_feed.when_feeding");
     }
 

@@ -18,10 +18,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-
-import java.util.Random;
 
 public class RichSoilFarmlandBlock extends FarmlandBlock {
     public RichSoilFarmlandBlock() {

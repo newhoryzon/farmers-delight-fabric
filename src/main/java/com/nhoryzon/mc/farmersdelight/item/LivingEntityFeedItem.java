@@ -9,10 +9,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -29,7 +27,7 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
 
     public abstract List<StatusEffectInstance> getStatusEffectApplied();
 
-    public abstract TranslatableText getTooltipTextWhenFeeding();
+    public abstract MutableText getTooltipTextWhenFeeding();
 
     public abstract boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand);
 
@@ -54,13 +52,13 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
         tooltip.add(getTooltipTextWhenFeeding().formatted(Formatting.GRAY));
 
         for (StatusEffectInstance effectInstance : getStatusEffectApplied()) {
-            MutableText effectDescription = new LiteralText(" ");
-            MutableText effectName = new TranslatableText(effectInstance.getTranslationKey());
+            MutableText effectDescription = Text.literal(" ");
+            MutableText effectName = Text.translatable(effectInstance.getTranslationKey());
             effectDescription.append(effectName);
             StatusEffect effect = effectInstance.getEffectType();
 
             if (effectInstance.getAmplifier() > 0) {
-                effectDescription.append(" ").append(new TranslatableText("potion.potency." + effectInstance.getAmplifier()));
+                effectDescription.append(" ").append(Text.translatable("potion.potency." + effectInstance.getAmplifier()));
             }
 
             if (effectInstance.getDuration() > 20) {

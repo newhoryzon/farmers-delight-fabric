@@ -10,7 +10,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +42,6 @@ public class HotCocoaItem extends MilkBottleItem {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        TranslatableText empty = FarmersDelightMod.i18n("tooltip.hot_cocoa");
-        tooltip.add(empty.formatted(Formatting.BLUE));
+        tooltip.add(FarmersDelightMod.i18n("tooltip.hot_cocoa").formatted(Formatting.BLUE));
     }
 }
