@@ -4,13 +4,10 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-
-import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class Tags {

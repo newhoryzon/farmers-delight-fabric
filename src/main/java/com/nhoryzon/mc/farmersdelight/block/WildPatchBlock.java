@@ -12,11 +12,11 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.Random;
 import java.util.Set;
 
 public class WildPatchBlock extends PlantBlock implements Fertilizable {
@@ -26,7 +26,11 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.d, .0d, 2.d, 14.d, 13.d, 14.d);
 
     public WildPatchBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.CROP));
+        this(OffsetType.XZ);
+    }
+
+    public WildPatchBlock(OffsetType offsetType) {
+        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.CROP).offsetType(offsetType));
     }
 
     /* FORGE : canGrow */
@@ -72,11 +76,6 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
     @Override
     protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
         return PLANT_ON_LIST.contains(floor.getBlock());
-    }
-
-    @Override
-    public OffsetType getOffsetType() {
-        return OffsetType.XZ;
     }
 
     @Override
