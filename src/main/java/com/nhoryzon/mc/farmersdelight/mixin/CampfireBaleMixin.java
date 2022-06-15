@@ -15,7 +15,7 @@ import java.util.Set;
 @Mixin(CampfireBlock.class)
 public class CampfireBaleMixin {
 
-    @Inject(at = @At("HEAD"), method = "doesBlockCauseSignalFire", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "isSignalFireBaseBlock", cancellable = true)
     public void doesBlockCauseSignalFire(BlockState state, CallbackInfoReturnable<Boolean> cir) {
         Set<Block> hayBales = Sets.newHashSet(BlocksRegistry.STRAW_BALE.get(), BlocksRegistry.RICE_BALE.get());
         if (hayBales.contains(state.getBlock())) {

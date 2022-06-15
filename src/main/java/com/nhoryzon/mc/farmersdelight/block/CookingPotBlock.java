@@ -50,6 +50,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -59,7 +60,6 @@ import net.minecraft.world.tick.OrderedTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class CookingPotBlock extends BlockWithEntity implements InventoryProvider, Waterloggable {
@@ -143,7 +143,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
                             ? FarmersDelightMod.i18n("tooltip.cooking_pot.single_serving")
                             : FarmersDelightMod.i18n("tooltip.cooking_pot.many_servings", meal.getCount());
                     tooltip.add(servingsOf.formatted(Formatting.GRAY));
-                    MutableText mealName = meal.getName().shallowCopy();
+                    MutableText mealName = meal.getName().copy();
                     tooltip.add(mealName.formatted(meal.getRarity().formatting));
                 }
             }

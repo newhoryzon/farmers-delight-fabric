@@ -13,7 +13,6 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -57,12 +56,12 @@ public class DecompositionRecipeCategory implements DisplayCategory<Decompositio
         widgets.add(Widgets.createTexturedWidget(GUI_TEXTURE, new Rectangle(bgBounds.x + 55, bgBounds.y + 44, 18, 18), 119, 0));
         widgets.add(Widgets.createSlot(new Point(bgBounds.x + 56, bgBounds.y + 45))
                 .entries(display.getModifier()).markInput().disableBackground());
-        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 33, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.light").getString()));
-        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 46, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.fluid").getString()));
-        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 59, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.accelerators").getString()));
+        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 33, bgBounds.y + 30), Text.literal("  "))
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("jei.decomposition.light")));
+        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 46, bgBounds.y + 30), Text.literal("  "))
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("jei.decomposition.fluid")));
+        widgets.add(Widgets.createLabel(new Point(bgBounds.x + 59, bgBounds.y + 30), Text.literal("  "))
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("jei.decomposition.accelerators")));
 
         return widgets;
     }

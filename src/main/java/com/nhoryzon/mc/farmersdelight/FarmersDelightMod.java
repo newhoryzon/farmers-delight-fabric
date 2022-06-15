@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.minecraft.block.Blocks;
@@ -21,16 +21,15 @@ import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.tag.BiomeTags;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
-import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -48,8 +47,8 @@ public class FarmersDelightMod implements ModInitializer {
     public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),
             () -> new ItemStack(ItemsRegistry.STOVE.get()));
 
-    public static TranslatableText i18n(String key, Object... args) {
-        return new TranslatableText(MOD_ID + "." + key, args);
+    public static MutableText i18n(String key, Object... args) {
+        return Text.translatable(MOD_ID + "." + key, args);
     }
 
 
@@ -89,7 +88,7 @@ public class FarmersDelightMod implements ModInitializer {
                 ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_CABBAGES.key());
-        BiomeModifications.addFeature(context -> BiomeSelectors.categories(Biome.Category.SWAMP, Biome.Category.JUNGLE).test(context),
+        BiomeModifications.addFeature(context -> BiomeSelectors.includeByKey(BiomeKeys.SWAMP, BiomeKeys.JUNGLE).test(context),
                 GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
         BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());
@@ -166,22 +165,22 @@ public class FarmersDelightMod implements ModInitializer {
                 Blocks.TALL_GRASS.getLootTableId(),
                 Blocks.WHEAT.getLootTableId());
 
-        LootTableLoadingCallback.EVENT.register((resourceManager, manager, id, supplier, setter) -> {
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());
             if (scavengingEntityIdList.contains(id)) {
-                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
+                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 
             if (addItemLootBlockIdList.contains(id)) {
-                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
+                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 
             if (villageHouseChestsId.contains(id)) {
-                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
+                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
 
             if (LootTables.SHIPWRECK_SUPPLY_CHEST.equals(id)) {
-                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
+                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
         });
     }
