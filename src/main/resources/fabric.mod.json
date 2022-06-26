@@ -12,9 +12,9 @@
     "orlouge"
   ],
   "contact": {
-    "homepage": "https://bitbucket.org/n-horyzon/farmers-delight-fabric",
-    "sources": "https://bitbucket.org/n-horyzon/farmers-delight-fabric",
-    "issues": "https://bitbucket.org/n-horyzon/farmers-delight-fabric/issues"
+    "homepage": "https://github.com/newhoryzon/farmers-delight-fabric/",
+    "sources": "https://github.com/newhoryzon/farmers-delight-fabric/",
+    "issues": "https://github.com/newhoryzon/farmers-delight-fabric/issues"
   },
   "license": "MIT License",
   "icon": "assets/farmersdelight/icon.png",
