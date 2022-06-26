@@ -2,7 +2,7 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/rice"
+      "tag": "c:crops/rice"
     }
   ],
   "result": {

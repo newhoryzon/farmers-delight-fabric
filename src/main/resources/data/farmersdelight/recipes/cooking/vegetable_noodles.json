@@ -8,13 +8,13 @@
       "item": "minecraft:brown_mushroom"
     },
     {
-      "tag": "fabric:pasta"
+      "tag": "c:pasta"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     },
     {
-      "tag": "fabric:vegetables"
+      "tag": "c:vegetables"
     }
   ],
   "result": {

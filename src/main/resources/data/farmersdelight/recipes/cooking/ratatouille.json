@@ -2,16 +2,16 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     },
     {
       "item": "minecraft:beetroot"
     },
     {
-      "tag": "fabric:vegetables"
+      "tag": "c:vegetables"
     }
   ],
   "result": {

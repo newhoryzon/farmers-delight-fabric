@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:cooked_fishes/salmon"
+      "tag": "c:cooked_fishes/salmon"
     },
     {
       "item": "minecraft:sweet_berries"
@@ -11,10 +11,10 @@
       "item": "minecraft:bowl"
     },
     {
-      "tag": "fabric:crops/cabbage"
+      "tag": "c:crops/cabbage"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     }
   ],
   "result": {

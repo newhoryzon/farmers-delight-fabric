@@ -42,6 +42,7 @@ import java.util.Set;
  */
 public class FarmersDelightMod implements ModInitializer {
 
+    public static final String COMMON_MOD_ID = "c";
     public static final String MOD_ID = "farmersdelight";
 
     public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),

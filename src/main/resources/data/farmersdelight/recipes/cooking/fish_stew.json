@@ -2,13 +2,13 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:raw_fishes"
+      "tag": "c:raw_fishes"
     },
     {
       "item": "farmersdelight:tomato_sauce"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     }
   ],
   "result": {

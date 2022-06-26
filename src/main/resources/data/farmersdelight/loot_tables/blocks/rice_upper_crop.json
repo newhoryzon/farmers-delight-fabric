@@ -32,7 +32,7 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "tag": "farmersdelight:tools/knives"
+                    "tag": "c:tools/knives"
                   }
                 }
               ],

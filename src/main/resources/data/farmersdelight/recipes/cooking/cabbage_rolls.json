@@ -2,11 +2,11 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/cabbage"
+      "tag": "c:crops/cabbage"
     },
     [
       {
-        "tag": "fabric:raw_mutton"
+        "tag": "c:raw_mutton"
       },
       {
         "item": "minecraft:carrot"
@@ -18,22 +18,22 @@
         "item": "minecraft:beetroot"
       },
       {
-        "tag": "fabric:raw_fishes"
+        "tag": "c:raw_fishes"
       },
       {
-        "tag": "fabric:mushrooms"
+        "tag": "c:mushrooms"
       },
       {
-        "tag": "fabric:raw_pork"
+        "tag": "c:raw_pork"
       },
       {
-        "tag": "fabric:eggs"
+        "tag": "c:eggs"
       },
       {
-        "tag": "fabric:raw_chicken"
+        "tag": "c:raw_chicken"
       },
       {
-        "tag": "fabric:raw_beef"
+        "tag": "c:raw_beef"
       }
     ]
   ],

@@ -2,10 +2,10 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:raw_mutton"
+      "tag": "c:raw_mutton"
     },
     {
-      "tag": "fabric:pasta"
+      "tag": "c:pasta"
     },
     {
       "item": "farmersdelight:tomato_sauce"

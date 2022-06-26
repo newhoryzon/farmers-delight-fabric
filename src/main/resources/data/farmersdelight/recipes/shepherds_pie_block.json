@@ -5,28 +5,28 @@
       "item": "minecraft:baked_potato"
     },
     {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     },
     {
       "item": "minecraft:baked_potato"
     },
     {
-      "tag": "fabric:cooked_mutton"
+      "tag": "c:cooked_mutton"
     },
     {
-      "tag": "fabric:cooked_mutton"
+      "tag": "c:cooked_mutton"
     },
     {
-      "tag": "fabric:cooked_mutton"
+      "tag": "c:cooked_mutton"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     },
     {
       "item": "minecraft:bowl"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     }
   ],
   "result": {
