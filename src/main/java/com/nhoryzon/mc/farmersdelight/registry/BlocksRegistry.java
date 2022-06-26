@@ -10,7 +10,7 @@ import com.nhoryzon.mc.farmersdelight.block.HoneyGlazedHamBlock;
 import com.nhoryzon.mc.farmersdelight.block.MushroomColonyBlock;
 import com.nhoryzon.mc.farmersdelight.block.OnionCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.OrganicCompostBlock;
-import com.nhoryzon.mc.farmersdelight.block.PantryBlock;
+import com.nhoryzon.mc.farmersdelight.block.CabinetBlock;
 import com.nhoryzon.mc.farmersdelight.block.PieBlock;
 import com.nhoryzon.mc.farmersdelight.block.RiceBaleBlock;
 import com.nhoryzon.mc.farmersdelight.block.RiceCropBlock;
@@ -64,14 +64,14 @@ public enum BlocksRegistry {
 
     ROPE("rope", RopeBlock::new, true),
     SAFETY_NET("safety_net", SafetyNetBlock::new, true),
-    OAK_PANTRY("oak_pantry", PantryBlock::new),
-    BIRCH_PANTRY("birch_pantry", PantryBlock::new),
-    SPRUCE_PANTRY("spruce_pantry", PantryBlock::new),
-    JUNGLE_PANTRY("jungle_pantry", PantryBlock::new),
-    ACACIA_PANTRY("acacia_pantry", PantryBlock::new),
-    DARK_OAK_PANTRY("dark_oak_pantry", PantryBlock::new),
-    CRIMSON_PANTRY("crimson_pantry", PantryBlock::new),
-    WARPED_PANTRY("warped_pantry", PantryBlock::new),
+    OAK_CABINET("oak_cabinet", CabinetBlock::new),
+    BIRCH_CABINET("birch_cabinet", CabinetBlock::new),
+    SPRUCE_CABINET("spruce_cabinet", CabinetBlock::new),
+    JUNGLE_CABINET("jungle_cabinet", CabinetBlock::new),
+    ACACIA_CABINET("acacia_cabinet", CabinetBlock::new),
+    DARK_OAK_CABINET("dark_oak_cabinet", CabinetBlock::new),
+    CRIMSON_CABINET("crimson_cabinet", CabinetBlock::new),
+    WARPED_CABINET("warped_cabinet", CabinetBlock::new),
     TATAMI("tatami", TatamiBlock::new),
     FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, true),
     HALF_TATAMI_MAT("half_tatami_mat", TatamiHalfMatBlock::new),

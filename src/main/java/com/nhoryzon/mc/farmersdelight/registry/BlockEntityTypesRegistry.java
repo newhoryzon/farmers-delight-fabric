@@ -2,9 +2,10 @@ package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.entity.block.BasketBlockEntity;
+import com.nhoryzon.mc.farmersdelight.entity.block.CanvasSignBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.PantryBlockEntity;
+import com.nhoryzon.mc.farmersdelight.entity.block.CabinetBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.StoveBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
@@ -21,8 +22,8 @@ public enum BlockEntityTypesRegistry {
     COOKING_POT("cooking_pot", CookingPotBlockEntity.class, CookingPotBlockEntity::new, BlocksRegistry.COOKING_POT),
     BASKET("basket", BasketBlockEntity.class, BasketBlockEntity::new, BlocksRegistry.BASKET),
     CUTTING_BOARD("cutting_board", CuttingBoardBlockEntity.class, CuttingBoardBlockEntity::new, BlocksRegistry.CUTTING_BOARD),
-    PANTRY("pantry", PantryBlockEntity.class, PantryBlockEntity::new, BlocksRegistry.OAK_PANTRY, BlocksRegistry.BIRCH_PANTRY,
-            BlocksRegistry.SPRUCE_PANTRY, BlocksRegistry.JUNGLE_PANTRY, BlocksRegistry.ACACIA_PANTRY, BlocksRegistry.DARK_OAK_PANTRY);
+    CABINET("cabinet", CabinetBlockEntity.class, CabinetBlockEntity::new, BlocksRegistry.OAK_CABINET, BlocksRegistry.BIRCH_CABINET,
+            BlocksRegistry.SPRUCE_CABINET, BlocksRegistry.JUNGLE_CABINET, BlocksRegistry.ACACIA_CABINET, BlocksRegistry.DARK_OAK_CABINET);
 
     private final String pathName;
     private final Class<? extends BlockEntity> blockEntityClass;
