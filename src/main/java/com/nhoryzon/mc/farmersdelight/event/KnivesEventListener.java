@@ -2,9 +2,12 @@ package com.nhoryzon.mc.farmersdelight.event;
 
 import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
+import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +33,7 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         ItemStack heldItem = player.getMainHandStack();
-        if (heldItem.isIn(TagsRegistry.KNIVES) && state.getBlock() instanceof CakeBlock) {
+        if (heldItem.isIn(TagsRegistry.KNIVES) && (state.getBlock() instanceof CakeBlock || state.isIn(TagsRegistry.DROPS_CAKE_SLICE))) {
             ItemScatterer.spawn(world, pos,
                     DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
         }
@@ -42,17 +45,26 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
         BlockState state = world.getBlockState(pos);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (state.getBlock() instanceof CakeBlock && heldItem.isIn(TagsRegistry.KNIVES)) {
-            int bites = state.get(CakeBlock.BITES);
-            if (bites < 6) {
-                world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), 3);
-            } else {
-                world.removeBlock(pos, false);
-            }
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
-            world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, .8f, .8f);
+        if (heldItem.isIn(TagsRegistry.KNIVES)) {
+            if (state.isIn(TagsRegistry.DROPS_CAKE_SLICE)) {
+                world.setBlockState(pos, Blocks.CAKE.getDefaultState().with(CakeBlock.BITES, 1), BlockStateUtils.DEFAULT);
+                Block.dropStacks(state, world, pos);
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
+                world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, .8f, .8f);
 
-            return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS;
+            } else if (state.getBlock() instanceof CakeBlock) {
+                int bites = state.get(CakeBlock.BITES);
+                if (bites < 6) {
+                    world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), BlockStateUtils.DEFAULT);
+                } else {
+                    world.removeBlock(pos, false);
+                }
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
+                world.playSound(null, pos, SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, .8f, .8f);
+
+                return ActionResult.SUCCESS;
+            }
         }
 
         return ActionResult.PASS;

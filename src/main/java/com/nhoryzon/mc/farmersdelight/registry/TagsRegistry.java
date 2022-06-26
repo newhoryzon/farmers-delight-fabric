@@ -22,11 +22,14 @@ public class TagsRegistry {
     public static final TagKey<Block> UNAFFECTED_BY_RICH_SOIL = create("unaffected_by_rich_soil", Registry.BLOCK_KEY);
     public static final TagKey<Block> MUSHROOM_COLONY_GROWABLE_ON = create("mushroom_colony_growable_on", Registry.BLOCK_KEY);
     public static final TagKey<Block> KNIVES_CUTTABLE = create("knives_cuttable", Registry.BLOCK_KEY);
+    public static final TagKey<Block> DROPS_CAKE_SLICE = create("drops_cake_slice", Registry.BLOCK_KEY);
+
     public static final TagKey<Item> WILD_CROPS_ITEM = create("wild_crops", Registry.ITEM_KEY);
     public static final TagKey<Item> STRAW_HARVESTERS = create("straw_harvesters", Registry.ITEM_KEY);
     public static final TagKey<Item> COMFORT_FOODS = create("comfort_foods", Registry.ITEM_KEY);
     public static final TagKey<Item> WOLF_PREY = create("wolf_prey", Registry.ITEM_KEY);
     public static final TagKey<Item> CABBAGE_ROLL_INGREDIENTS = create("cabbage_roll_ingredients", Registry.ITEM_KEY);
+
     public static final TagKey<EntityType<?>> DOG_FOOD_USERS = create("dog_food_users", Registry.ENTITY_TYPE_KEY);
     public static final TagKey<EntityType<?>> HORSE_FEED_USERS = create("horse_feed_users", Registry.ENTITY_TYPE_KEY);
 
