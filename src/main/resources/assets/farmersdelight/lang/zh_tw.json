@@ -3,14 +3,14 @@
   "block.farmersdelight.cooking_pot": "烹飪鍋",
   "block.farmersdelight.basket": "籃子",
   "block.farmersdelight.cutting_board": "砧板",
-  "block.farmersdelight.oak_pantry": "橡木儲藏櫃",
-  "block.farmersdelight.birch_pantry": "樺木儲藏櫃",
-  "block.farmersdelight.spruce_pantry": "杉木儲藏櫃",
-  "block.farmersdelight.jungle_pantry": "叢林木儲藏櫃",
-  "block.farmersdelight.acacia_pantry": "相思木儲藏櫃",
-  "block.farmersdelight.dark_oak_pantry": "黑橡木儲藏櫃",
-  "block.farmersdelight.crimson_pantry": "緋紅蕈木儲藏櫃",
-  "block.farmersdelight.warped_pantry": "扭曲蕈木儲藏櫃",
+  "block.farmersdelight.oak_cabinet": "橡木儲藏櫃",
+  "block.farmersdelight.birch_cabinet": "樺木儲藏櫃",
+  "block.farmersdelight.spruce_cabinet": "杉木儲藏櫃",
+  "block.farmersdelight.jungle_cabinet": "叢林木儲藏櫃",
+  "block.farmersdelight.acacia_cabinet": "相思木儲藏櫃",
+  "block.farmersdelight.dark_oak_cabinet": "黑橡木儲藏櫃",
+  "block.farmersdelight.crimson_cabinet": "緋紅蕈木儲藏櫃",
+  "block.farmersdelight.warped_cabinet": "扭曲蕈木儲藏櫃",
   "block.farmersdelight.rope": "繩索",
   "block.farmersdelight.safety_net": "安全網",
   "block.farmersdelight.tatami": "榻榻米塊",
@@ -32,8 +32,8 @@
   "block.farmersdelight.tomatoes": "番茄",
   "block.farmersdelight.cabbages": "高麗菜",
   "block.farmersdelight.onions": "洋蔥",
-  "block.farmersdelight.rice_crop": "稻穗",
-  "block.farmersdelight.rice_upper_crop": "稻穗",
+  "block.farmersdelight.rice": "稻穗",
+  "block.farmersdelight.rice_panicles": "稻穗",
   "block.farmersdelight.brown_mushroom_colony": "棕色蘑菇菌落",
   "block.farmersdelight.red_mushroom_colony": "紅色蘑菇菌落",
 
@@ -144,21 +144,21 @@
   "item.farmersdelight.dog_food": "狗飼料",
   "item.farmersdelight.horse_feed": "馬飼料",
 
-  "effect.farmersdelight.nourished": "滋補",
+  "effect.farmersdelight.nourishment": "滋補",
   "effect.farmersdelight.comfort": "放鬆",
 
   "enchantment.farmersdelight.backstabbing": "背刺",
   "enchantment.farmersdelight.backstabbing.desc": "增加從背後攻擊的傷害",
 
-  "effect.farmersdelight.nourished.0.desc": "讓飽足感停止自然流失,除非回血.",
+  "effect.farmersdelight.nourishment.0.desc": "讓飽足感停止自然流失,除非回血.",
   "effect.farmersdelight.comfort.0.desc": "使您免受飢餓,緩慢和虛弱的困擾.",
 
-  "itemGroup.farmersdelight.main": "Farmer's Delight",
+  "itemGroup.farmersdelight": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "烹飪鍋",
   "farmersdelight.container.cooking_pot.served_on": "送達: %s",
   "farmersdelight.container.basket": "籃子",
-  "farmersdelight.container.pantry": "儲藏櫃",
+  "farmersdelight.container.cabinet": "儲藏櫃",
 
   "farmersdelight.tooltip.cooking_pot.empty": "空空如也",
   "farmersdelight.tooltip.cooking_pot.single_serving": "目前的第 1 份:",
@@ -211,10 +211,10 @@
 
   "farmersdelight.block.feast.use_container": "你需要一個 %s 來吃",
 
-  "farmersdelight.jei.cooking": "烹飪",
-  "farmersdelight.jei.cutting": "砧板",
-  "farmersdelight.jei.decomposition": "分解",
-  "farmersdelight.jei.decomposition.light": "光合反應",
-  "farmersdelight.jei.decomposition.fluid": "水合反應",
-  "farmersdelight.jei.decomposition.accelerators": "能來加速 (見下文)"
+  "farmersdelight.rei.cooking": "烹飪",
+  "farmersdelight.rei.cutting": "砧板",
+  "farmersdelight.rei.decomposition": "分解",
+  "farmersdelight.rei.decomposition.light": "光合反應",
+  "farmersdelight.rei.decomposition.fluid": "水合反應",
+  "farmersdelight.rei.decomposition.accelerators": "能來加速 (見下文)"
 }
