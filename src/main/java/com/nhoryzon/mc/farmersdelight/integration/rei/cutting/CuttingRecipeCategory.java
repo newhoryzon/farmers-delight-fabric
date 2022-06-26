@@ -32,7 +32,7 @@ public class CuttingRecipeCategory implements DisplayCategory<CuttingRecipeDispl
 
     @Override
     public Text getTitle() {
-        return FarmersDelightMod.i18n("jei.cutting");
+        return FarmersDelightMod.i18n("rei.cutting");
     }
 
     @Override
