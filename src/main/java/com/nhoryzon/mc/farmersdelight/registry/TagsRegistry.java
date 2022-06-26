@@ -20,6 +20,7 @@ public class TagsRegistry {
     public static final TagKey<Block> TRAY_HEAT_SOURCES = create("tray_heat_sources", Registry.BLOCK_KEY);
     public static final TagKey<Block> COMPOST_ACTIVATORS = create("compost_activators", Registry.BLOCK_KEY);
     public static final TagKey<Block> UNAFFECTED_BY_RICH_SOIL = create("unaffected_by_rich_soil", Registry.BLOCK_KEY);
+    public static final TagKey<Block> MUSHROOM_COLONY_GROWABLE_ON = create("mushroom_colony_growable_on", Registry.BLOCK_KEY);
     public static final TagKey<Block> KNIVES_CUTTABLE = create("knives_cuttable", Registry.BLOCK_KEY);
     public static final TagKey<Item> WILD_CROPS_ITEM = create("wild_crops", Registry.ITEM_KEY);
     public static final TagKey<Item> STRAW_HARVESTERS = create("straw_harvesters", Registry.ITEM_KEY);
