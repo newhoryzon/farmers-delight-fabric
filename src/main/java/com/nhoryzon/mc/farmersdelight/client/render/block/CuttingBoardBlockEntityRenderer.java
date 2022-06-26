@@ -12,8 +12,10 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.HoeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.TridentItem;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
@@ -83,12 +85,18 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
         matrixStackIn.translate(.5d, .25d, .5d);
 
         // Rotate item to face the cutting board's front side
-        float f = -direction.asRotation();
+        float f = -direction.asRotation() + 180;
         matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
 
         // Rotate item to be carved on the surface, A little less so for hoes and pickaxes.
-        matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
-                itemStack.getItem() instanceof PickaxeItem || itemStack.getItem() instanceof HoeItem ? 225.f : 180.f));
+        Item tool = itemStack.getItem();
+        float poseAngle = 180.f;
+        if (tool instanceof PickaxeItem || tool instanceof HoeItem) {
+            poseAngle = 225.f;
+        } else if (tool instanceof TridentItem) {
+            poseAngle = 135.f;
+        }
+        matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(poseAngle));
 
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);

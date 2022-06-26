@@ -16,7 +16,8 @@ import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -27,7 +28,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -35,7 +35,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -43,33 +42,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class CuttingBoardBlockEntity extends BlockEntity {
 
     public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
 
     private boolean isItemCarvingBoard;
-    private final ItemStackHandler itemHandler = new ItemStackHandler() {
-        @Override
-        public int getMaxCountForSlot(int slot) {
-            return 1;
-        }
-
-        @Override
-        protected void onInventorySlotChanged(int slot) {
-            inventoryChanged();
-        }
-    };
-    protected final RecipeType<? extends CuttingBoardRecipe> recipeType;
-
-    protected CuttingBoardBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, RecipeType<? extends CuttingBoardRecipe> recipeType) {
-        super(blockEntityType, blockPos, blockState);
-        this.recipeType = recipeType;
-        this.isItemCarvingBoard = false;
-    }
+    private final ItemStackHandler itemHandler;
 
     public CuttingBoardBlockEntity(BlockPos blockPos, BlockState blockState) {
-        this(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState, RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type());
+        super(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState);
+        this.isItemCarvingBoard = false;
+        this.itemHandler = new ItemStackHandler() {
+            @Override
+            public int getMaxCountForSlot(int slot) {
+                return 1;
+            }
+
+            @Override
+            protected void onInventorySlotChanged(int slot) {
+                inventoryChanged();
+            }
+        };
     }
 
     @Override
@@ -108,24 +103,30 @@ public class CuttingBoardBlockEntity extends BlockEntity {
      * @return Whether the process succeeded or failed.
      */
     public boolean processItemUsingTool(ItemStack tool, PlayerEntity player) {
-        List<? extends CuttingBoardRecipe> recipeList = Objects.requireNonNull(world).getRecipeManager()
-                .getAllMatches(recipeType, new RecipeWrapper(itemHandler), world);
-        CuttingBoardRecipe recipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(tool))
-                .findAny().orElse(null);
+        if (world == null) {
+            return false;
+        }
+
+        List<CuttingBoardRecipe> recipeList = world.getRecipeManager()
+                .getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), new RecipeWrapper(itemHandler), world);
+        Optional<CuttingBoardRecipe> matchingRecipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(tool)).findAny();
 
         if (player != null) {
             if (recipeList.isEmpty()) {
                 player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_item"), true);
-            } else if (recipe == null) {
+            } else if (matchingRecipe.isEmpty()) {
                 player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_tool"), true);
             }
         }
 
-        if (recipe != null) {
-            DefaultedList<ItemStack> results = recipe.getResultList();
+        matchingRecipe.ifPresent(recipe -> {
+            List<ItemStack> results = recipe.getRolledResults(world.getRandom(), EnchantmentHelper.getLevel(Enchantments.FORTUNE, tool));
             for (ItemStack result : results) {
                 Direction direction = getCachedState().get(CuttingBoardBlock.FACING).rotateYCounterclockwise();
-                ItemEntity entity = new ItemEntity(world, pos.getX() + .5 + (direction.getOffsetX() * .2), pos.getY() + .2, pos.getZ() + .5 + (direction.getOffsetZ() * .2), result.copy());
+                ItemEntity entity = new ItemEntity(world,
+                        pos.getX() + .5 + (direction.getOffsetX() * .2),
+                        pos.getY() + .2,
+                        pos.getZ() + .5 + (direction.getOffsetZ() * .2), result.copy());
                 entity.setVelocity(direction.getOffsetX() * .2f, .0f, direction.getOffsetZ() * .2f);
                 world.spawnEntity(entity);
             }
@@ -142,10 +143,9 @@ public class CuttingBoardBlockEntity extends BlockEntity {
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 ((CuttingBoardTrigger) AdvancementsRegistry.CUTTING_BOARD.get()).trigger(serverPlayer);
             }
-            return true;
-        }
+        });
 
-        return false;
+        return matchingRecipe.isPresent();
     }
 
     public void playProcessingSound(String soundEventID, Item tool, Item boardItem) {
