@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropBlock;
-import net.minecraft.block.Fertilizable;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.state.StateManager;
@@ -20,7 +19,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
-public class RiceUpperCropBlock extends CropBlock implements Fertilizable {
+public class RiceUpperCropBlock extends CropBlock {
     public static final IntProperty RICE_AGE = Properties.AGE_3;
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.createCuboidShape(3.d, .0d, 3.d, 13.d, 8.d, 13.d),
@@ -55,7 +54,7 @@ public class RiceUpperCropBlock extends CropBlock implements Fertilizable {
 
     @Override
     protected int getGrowthAmount(World world) {
-        return MathHelper.nextInt(world.getRandom(), 1, 4);
+        return super.getGrowthAmount(world) / 3;
     }
 
     @Override

@@ -52,8 +52,8 @@
   "block.farmersdelight.tomatoes": "Tomaten",
   "block.farmersdelight.cabbages": "Kolen",
   "block.farmersdelight.onions": "Ajuinen",
-  "block.farmersdelight.rice": "Rijstgewassen",
-  "block.farmersdelight.rice_panicles": "Rijstgewassen",
+  "block.farmersdelight.rice_crop": "Rijstgewassen",
+  "block.farmersdelight.rice_upper_crop": "Rijstgewassen",
   "block.farmersdelight.brown_mushroom_colony": "Bruine Paddenstoelenkolonie",
   "block.farmersdelight.red_mushroom_colony": "Rode Paddenstoelenkolonie",
 
