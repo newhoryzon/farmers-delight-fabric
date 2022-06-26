@@ -3,6 +3,7 @@ package com.nhoryzon.mc.farmersdelight.registry;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
 import com.nhoryzon.mc.farmersdelight.block.CabbageCropBlock;
+import com.nhoryzon.mc.farmersdelight.block.CanvasRugBlock;
 import com.nhoryzon.mc.farmersdelight.block.CookingPotBlock;
 import com.nhoryzon.mc.farmersdelight.block.CuttingBoardBlock;
 import com.nhoryzon.mc.farmersdelight.block.FeastBlock;
@@ -29,6 +30,8 @@ import com.nhoryzon.mc.farmersdelight.block.TomatoBushCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildPatchBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildRiceCropBlock;
+import com.nhoryzon.mc.farmersdelight.block.signs.StandingCanvasSignBlock;
+import com.nhoryzon.mc.farmersdelight.block.signs.WallCanvasSignBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -41,12 +44,14 @@ import net.minecraft.block.Material;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.function.Supplier;
 
 public enum BlocksRegistry {
+
     STOVE("stove", StoveBlock::new),
     COOKING_POT("cooking_pot", CookingPotBlock::new, true),
     BASKET("basket", BasketBlock::new, true),
@@ -72,9 +77,46 @@ public enum BlocksRegistry {
     DARK_OAK_CABINET("dark_oak_cabinet", CabinetBlock::new),
     CRIMSON_CABINET("crimson_cabinet", CabinetBlock::new),
     WARPED_CABINET("warped_cabinet", CabinetBlock::new),
+    CANVAS_RUG("canvas_rug", CanvasRugBlock::new, true),
     TATAMI("tatami", TatamiBlock::new),
     FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, true),
     HALF_TATAMI_MAT("half_tatami_mat", TatamiHalfMatBlock::new),
+
+    CANVAS_SIGN("canvas_sign", () -> new StandingCanvasSignBlock(null)),
+    WHITE_CANVAS_SIGN("white_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.WHITE)),
+    ORANGE_CANVAS_SIGN("orange_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.ORANGE)),
+    MAGENTA_CANVAS_SIGN("magenta_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.MAGENTA)),
+    LIGHT_BLUE_CANVAS_SIGN("light_blue_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.LIGHT_BLUE)),
+    YELLOW_CANVAS_SIGN("yellow_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.YELLOW)),
+    LIME_CANVAS_SIGN("lime_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.LIME)),
+    PINK_CANVAS_SIGN("pink_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.PINK)),
+    GRAY_CANVAS_SIGN("gray_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.GRAY)),
+    LIGHT_GRAY_CANVAS_SIGN("light_gray_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.LIGHT_GRAY)),
+    CYAN_CANVAS_SIGN("cyan_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.CYAN)),
+    PURPLE_CANVAS_SIGN("purple_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.PURPLE)),
+    BLUE_CANVAS_SIGN("blue_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.BLUE)),
+    BROWN_CANVAS_SIGN("brown_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.BROWN)),
+    GREEN_CANVAS_SIGN("green_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.GREEN)),
+    RED_CANVAS_SIGN("red_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.RED)),
+    BLACK_CANVAS_SIGN("black_canvas_sign", () -> new StandingCanvasSignBlock(DyeColor.BLACK)),
+
+    CANVAS_WALL_SIGN("canvas_wall_sign", () -> new WallCanvasSignBlock(CANVAS_SIGN.get(), null)),
+    WHITE_CANVAS_WALL_SIGN("white_canvas_wall_sign", () -> new WallCanvasSignBlock(WHITE_CANVAS_SIGN.get(), DyeColor.WHITE)),
+    ORANGE_CANVAS_WALL_SIGN("orange_canvas_wall_sign", () -> new WallCanvasSignBlock(ORANGE_CANVAS_SIGN.get(), DyeColor.ORANGE)),
+    MAGENTA_CANVAS_WALL_SIGN("magenta_canvas_wall_sign", () -> new WallCanvasSignBlock(MAGENTA_CANVAS_SIGN.get(), DyeColor.MAGENTA)),
+    LIGHT_BLUE_CANVAS_WALL_SIGN("light_blue_canvas_wall_sign", () -> new WallCanvasSignBlock(LIGHT_BLUE_CANVAS_SIGN.get(), DyeColor.LIGHT_BLUE)),
+    YELLOW_CANVAS_WALL_SIGN("yellow_canvas_wall_sign", () -> new WallCanvasSignBlock(YELLOW_CANVAS_SIGN.get(), DyeColor.YELLOW)),
+    LIME_CANVAS_WALL_SIGN("lime_canvas_wall_sign", () -> new WallCanvasSignBlock(LIME_CANVAS_SIGN.get(), DyeColor.LIME)),
+    PINK_CANVAS_WALL_SIGN("pink_canvas_wall_sign", () -> new WallCanvasSignBlock(PINK_CANVAS_SIGN.get(), DyeColor.PINK)),
+    GRAY_CANVAS_WALL_SIGN("gray_canvas_wall_sign", () -> new WallCanvasSignBlock(GRAY_CANVAS_SIGN.get(), DyeColor.GRAY)),
+    LIGHT_GRAY_CANVAS_WALL_SIGN("light_gray_canvas_wall_sign", () -> new WallCanvasSignBlock(LIGHT_GRAY_CANVAS_SIGN.get(), DyeColor.LIGHT_GRAY)),
+    CYAN_CANVAS_WALL_SIGN("cyan_canvas_wall_sign", () -> new WallCanvasSignBlock(CYAN_CANVAS_SIGN.get(), DyeColor.CYAN)),
+    PURPLE_CANVAS_WALL_SIGN("purple_canvas_wall_sign", () -> new WallCanvasSignBlock(PURPLE_CANVAS_SIGN.get(), DyeColor.PURPLE)),
+    BLUE_CANVAS_WALL_SIGN("blue_canvas_wall_sign", () -> new WallCanvasSignBlock(BLUE_CANVAS_SIGN.get(), DyeColor.BLUE)),
+    BROWN_CANVAS_WALL_SIGN("brown_canvas_wall_sign", () -> new WallCanvasSignBlock(BROWN_CANVAS_SIGN.get(), DyeColor.BROWN)),
+    GREEN_CANVAS_WALL_SIGN("green_canvas_wall_sign", () -> new WallCanvasSignBlock(GREEN_CANVAS_SIGN.get(), DyeColor.GREEN)),
+    RED_CANVAS_WALL_SIGN("red_canvas_wall_sign", () -> new WallCanvasSignBlock(RED_CANVAS_SIGN.get(), DyeColor.RED)),
+    BLACK_CANVAS_WALL_SIGN("black_canvas_wall_sign", () -> new WallCanvasSignBlock(BLACK_CANVAS_SIGN.get(), DyeColor.BLACK)),
 
     BROWN_MUSHROOM_COLONY("brown_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.BROWN_MUSHROOM), Items.BROWN_MUSHROOM), true),
     RED_MUSHROOM_COLONY("red_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.RED_MUSHROOM), Items.RED_MUSHROOM), true),

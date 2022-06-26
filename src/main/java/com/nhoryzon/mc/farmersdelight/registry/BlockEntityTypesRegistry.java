@@ -23,7 +23,18 @@ public enum BlockEntityTypesRegistry {
     BASKET("basket", BasketBlockEntity.class, BasketBlockEntity::new, BlocksRegistry.BASKET),
     CUTTING_BOARD("cutting_board", CuttingBoardBlockEntity.class, CuttingBoardBlockEntity::new, BlocksRegistry.CUTTING_BOARD),
     CABINET("cabinet", CabinetBlockEntity.class, CabinetBlockEntity::new, BlocksRegistry.OAK_CABINET, BlocksRegistry.BIRCH_CABINET,
-            BlocksRegistry.SPRUCE_CABINET, BlocksRegistry.JUNGLE_CABINET, BlocksRegistry.ACACIA_CABINET, BlocksRegistry.DARK_OAK_CABINET);
+            BlocksRegistry.SPRUCE_CABINET, BlocksRegistry.JUNGLE_CABINET, BlocksRegistry.ACACIA_CABINET, BlocksRegistry.DARK_OAK_CABINET),
+    CANVAS_SIGN("canvas_sign", CanvasSignBlockEntity.class, CanvasSignBlockEntity::new,
+            BlocksRegistry.CANVAS_SIGN, BlocksRegistry.BLACK_CANVAS_SIGN, BlocksRegistry.BLUE_CANVAS_SIGN, BlocksRegistry.BROWN_CANVAS_SIGN,
+            BlocksRegistry.CYAN_CANVAS_SIGN, BlocksRegistry.GRAY_CANVAS_SIGN, BlocksRegistry.GREEN_CANVAS_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_SIGN,
+            BlocksRegistry.LIGHT_BLUE_CANVAS_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_SIGN, BlocksRegistry.LIME_CANVAS_SIGN, BlocksRegistry.MAGENTA_CANVAS_SIGN,
+            BlocksRegistry.ORANGE_CANVAS_SIGN, BlocksRegistry.PINK_CANVAS_SIGN, BlocksRegistry.PURPLE_CANVAS_SIGN, BlocksRegistry.RED_CANVAS_SIGN,
+            BlocksRegistry.WHITE_CANVAS_SIGN, BlocksRegistry.YELLOW_CANVAS_SIGN,
+            BlocksRegistry.CANVAS_WALL_SIGN, BlocksRegistry.BLACK_CANVAS_WALL_SIGN, BlocksRegistry.BLUE_CANVAS_WALL_SIGN, BlocksRegistry.BROWN_CANVAS_WALL_SIGN,
+            BlocksRegistry.CYAN_CANVAS_WALL_SIGN, BlocksRegistry.GRAY_CANVAS_WALL_SIGN, BlocksRegistry.GREEN_CANVAS_WALL_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN,
+            BlocksRegistry.LIGHT_BLUE_CANVAS_WALL_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN, BlocksRegistry.LIME_CANVAS_WALL_SIGN, BlocksRegistry.MAGENTA_CANVAS_WALL_SIGN,
+            BlocksRegistry.ORANGE_CANVAS_WALL_SIGN, BlocksRegistry.PINK_CANVAS_WALL_SIGN, BlocksRegistry.PURPLE_CANVAS_WALL_SIGN, BlocksRegistry.RED_CANVAS_WALL_SIGN,
+            BlocksRegistry.WHITE_CANVAS_WALL_SIGN, BlocksRegistry.YELLOW_CANVAS_WALL_SIGN);
 
     private final String pathName;
     private final Class<? extends BlockEntity> blockEntityClass;

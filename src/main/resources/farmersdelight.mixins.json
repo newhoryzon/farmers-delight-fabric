@@ -6,6 +6,7 @@
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
     "CampfireBaleMixin",
+    "CanvasSignEditScreenMixin",
     "ChickenEntityBreedingMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
@@ -17,8 +18,8 @@
     "PigEntityBreedingMixin",
     "PlantBlockOnRichSoilMixin",
     "StemBlockOnRichSoilFarmlandMixin",
-    "accessors.PlayerExhaustionAccessorMixin",
-    "accessors.DispenserBehaviorsAccessorMixin"
+    "accessors.DispenserBehaviorsAccessorMixin",
+    "accessors.PlayerExhaustionAccessorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

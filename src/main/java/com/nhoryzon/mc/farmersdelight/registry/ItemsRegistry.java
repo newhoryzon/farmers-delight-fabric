@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.SignItem;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -61,9 +62,45 @@ public enum ItemsRegistry {
     DARK_OAK_CABINET("dark_oak_cabinet", () -> new ModBlockItem(BlocksRegistry.DARK_OAK_CABINET.get()), 300),
     CRIMSON_CABINET("crimson_cabinet", () -> new ModBlockItem(BlocksRegistry.CRIMSON_CABINET.get())),
     WARPED_CABINET("warped_cabinet", () -> new ModBlockItem(BlocksRegistry.WARPED_CABINET.get())),
+    CANVAS_RUG("canvas_rug", () -> new ModBlockItem(BlocksRegistry.CANVAS_RUG.get()), 200),
     TATAMI("tatami", () -> new ModBlockItem(BlocksRegistry.TATAMI.get()), 400),
     FULL_TATAMI_MAT("full_tatami_mat", () -> new ModBlockItem(BlocksRegistry.FULL_TATAMI_MAT.get()), 200),
     HALF_TATAMI_MAT("half_tatami_mat", () -> new ModBlockItem(BlocksRegistry.HALF_TATAMI_MAT.get()), 100),
+
+    CANVAS_SIGN("canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.CANVAS_SIGN.get(), BlocksRegistry.CANVAS_WALL_SIGN.get())),
+    WHITE_CANVAS_SIGN("white_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.WHITE_CANVAS_SIGN.get(), BlocksRegistry.WHITE_CANVAS_WALL_SIGN.get())),
+    ORANGE_CANVAS_SIGN("orange_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.ORANGE_CANVAS_SIGN.get(), BlocksRegistry.ORANGE_CANVAS_WALL_SIGN.get())),
+    MAGENTA_CANVAS_SIGN("magenta_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.MAGENTA_CANVAS_SIGN.get(), BlocksRegistry.MAGENTA_CANVAS_WALL_SIGN.get())),
+    LIGHT_BLUE_CANVAS_SIGN("light_blue_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.LIGHT_BLUE_CANVAS_SIGN.get(), BlocksRegistry.LIGHT_BLUE_CANVAS_WALL_SIGN.get())),
+    YELLOW_CANVAS_SIGN("yellow_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.YELLOW_CANVAS_SIGN.get(), BlocksRegistry.YELLOW_CANVAS_WALL_SIGN.get())),
+    LIME_CANVAS_SIGN("lime_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.LIME_CANVAS_SIGN.get(), BlocksRegistry.LIME_CANVAS_WALL_SIGN.get())),
+    PINK_CANVAS_SIGN("pink_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.PINK_CANVAS_SIGN.get(), BlocksRegistry.PINK_CANVAS_WALL_SIGN.get())),
+    GRAY_CANVAS_SIGN("gray_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.GRAY_CANVAS_SIGN.get(), BlocksRegistry.GRAY_CANVAS_WALL_SIGN.get())),
+    LIGHT_GRAY_CANVAS_SIGN("light_gray_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.LIGHT_GRAY_CANVAS_SIGN.get(), BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN.get())),
+    CYAN_CANVAS_SIGN("cyan_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.CYAN_CANVAS_SIGN.get(), BlocksRegistry.CYAN_CANVAS_WALL_SIGN.get())),
+    PURPLE_CANVAS_SIGN("purple_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.PURPLE_CANVAS_SIGN.get(), BlocksRegistry.PURPLE_CANVAS_WALL_SIGN.get())),
+    BLUE_CANVAS_SIGN("blue_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.BLUE_CANVAS_SIGN.get(), BlocksRegistry.BLUE_CANVAS_WALL_SIGN.get())),
+    BROWN_CANVAS_SIGN("brown_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.BROWN_CANVAS_SIGN.get(), BlocksRegistry.BROWN_CANVAS_WALL_SIGN.get())),
+    GREEN_CANVAS_SIGN("green_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.GREEN_CANVAS_SIGN.get(), BlocksRegistry.GREEN_CANVAS_WALL_SIGN.get())),
+    RED_CANVAS_SIGN("red_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.RED_CANVAS_SIGN.get(), BlocksRegistry.RED_CANVAS_WALL_SIGN.get())),
+    BLACK_CANVAS_SIGN("black_canvas_sign", () -> new SignItem(new ModItemSettings(),
+            BlocksRegistry.BLACK_CANVAS_SIGN.get(), BlocksRegistry.BLACK_CANVAS_WALL_SIGN.get())),
 
     ORGANIC_COMPOST("organic_compost", () -> new ModBlockItem(BlocksRegistry.ORGANIC_COMPOST.get())),
     RICH_SOIL("rich_soil", () -> new ModBlockItem(BlocksRegistry.RICH_SOIL.get())),
@@ -187,7 +224,7 @@ public enum ItemsRegistry {
     public static void registerAll() {
         for (ItemsRegistry value : values()) {
             Registry.register(Registry.ITEM, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.get());
-            if (value.burnTime != null) {
+            if (value.burnTime != null && value.burnTime > 0) {
                 FuelRegistry.INSTANCE.add(value.get(), value.burnTime);
             }
         }
