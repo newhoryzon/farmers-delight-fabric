@@ -8,7 +8,7 @@ import com.nhoryzon.mc.farmersdelight.item.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.recipe.CookingPotRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
@@ -377,7 +377,7 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
             return false;
         }
         BlockState checkState = world.getBlockState(pos.down());
-        if (checkState.isIn(Tags.HEAT_SOURCES)) {
+        if (checkState.isIn(TagsRegistry.HEAT_SOURCES)) {
             if (checkState.contains(Properties.LIT)) {
                 return checkState.get(Properties.LIT);
             }

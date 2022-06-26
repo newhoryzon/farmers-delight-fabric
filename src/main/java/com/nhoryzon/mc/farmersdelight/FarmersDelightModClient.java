@@ -43,10 +43,9 @@ public class FarmersDelightModClient implements ClientModInitializer {
 				(atlasTexture, registry) -> registry.register(CookingPotScreenHandler.EMPTY_CONTAINER_SLOT_BOWL));
 		ClientSpriteRegistryCallback.event(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE).register(
 				(atlasTexture, registry) -> registry.register(CanvasSignBlockEntityRenderer.BLANK_CANVAS_SIGN_SPRITE.getTextureId()));
-		CanvasSignBlockEntityRenderer.DYED_CANVAS_SIGN_SPRITES.forEach((dyeColor, spriteIdentifier) -> {
+		CanvasSignBlockEntityRenderer.DYED_CANVAS_SIGN_SPRITES.forEach((dyeColor, spriteIdentifier) ->
 			ClientSpriteRegistryCallback.event(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE).register(
-					(atlasTexture, registry) -> registry.register(spriteIdentifier.getTextureId()));
-		});
+					(atlasTexture, registry) -> registry.register(spriteIdentifier.getTextureId())));
 	}
 
 }

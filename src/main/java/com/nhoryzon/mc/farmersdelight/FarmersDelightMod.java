@@ -23,7 +23,6 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
@@ -42,7 +41,6 @@ import java.util.Set;
  */
 public class FarmersDelightMod implements ModInitializer {
 
-    public static final String COMMON_MOD_ID = "c";
     public static final String MOD_ID = "farmersdelight";
 
     public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),
@@ -51,8 +49,6 @@ public class FarmersDelightMod implements ModInitializer {
     public static MutableText i18n(String key, Object... args) {
         return Text.translatable(MOD_ID + "." + key, args);
     }
-
-
 
     @Override
     public void onInitialize() {

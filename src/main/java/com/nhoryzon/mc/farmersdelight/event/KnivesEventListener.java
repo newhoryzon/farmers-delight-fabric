@@ -1,7 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.event;
 
 import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.BlockState;
@@ -30,7 +30,7 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
     @Override
     public void afterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         ItemStack heldItem = player.getMainHandStack();
-        if (heldItem.isIn(Tags.KNIVES) && state.getBlock() instanceof CakeBlock) {
+        if (heldItem.isIn(TagsRegistry.KNIVES) && state.getBlock() instanceof CakeBlock) {
             ItemScatterer.spawn(world, pos,
                     DefaultedList.ofSize(1, new ItemStack(ItemsRegistry.CAKE_SLICE.get(), 7 - state.get(CakeBlock.BITES))));
         }
@@ -42,7 +42,7 @@ public class KnivesEventListener implements PlayerBlockBreakEvents.After, UseBlo
         BlockState state = world.getBlockState(pos);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (state.getBlock() instanceof CakeBlock && heldItem.isIn(Tags.KNIVES)) {
+        if (state.getBlock() instanceof CakeBlock && heldItem.isIn(TagsRegistry.KNIVES)) {
             int bites = state.get(CakeBlock.BITES);
             if (bites < 6) {
                 world.setBlockState(pos, state.with(CakeBlock.BITES, bites + 1), 3);

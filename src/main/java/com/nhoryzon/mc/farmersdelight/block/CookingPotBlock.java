@@ -5,7 +5,7 @@ import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -268,7 +268,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     }
 
     private boolean needsTrayForHeatSource(BlockState state) {
-        return state.isIn(Tags.TRAY_HEAT_SOURCES);
+        return state.isIn(TagsRegistry.TRAY_HEAT_SOURCES);
     }
 
 }

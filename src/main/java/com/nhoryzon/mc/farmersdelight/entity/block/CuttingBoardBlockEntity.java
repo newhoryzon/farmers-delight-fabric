@@ -11,7 +11,7 @@ import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -156,7 +155,7 @@ public class CuttingBoardBlockEntity extends BlockEntity {
             playSound(sound, 1.f, 1.f);
         } else if (tool instanceof ShearsItem) {
             playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.f, 1.f);
-        } else if (tool.getDefaultStack().isIn(Tags.KNIVES)) {
+        } else if (tool.getDefaultStack().isIn(TagsRegistry.KNIVES)) {
             playSound(SoundsRegistry.BLOCK_CUTTING_BOARD_KNIFE.get(), .8f, 1.f);
         } else if (boardItem instanceof BlockItem boardBlockItem) {
             Block block = boardBlockItem.getBlock();

@@ -1,7 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.item;
 
 import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarvedPumpkinBlock;
@@ -35,13 +35,13 @@ public class KnifeItem extends MiningToolItem {
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Set.of(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
 
     public KnifeItem(ToolMaterial material, Settings settings) {
-        super(.5f, -1.8f, material, Tags.KNIVES_CUTTABLE, settings);
+        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, settings);
     }
 
     @Override
     public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
         Material material = state.getMaterial();
-        if (state.isIn(Tags.KNIVES_CUTTABLE) || EFFECTIVE_ON_MATERIAL.contains(material)) {
+        if (state.isIn(TagsRegistry.KNIVES_CUTTABLE) || EFFECTIVE_ON_MATERIAL.contains(material)) {
             return this.miningSpeed;
         } else {
             return super.getMiningSpeedMultiplier(stack, state);
@@ -68,7 +68,7 @@ public class KnifeItem extends MiningToolItem {
         BlockState state = world.getBlockState(pos);
         Direction facing = context.getSide();
 
-        if (state.getBlock() == Blocks.PUMPKIN && tool.isIn(Tags.KNIVES)) {
+        if (state.getBlock() == Blocks.PUMPKIN && tool.isIn(TagsRegistry.KNIVES)) {
             PlayerEntity player = context.getPlayer();
             if (player != null && !world.isClient()) {
                 Direction direction = facing.getAxis() == Direction.Axis.Y ? player.getHorizontalFacing().getOpposite() : facing;

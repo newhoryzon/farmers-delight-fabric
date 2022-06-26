@@ -1,6 +1,7 @@
-package com.nhoryzon.mc.farmersdelight.tag;
+package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import net.fabricmc.fabric.impl.tag.convention.TagRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -10,13 +11,9 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 
 @SuppressWarnings("unused")
-public class Tags {
+public class TagsRegistry {
 
-    private Tags() throws InstantiationException {
-        throw new InstantiationException("Constant class cannot be instantiate");
-    }
-
-    public static final TagKey<Item> KNIVES = create(FarmersDelightMod.COMMON_MOD_ID, "tools/knives", Registry.ITEM_KEY);
+    public static final TagKey<Item> KNIVES = TagRegistration.ITEM_TAG_REGISTRATION.registerCommon("tools/knives");
 
     public static final TagKey<Block> WILD_CROPS = create("wild_crops", Registry.BLOCK_KEY);
     public static final TagKey<Block> HEAT_SOURCES = create("heat_sources", Registry.BLOCK_KEY);
@@ -36,8 +33,8 @@ public class Tags {
         return TagKey.of(registry, new Identifier(FarmersDelightMod.MOD_ID, pathName));
     }
 
-    private static <E> TagKey<E> create(String namespace, String pathName, RegistryKey<Registry<E>> registry) {
-        return TagKey.of(registry, new Identifier(namespace, pathName));
+    private TagsRegistry() throws InstantiationException {
+        throw new InstantiationException("Constant class cannot be instantiate");
     }
 
 }
