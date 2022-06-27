@@ -6,10 +6,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum SoundsRegistry {
+
+    BLOCK_STOVE_CRACKLE("block.stove.crackle"),
     BLOCK_COOKING_POT_BOIL("block.cooking_pot.boil"),
     BLOCK_CUTTING_BOARD_KNIFE("block.cutting_board.knife"),
-    BLOCK_STOVE_CRACKLE("block.stove.crackle"),
-    ITEM_TOMATO_PICK_FROM_BUSH("item.tomato.pick_from_bush");
+    BLOCK_TOMATO_PICK_FROM_BUSH("block.tomato_bush.pick_tomatoes"),
+
+    ENTITY_ROTTEN_TOMATO_THROW("entity.rotten_tomato.throw"),
+    ENTITY_ROTTEN_TOMATO_HIT("entity.rotten_tomato.hit");
 
     private final String pathName;
     private final SoundEvent soundEvent;
@@ -28,4 +32,5 @@ public enum SoundsRegistry {
     public SoundEvent get() {
         return soundEvent;
     }
+
 }

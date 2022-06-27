@@ -57,7 +57,7 @@
       }
     ]
   },
-  "item.tomato.pick_from_bush": {
+  "block.tomato_bush.pick_tomatoes": {
     "category": "block",
     "subtitle": "farmersdelight.subtitles.tomato.pick",
     "sounds": [
@@ -68,6 +68,24 @@
       {
         "name": "item/sweet_berries/pick_from_bush2",
         "stream": true
+      }
+    ]
+  },
+  "entity.rotten_tomato.throw": {
+    "subtitle": "farmersdelight.subtitles.rotten_tomato.throw",
+    "sounds": [
+      {
+        "name": "entity.snowball.throw",
+        "type": "event"
+      }
+    ]
+  },
+  "entity.rotten_tomato.hit": {
+    "subtitle": "farmersdelight.subtitles.rotten_tomato.hit",
+    "sounds": [
+      {
+        "name": "entity.slime.attack",
+        "type": "event"
       }
     ]
   }

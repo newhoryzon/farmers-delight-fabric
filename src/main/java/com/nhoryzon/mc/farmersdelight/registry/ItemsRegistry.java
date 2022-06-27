@@ -12,6 +12,7 @@ import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
 import com.nhoryzon.mc.farmersdelight.item.Foods;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
+import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -134,6 +135,7 @@ public enum ItemsRegistry {
     ONION("onion", () -> new BlockItem(BlocksRegistry.ONION_CROP.get(), new ModItemSettings().food(Foods.ONION.get()))),
     RICE_PANICLE("rice_panicle", () -> new Item(new ModItemSettings())),
     RICE("rice", () -> new BlockItem(BlocksRegistry.RICE_CROP.get(), new ModItemSettings())),
+    ROTTEN_TOMATO("rotten_tomato", RottenTomatoItem::new),
 
     FRIED_EGG("fried_egg", () -> new Item(new ModItemSettings().food(Foods.FRIED_EGG.get()))),
     MILK_BOTTLE("milk_bottle", () -> new MilkBottleItem(new ModItemSettings().recipeRemainder(Items.GLASS_BOTTLE).maxCount(16))),

@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.nhoryzon.mc.farmersdelight.entity.RottenTomatoEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
 import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
@@ -16,7 +17,10 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
@@ -24,8 +28,10 @@ import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Position;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
@@ -64,6 +70,7 @@ public class FarmersDelightMod implements ModInitializer {
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
         ConfiguredFeaturesRegistry.registerAll();
+        EntityTypesRegistry.registerAll();
 
         registerBiomeModifications();
         registerCompostables();
@@ -128,6 +135,7 @@ public class FarmersDelightMod implements ModInitializer {
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.SWEET_BERRY_CHEESECAKE_SLICE.get(), .85f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.CHOCOLATE_PIE_SLICE.get(), .85f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.RAW_PASTA.get(), .85f);
+        CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.ROTTEN_TOMATO.get(), .85f);
 
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.APPLE_PIE.get(), 1.f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.SWEET_BERRY_CHEESECAKE.get(), 1.f);
@@ -207,6 +215,12 @@ public class FarmersDelightMod implements ModInitializer {
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.DIAMOND_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
+        DispenserBlock.registerBehavior(ItemsRegistry.ROTTEN_TOMATO.get(), new ProjectileDispenserBehavior() {
+            @Override
+            protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
+                return new RottenTomatoEntity(world, position.getX(), position.getY(), position.getZ());
+            }
+        });
     }
 
     protected void registerVillagerTradeOffer() {
