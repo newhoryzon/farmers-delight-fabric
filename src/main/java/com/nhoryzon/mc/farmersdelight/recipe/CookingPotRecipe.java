@@ -101,6 +101,11 @@ public class CookingPotRecipe implements Recipe<Inventory> {
         return group;
     }
 
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
     public ItemStack getContainer() {
         return container;
     }
@@ -112,4 +117,5 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     public int getCookTime() {
         return cookTime;
     }
+
 }

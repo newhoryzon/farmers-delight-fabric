@@ -118,6 +118,11 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
         return group;
     }
 
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
     public Ingredient getTool() {
         return tool;
     }
@@ -125,4 +130,5 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     public String getSoundEvent() {
         return soundEvent;
     }
+
 }
