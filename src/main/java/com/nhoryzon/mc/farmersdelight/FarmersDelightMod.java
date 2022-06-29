@@ -5,6 +5,7 @@ import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispens
 import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
 import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
 import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -21,7 +22,9 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
@@ -35,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -78,6 +82,11 @@ public class FarmersDelightMod implements ModInitializer {
         registerLootTable();
         registerDispenserBehavior();
         registerVillagerTradeOffer();
+
+        ParrotsTamingIngredientsAccessorMixin.getTamingIngredients().addAll(List.of(
+                ItemsRegistry.CABBAGE_SEEDS.get(),
+                ItemsRegistry.TOMATO_SEED.get(),
+                ItemsRegistry.RICE.get()));
     }
 
     protected void registerEventListeners() {

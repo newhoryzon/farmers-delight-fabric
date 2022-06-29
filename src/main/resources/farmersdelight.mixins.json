@@ -19,6 +19,7 @@
     "PlantBlockOnRichSoilMixin",
     "StemBlockOnRichSoilFarmlandMixin",
     "accessors.DispenserBehaviorsAccessorMixin",
+    "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin"
   ],
   "injectors": {
