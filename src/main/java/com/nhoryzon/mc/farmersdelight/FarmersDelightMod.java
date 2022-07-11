@@ -37,6 +37,8 @@ import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -50,6 +52,8 @@ import java.util.Set;
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger("Farmer's Delight");
 
     public static final String MOD_ID = "farmersdelight";
 

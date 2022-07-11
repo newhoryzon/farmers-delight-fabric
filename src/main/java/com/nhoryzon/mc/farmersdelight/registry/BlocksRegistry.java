@@ -202,4 +202,9 @@ public enum BlocksRegistry {
 
         return block;
     }
+
+    public String getId() {
+        return Registry.BLOCK.getId(get()).toString();
+    }
+
 }

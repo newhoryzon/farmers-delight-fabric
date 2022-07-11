@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public enum BlockEntityTypesRegistry {
@@ -68,4 +69,9 @@ public enum BlockEntityTypesRegistry {
 
         return (BlockEntityType<T>) blockEntityType;
     }
+
+    public String getId() {
+        return Registry.BLOCK_ENTITY_TYPE.getId(get()).toString();
+    }
+
 }

@@ -238,4 +238,9 @@ public enum ItemsRegistry {
         }
         return item;
     }
+
+    public String getId() {
+        return Registry.ITEM.getId(get()).toString();
+    }
+
 }
