@@ -154,7 +154,7 @@
   "enchantment.farmersdelight.backstabbing": "Dźganie w plecy",
   "enchantment.farmersdelight.backstabbing.desc": "Zwiększa obrażenia przy uderzeniu w cel od tyłu.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Garnek",
   "farmersdelight.container.cooking_pot.served_on": "Sposób podania: %s",

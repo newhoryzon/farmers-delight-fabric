@@ -177,7 +177,7 @@
   "enchantment.farmersdelight.backstabbing": "Punyalada per l'esquena",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica  el mal al apunyalar un objectiu per d'arrera.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Olla",
   "farmersdelight.container.cooking_pot.served_on": "Servit en: %s",

@@ -177,7 +177,7 @@
   "enchantment.farmersdelight.backstabbing": "不意打ち",
   "enchantment.farmersdelight.backstabbing.desc": "背後から攻撃した際の攻撃力が上昇する",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "鍋",
   "farmersdelight.container.cooking_pot.served_on": "%sで保存",

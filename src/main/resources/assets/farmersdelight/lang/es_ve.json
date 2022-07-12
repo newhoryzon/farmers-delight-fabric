@@ -154,7 +154,7 @@
   "enchantment.farmersdelight.backstabbing": "Puñaladas por la espalda",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica el daño al golpear a un objetivo por detrás.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Olla",
   "farmersdelight.container.cooking_pot.served_on": "Servido en: %s",

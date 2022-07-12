@@ -178,7 +178,7 @@
   "enchantment.farmersdelight.backstabbing": "Hinterhalt",
   "enchantment.farmersdelight.backstabbing.desc": "Mehr Schaden durch Angriffe von hinten.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Kochtopf",
   "farmersdelight.container.cooking_pot.served_on": "Serviert auf: %s",

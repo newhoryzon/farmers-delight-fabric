@@ -151,7 +151,7 @@
   "enchantment.farmersdelight.backstabbing": "Coup dans le dos",
   "enchantment.farmersdelight.backstabbing.desc": "Augemente les dégats quand une cible est frappée dans le dos.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Marmite",
   "farmersdelight.container.cooking_pot.served_on": "Servi sur: %s",

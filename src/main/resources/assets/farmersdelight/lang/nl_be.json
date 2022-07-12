@@ -178,7 +178,7 @@
   "enchantment.farmersdelight.backstabbing": "Achtersteken",
   "enchantment.farmersdelight.backstabbing.desc": "Vergroot de schade bij het van achteren raken van een doelwit.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Kookpot",
   "farmersdelight.container.cooking_pot.served_on": "Geserveerd op: %s",

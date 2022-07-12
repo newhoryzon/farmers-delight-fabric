@@ -178,7 +178,7 @@
   "enchantment.farmersdelight.backstabbing": "Убод у леђа",
   "enchantment.farmersdelight.backstabbing.desc": "Појачава напад приликом удара мете отпозади.",
 
-  "itemGroup.farmersdelight": "Паорово одушевљење",
+  "itemGroup.farmersdelight.main": "Паорово одушевљење",
 
   "farmersdelight.container.cooking_pot": "Лонац",
   "farmersdelight.container.cooking_pot.served_on": "Послужено на: %s",

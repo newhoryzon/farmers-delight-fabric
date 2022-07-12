@@ -177,7 +177,7 @@
   "enchantment.farmersdelight.backstabbing": "Pugnalata alla schiena",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica i danni quando colpisci il bersaglio da dietro.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Pentola",
   "farmersdelight.container.cooking_pot.served_on": "Servito su: %s",

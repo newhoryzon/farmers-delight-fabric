@@ -177,7 +177,7 @@
   "enchantment.farmersdelight.backstabbing": "Предательство",
   "enchantment.farmersdelight.backstabbing.desc": "Увеличивает урон при атаке цели со спины.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Кухонный котел",
   "farmersdelight.container.cooking_pot.served_on": "Подаётся: %s",

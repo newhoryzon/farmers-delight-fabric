@@ -154,7 +154,7 @@
   "enchantment.farmersdelight.backstabbing": "Arkadan bıçaklama",
   "enchantment.farmersdelight.backstabbing.desc": "Bir hedefe arkadan vururken hasarı artırır.",
 
-  "itemGroup.farmersdelight": "Çiftçinin Keyfi",
+  "itemGroup.farmersdelight.main": "Çiftçinin Keyfi",
 
   "farmersdelight.container.cooking_pot": "Tencere",
   "farmersdelight.container.cooking_pot.served_on": "Sunulduğu tarih:%s",

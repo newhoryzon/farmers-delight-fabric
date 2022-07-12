@@ -178,7 +178,7 @@
   "enchantment.farmersdelight.backstabbing": "Mutiny",
   "enchantment.farmersdelight.backstabbing.desc": "Strikes true at the heart o' yer victim, be their backs turned on ye.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Pot o' Grub",
   "farmersdelight.container.cooking_pot.served_on": "Grab yerself a: %s",

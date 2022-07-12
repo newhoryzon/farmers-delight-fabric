@@ -178,7 +178,7 @@
   "enchantment.farmersdelight.backstabbing": "Punhalada nas costas",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica o dano ao atingir um alvo pelas costas.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Panela",
   "farmersdelight.container.cooking_pot.served_on": "Servido em: %s",

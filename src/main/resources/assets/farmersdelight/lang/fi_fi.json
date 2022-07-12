@@ -177,7 +177,7 @@
   "enchantment.farmersdelight.backstabbing": "Selkäänpuukotus",
   "enchantment.farmersdelight.backstabbing.desc": "Vahvistaa vahinkoa takaa päin hyökätessä.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Kattila",
   "farmersdelight.container.cooking_pot.served_on": "Astia: %s",

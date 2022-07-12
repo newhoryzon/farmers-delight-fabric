@@ -154,7 +154,7 @@
   "enchantment.farmersdelight.backstabbing": "Facada nas costas",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica dano ao atacar o alvo por trás.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Panela",
   "farmersdelight.container.cooking_pot.served_on": "Servido em: %s",

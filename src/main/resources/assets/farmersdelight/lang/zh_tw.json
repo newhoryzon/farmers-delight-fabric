@@ -153,7 +153,7 @@
   "effect.farmersdelight.nourishment.0.desc": "讓飽足感停止自然流失,除非回血.",
   "effect.farmersdelight.comfort.0.desc": "使您免受飢餓,緩慢和虛弱的困擾.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "烹飪鍋",
   "farmersdelight.container.cooking_pot.served_on": "送達: %s",

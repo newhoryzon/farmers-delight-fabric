@@ -154,7 +154,7 @@
   "enchantment.farmersdelight.backstabbing": "Menusuk dari Belakang",
   "enchantment.farmersdelight.backstabbing.desc": "Memperkuat kerusakan saat menyerang target dari belakang.",
 
-  "itemGroup.farmersdelight": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Farmer's Delight",
 
   "farmersdelight.container.cooking_pot": "Panci Memasak",
   "farmersdelight.container.cooking_pot.served_on": "Disajikan di: %s",

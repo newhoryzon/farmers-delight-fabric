@@ -175,7 +175,7 @@
   "enchantment.farmersdelight.backstabbing": "背刺",
   "enchantment.farmersdelight.backstabbing.desc": "增加从后攻击目标时的伤害。",
 
-  "itemGroup.farmersdelight": "农夫乐事",
+  "itemGroup.farmersdelight.main": "农夫乐事",
 
   "farmersdelight.container.cooking_pot": "厨锅",
   "farmersdelight.container.cooking_pot.served_on": "需摆放于：%s",
