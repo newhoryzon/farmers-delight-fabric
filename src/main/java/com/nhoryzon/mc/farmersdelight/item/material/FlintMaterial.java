@@ -1,10 +1,11 @@
-package com.nhoryzon.mc.farmersdelight.item;
+package com.nhoryzon.mc.farmersdelight.item.material;
 
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
 public class FlintMaterial implements ToolMaterial {
+
     @Override
     public int getDurability() {
         return 131;
@@ -34,4 +35,5 @@ public class FlintMaterial implements ToolMaterial {
     public Ingredient getRepairIngredient() {
         return Ingredient.ofItems(Items.FLINT);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.nhoryzon.mc.farmersdelight.item;
+package com.nhoryzon.mc.farmersdelight.item.enumeration;
 
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;

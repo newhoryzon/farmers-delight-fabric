@@ -34,8 +34,8 @@ public class KnifeItem extends MiningToolItem {
 
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Set.of(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
 
-    public KnifeItem(ToolMaterial material, Settings settings) {
-        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, settings);
+    public KnifeItem(ToolMaterial material) {
+        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, new ModItemSettings());
     }
 
     @Override

@@ -3,13 +3,14 @@ package com.nhoryzon.mc.farmersdelight.registry;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.item.ConsumableItem;
 import com.nhoryzon.mc.farmersdelight.item.DogFoodItem;
+import com.nhoryzon.mc.farmersdelight.item.DrinkableItem;
 import com.nhoryzon.mc.farmersdelight.item.HorseFeedItem;
 import com.nhoryzon.mc.farmersdelight.item.HotCocoaItem;
 import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import com.nhoryzon.mc.farmersdelight.item.MilkBottleItem;
 import com.nhoryzon.mc.farmersdelight.item.ModBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
-import com.nhoryzon.mc.farmersdelight.item.Foods;
+import com.nhoryzon.mc.farmersdelight.item.enumeration.Foods;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
@@ -118,28 +119,30 @@ public enum ItemsRegistry {
 
     /* Items */
 
-    FLINT_KNIFE("flint_knife", () -> new KnifeItem(com.nhoryzon.mc.farmersdelight.item.ToolMaterials.FLINT, new ModItemSettings())),
-    IRON_KNIFE("iron_knife", () -> new KnifeItem(ToolMaterials.IRON, new ModItemSettings())),
-    GOLDEN_KNIFE("golden_knife", () -> new KnifeItem(ToolMaterials.GOLD, new ModItemSettings())),
-    DIAMOND_KNIFE("diamond_knife", () -> new KnifeItem(ToolMaterials.DIAMOND, new ModItemSettings())),
-    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE, new ModItemSettings())),
+    FLINT_KNIFE("flint_knife", () -> new KnifeItem(com.nhoryzon.mc.farmersdelight.item.enumeration.ToolMaterials.FLINT)),
+    IRON_KNIFE("iron_knife", () -> new KnifeItem(ToolMaterials.IRON)),
+    GOLDEN_KNIFE("golden_knife", () -> new KnifeItem(ToolMaterials.GOLD)),
+    DIAMOND_KNIFE("diamond_knife", () -> new KnifeItem(ToolMaterials.DIAMOND)),
+    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE)),
 
     STRAW("straw", () -> new Item(new ModItemSettings()), 100),
     CANVAS("canvas", () -> new Item(new ModItemSettings()), 400),
     TREE_BARK("tree_bark", () -> new Item(new ModItemSettings()), 200),
 
     CABBAGE("cabbage", () -> new Item(new ModItemSettings().food(Foods.CABBAGE.get()))),
-    CABBAGE_SEEDS("cabbage_seeds", () -> new BlockItem(BlocksRegistry.CABBAGE_CROP.get(), new ModItemSettings())),
+    CABBAGE_SEEDS("cabbage_seeds", () -> new ModBlockItem(BlocksRegistry.CABBAGE_CROP.get())),
     TOMATO("tomato", () -> new Item(new ModItemSettings().food(Foods.TOMATO.get()))),
-    TOMATO_SEED("tomato_seeds", () -> new BlockItem(BlocksRegistry.TOMATO_CROP.get(), new ModItemSettings())),
+    TOMATO_SEED("tomato_seeds", () -> new ModBlockItem(BlocksRegistry.TOMATO_CROP.get())),
     ONION("onion", () -> new BlockItem(BlocksRegistry.ONION_CROP.get(), new ModItemSettings().food(Foods.ONION.get()))),
     RICE_PANICLE("rice_panicle", () -> new Item(new ModItemSettings())),
     RICE("rice", () -> new BlockItem(BlocksRegistry.RICE_CROP.get(), new ModItemSettings())),
     ROTTEN_TOMATO("rotten_tomato", RottenTomatoItem::new),
 
     FRIED_EGG("fried_egg", () -> new Item(new ModItemSettings().food(Foods.FRIED_EGG.get()))),
-    MILK_BOTTLE("milk_bottle", () -> new MilkBottleItem(new ModItemSettings().recipeRemainder(Items.GLASS_BOTTLE).maxCount(16))),
-    HOT_COCOA("hot_cocoa", () -> new HotCocoaItem(new ModItemSettings().recipeRemainder(Items.GLASS_BOTTLE).maxCount(16))),
+    MILK_BOTTLE("milk_bottle", MilkBottleItem::new),
+    HOT_COCOA("hot_cocoa", HotCocoaItem::new),
+    APPLE_CIDER("apple_cider", () -> new DrinkableItem(new ModItemSettings().food(Foods.APPLE_CIDER.get()).recipeRemainder(Items.GLASS_BOTTLE).maxCount(16), true, false)),
+    MELON_JUICE("melon_juice", () -> new DrinkableItem(new ModItemSettings().recipeRemainder(Items.GLASS_BOTTLE).maxCount(16))),
     TOMATO_SAUCE("tomato_sauce", () -> new ConsumableItem(new ModItemSettings().food(Foods.TOMATO_SAUCE.get()).recipeRemainder(Items.BOWL))),
     WHEAT_DOUGH("wheat_dough", () -> new Item(new ModItemSettings().food(Foods.WHEAT_DOUGH.get()))),
     RAW_PASTA("raw_pasta", () -> new Item(new ModItemSettings().food(Foods.RAW_PASTA.get()))),
@@ -168,8 +171,9 @@ public enum ItemsRegistry {
     SWEET_BERRY_COOKIE("sweet_berry_cookie", () -> new Item(new ModItemSettings().food(Foods.COOKIES.get()))),
     HONEY_COOKIE("honey_cookie", () -> new Item(new ModItemSettings().food(Foods.COOKIES.get()))),
     MELON_POPSICLE("melon_popsicle", () -> new Item(new ModItemSettings().food(Foods.POPSICLE.get()))),
-    FRUIT_SALAD("fruit_salad", () -> new ConsumableItem(new ModItemSettings().food(Foods.FRUIT_SALAD.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    MIXED_SALAD("mixed_salad", () -> new ConsumableItem(new ModItemSettings().food(Foods.MIXED_SALAD.get()).recipeRemainder(Items.BOWL).maxCount(16))),
+    FRUIT_SALAD("fruit_salad", () -> new ConsumableItem(new ModItemSettings().food(Foods.FRUIT_SALAD.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+
+    MIXED_SALAD("mixed_salad", () -> new ConsumableItem(new ModItemSettings().food(Foods.MIXED_SALAD.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
     NETHER_SALAD("nether_salad", () -> new ConsumableItem(new ModItemSettings().food(Foods.NETHER_SALAD.get()).recipeRemainder(Items.BOWL).maxCount(16))),
     BARBECUE_STICK("barbecue_stick", () -> new Item(new ModItemSettings().food(Foods.BARBECUE_STICK.get()))),
     EGG_SANDWICH("egg_sandwich", () -> new Item(new ModItemSettings().food(Foods.EGG_SANDWICH.get()))),
@@ -181,32 +185,33 @@ public enum ItemsRegistry {
     STUFFED_POTATO("stuffed_potato", () -> new Item(new ModItemSettings().food(Foods.STUFFED_POTATO.get()))),
     CABBAGE_ROLLS("cabbage_rolls", () -> new Item(new ModItemSettings().food(Foods.CABBAGE_ROLLS.get()))),
 
-    COOKED_RICE("cooked_rice", () -> new ConsumableItem(new ModItemSettings().food(Foods.COOKED_RICE.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    BEEF_STEW("beef_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.BEEF_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    CHICKEN_SOUP("chicken_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.CHICKEN_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    VEGETABLE_SOUP("vegetable_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.VEGETABLE_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    FISH_STEW("fish_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.FISH_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    FRIED_RICE("fried_rice", () -> new ConsumableItem(new ModItemSettings().food(Foods.FRIED_RICE.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    PUMPKIN_SOUP("pumpkin_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.PUMPKIN_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    BAKED_COD_STEW("baked_cod_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.BAKED_COD_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    NOODLE_SOUP("noodle_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.NOODLE_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16))),
+    COOKED_RICE("cooked_rice", () -> new ConsumableItem(new ModItemSettings().food(Foods.COOKED_RICE.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    BEEF_STEW("beef_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.BEEF_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    CHICKEN_SOUP("chicken_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.CHICKEN_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    VEGETABLE_SOUP("vegetable_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.VEGETABLE_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    FISH_STEW("fish_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.FISH_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    FRIED_RICE("fried_rice", () -> new ConsumableItem(new ModItemSettings().food(Foods.FRIED_RICE.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    PUMPKIN_SOUP("pumpkin_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.PUMPKIN_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    BAKED_COD_STEW("baked_cod_stew", () -> new ConsumableItem(new ModItemSettings().food(Foods.BAKED_COD_STEW.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    NOODLE_SOUP("noodle_soup", () -> new ConsumableItem(new ModItemSettings().food(Foods.NOODLE_SOUP.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
 
-    PASTA_WITH_MEATBALLS("pasta_with_meatballs", () -> new ConsumableItem(new ModItemSettings().food(Foods.PASTA_WITH_MEATBALLS.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    PASTA_WITH_MUTTON_CHOP("pasta_with_mutton_chop", () -> new ConsumableItem(new ModItemSettings().food(Foods.PASTA_WITH_MUTTON_CHOP.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    ROASTED_MUTTON_CHOPS("roasted_mutton_chops", () -> new ConsumableItem(new ModItemSettings().food(Foods.ROASTED_MUTTON_CHOPS.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    VEGETABLE_NOODLES("vegetable_noodles", () -> new ConsumableItem(new ModItemSettings().food(Foods.VEGETABLE_NOODLES.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    STEAK_AND_POTATOES("steak_and_potatoes", () -> new ConsumableItem(new ModItemSettings().food(Foods.STEAK_AND_POTATOES.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    RATATOUILLE("ratatouille", () -> new ConsumableItem(new ModItemSettings().food(Foods.RATATOUILLE.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    SQUID_INK_PASTA("squid_ink_pasta", () -> new ConsumableItem(new ModItemSettings().food(Foods.SQUID_INK_PASTA.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    GRILLED_SALMON("grilled_salmon", () -> new ConsumableItem(new ModItemSettings().food(Foods.GRILLED_SALMON.get()).recipeRemainder(Items.BOWL).maxCount(16))),
+    BACON_AND_EGGS("bacon_and_eggs", () -> new ConsumableItem(new ModItemSettings().food(Foods.BACON_AND_EGGS.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    PASTA_WITH_MEATBALLS("pasta_with_meatballs", () -> new ConsumableItem(new ModItemSettings().food(Foods.PASTA_WITH_MEATBALLS.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    PASTA_WITH_MUTTON_CHOP("pasta_with_mutton_chop", () -> new ConsumableItem(new ModItemSettings().food(Foods.PASTA_WITH_MUTTON_CHOP.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    ROASTED_MUTTON_CHOPS("roasted_mutton_chops", () -> new ConsumableItem(new ModItemSettings().food(Foods.ROASTED_MUTTON_CHOPS.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    VEGETABLE_NOODLES("vegetable_noodles", () -> new ConsumableItem(new ModItemSettings().food(Foods.VEGETABLE_NOODLES.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    STEAK_AND_POTATOES("steak_and_potatoes", () -> new ConsumableItem(new ModItemSettings().food(Foods.STEAK_AND_POTATOES.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    RATATOUILLE("ratatouille", () -> new ConsumableItem(new ModItemSettings().food(Foods.RATATOUILLE.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    SQUID_INK_PASTA("squid_ink_pasta", () -> new ConsumableItem(new ModItemSettings().food(Foods.SQUID_INK_PASTA.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    GRILLED_SALMON("grilled_salmon", () -> new ConsumableItem(new ModItemSettings().food(Foods.GRILLED_SALMON.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
 
-    ROAST_CHICKEN("roast_chicken", () -> new ConsumableItem(new ModItemSettings().food(Foods.ROAST_CHICKEN.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    STUFFED_PUMPKIN("stuffed_pumpkin", () -> new ConsumableItem(new ModItemSettings().food(Foods.STUFFED_PUMPKIN.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    HONEY_GLAZED_HAM("honey_glazed_ham", () -> new ConsumableItem(new ModItemSettings().food(Foods.HONEY_GLAZED_HAM.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    SHEPHERDS_PIE("shepherds_pie", () -> new ConsumableItem(new ModItemSettings().food(Foods.SHEPHERDS_PIE.get()).recipeRemainder(Items.BOWL).maxCount(16))),
+    ROAST_CHICKEN("roast_chicken", () -> new ConsumableItem(new ModItemSettings().food(Foods.ROAST_CHICKEN.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    STUFFED_PUMPKIN("stuffed_pumpkin", () -> new ConsumableItem(new ModItemSettings().food(Foods.STUFFED_PUMPKIN.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    HONEY_GLAZED_HAM("honey_glazed_ham", () -> new ConsumableItem(new ModItemSettings().food(Foods.HONEY_GLAZED_HAM.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
+    SHEPHERDS_PIE("shepherds_pie", () -> new ConsumableItem(new ModItemSettings().food(Foods.SHEPHERDS_PIE.get()).recipeRemainder(Items.BOWL).maxCount(16), true)),
 
-    DOG_FOOD("dog_food", () -> new DogFoodItem(new ModItemSettings().food(Foods.DOG_FOOD.get()).recipeRemainder(Items.BOWL).maxCount(16))),
-    HORSE_FEED("horse_feed", () -> new HorseFeedItem(new ModItemSettings().maxCount(16)));
+    DOG_FOOD("dog_food", DogFoodItem::new),
+    HORSE_FEED("horse_feed", HorseFeedItem::new);
 
     private final String pathName;
     private final Supplier<Item> itemSupplier;

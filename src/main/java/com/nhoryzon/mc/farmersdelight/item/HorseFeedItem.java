@@ -20,8 +20,8 @@ public class HorseFeedItem extends LivingEntityFeedItem {
             new StatusEffectInstance(StatusEffects.SPEED, 6000, 1),
             new StatusEffectInstance(StatusEffects.JUMP_BOOST, 6000, 0));
 
-    public HorseFeedItem(Settings settings) {
-        super(settings);
+    public HorseFeedItem() {
+        super(new ModItemSettings().maxCount(16));
     }
 
     @Override
