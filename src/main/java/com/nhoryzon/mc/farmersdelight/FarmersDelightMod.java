@@ -160,12 +160,21 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerLootTable() {
-        Set<Identifier> villageHouseChestsId = Set.of(
+        Set<Identifier> chestsId = Set.of(
+                LootTables.ABANDONED_MINESHAFT_CHEST,
+                LootTables.BASTION_HOGLIN_STABLE_CHEST,
+                LootTables.BASTION_TREASURE_CHEST,
+                LootTables.END_CITY_TREASURE_CHEST,
+                LootTables.PILLAGER_OUTPOST_CHEST,
+                LootTables.RUINED_PORTAL_CHEST,
+                LootTables.SHIPWRECK_SUPPLY_CHEST,
+                LootTables.SIMPLE_DUNGEON_CHEST,
                 LootTables.VILLAGE_PLAINS_CHEST,
                 LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
                 LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
                 LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
-                LootTables.VILLAGE_DESERT_HOUSE_CHEST);
+                LootTables.VILLAGE_DESERT_HOUSE_CHEST,
+                LootTables.VILLAGE_BUTCHER_CHEST);
         Set<Identifier> scavengingEntityIdList = Set.of(
                 EntityType.PIG.getLootTableId(),
                 EntityType.HOGLIN.getLootTableId(),
@@ -185,19 +194,11 @@ public class FarmersDelightMod implements ModInitializer {
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());
-            if (scavengingEntityIdList.contains(id)) {
+            if (scavengingEntityIdList.contains(id) || addItemLootBlockIdList.contains(id)) {
                 tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 
-            if (addItemLootBlockIdList.contains(id)) {
-                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
-            }
-
-            if (villageHouseChestsId.contains(id)) {
-                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
-            }
-
-            if (LootTables.SHIPWRECK_SUPPLY_CHEST.equals(id)) {
+            if (chestsId.contains(id)) {
                 tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
         });
