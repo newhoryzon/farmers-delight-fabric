@@ -93,7 +93,7 @@
   "item.farmersdelight.sweet_berry_cookie": "甜浆果曲奇",
   "item.farmersdelight.honey_cookie": "蜂蜜曲奇",
   "item.farmersdelight.melon_popsicle": "西瓜冰棍",
-  
+
   "item.farmersdelight.earthworm": "蚯蚓",
 
   "item.farmersdelight.flint_knife": "燧石刀",
@@ -123,9 +123,10 @@
   "item.farmersdelight.pumpkin_soup": "南瓜汤",
   "item.farmersdelight.baked_cod_stew": "烘焙鳕鱼炖",
   "item.farmersdelight.noodle_soup": "面条汤",
-  
+
   "item.farmersdelight.pasta_with_meatballs": "肉丸意面",
   "item.farmersdelight.pasta_with_mutton_chop": "羊排意面",
+  "item.farmersdelight.roasted_mutton_chops": "烤羊排",
   "item.farmersdelight.steak_and_potatoes": "牛排配土豆",
   "item.farmersdelight.vegetable_noodles": "蔬菜面",
   "item.farmersdelight.ratatouille": "蔬菜杂烩",
@@ -140,7 +141,7 @@
   "item.farmersdelight.honey_glazed_ham": "盘装蜜汁火腿",
   "block.farmersdelight.shepherds_pie_block": "羊倌肉饼",
   "item.farmersdelight.shepherds_pie": "盘装羊倌肉饼",
-  
+
   "item.farmersdelight.dog_food": "狗粮",
   "item.farmersdelight.horse_feed": "马食",
 
@@ -152,7 +153,7 @@
 
   "enchantment.farmersdelight.backstabbing": "背刺",
   "enchantment.farmersdelight.backstabbing.desc": "增加从后攻击目标时的伤害。",
-  
+
   "itemGroup.farmersdelight.main": "农夫乐事",
 
   "farmersdelight.container.cooking_pot": "厨锅",
@@ -166,7 +167,10 @@
 
   "farmersdelight.tooltip.dog_food.when_feeding": "当被喂予狗时：",
   "farmersdelight.tooltip.horse_feed.when_feeding": "当被喂予马时：",
-  
+
+  "farmersdelight.tooltip.milk_bottle": "抹除 1 种状态效果",
+  "farmersdelight.tooltip.hot_cocoa": "抹除 1 种负面效果",
+
   "farmersdelight.advancement.root": "农夫乐事",
   "farmersdelight.advancement.root.desc": "美味的世界在等着你！",
   "farmersdelight.advancement.craft_knife": "刀耕火种",
@@ -188,7 +192,6 @@
   "_comment": "Neta 美国总统 Harry Truman，表示的是“假如你缺乏精力与胆量，不能承受工作的压力，或是不能接受尖锐批评的勇气，那么你就不要谋求或担任高层的职位”或“没有金刚钻别揽瓷器活”，此处应联系其批评义翻译丨原文If You Can't Take the Heat...",
   "farmersdelight.advancement.obtain_netherite_knife.desc": "要么在你的刀上花一整块下界合金锭，要么离开厨房",
 
-  
   "farmersdelight.advancement.place_campfire": "Bonfire Lit",
   "_comment": "Neta 黑暗之魂",
   "farmersdelight.advancement.place_campfire.desc": "放置一个营火，让夜晚不再寒冷",
@@ -212,9 +215,12 @@
   "farmersdelight.subtitles.cooking_pot.boil": "厨锅：蒸煮",
   "farmersdelight.subtitles.cutting_board.knife_cut": "刀：切下",
   "farmersdelight.subtitles.stove.crackle": "炉灶：噼啪",
-  "_comment": "实话说我不知道那三行不带冒号的哪里会出现",
+  "farmersdelight.subtitles.tomato.pick": "番茄：弹出",
 
   "farmersdelight.block.feast.use_container": "你需要一个%s以食用它。",
+  "farmersdelight.block.rice.invalid_placement": "这种作物在浅水区外无法生存。",
+  "farmersdelight.block.cutting_board.invalid_item": "这种物品看起来不能切…",
+  "farmersdelight.block.cutting_board.invalid_tool": "也许要换一种工具…",
 
   "farmersdelight.jei.cooking": "烹饪",
   "farmersdelight.jei.cutting": "砧板",
