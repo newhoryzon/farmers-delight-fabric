@@ -82,7 +82,7 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
 
     private void renderItemCarved(MatrixStack matrixStackIn, Direction direction, ItemStack itemStack) {
         // Center item above the cutting board
-        matrixStackIn.translate(.5d, .25d, .5d);
+        matrixStackIn.translate(.5d, .23d, .5d);
 
         // Rotate item to face the cutting board's front side
         float f = -direction.asRotation() + 180;
@@ -101,4 +101,5 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);
     }
+
 }
