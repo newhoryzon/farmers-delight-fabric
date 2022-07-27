@@ -8,6 +8,7 @@ import net.minecraft.util.registry.Registry;
 public enum SoundsRegistry {
 
     BLOCK_STOVE_CRACKLE("block.stove.crackle"),
+    BLOCK_COOKING_POT_BOIL_SOUP("block.cooking_pot.boil_soup"),
     BLOCK_COOKING_POT_BOIL("block.cooking_pot.boil"),
     BLOCK_CUTTING_BOARD_KNIFE("block.cutting_board.knife"),
     BLOCK_TOMATO_PICK_FROM_BUSH("block.tomato_bush.pick_tomatoes"),

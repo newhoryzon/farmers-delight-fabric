@@ -7,12 +7,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.List;
 public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
 
     private static final Identifier BACKGROUND_TEXTURE = new Identifier(FarmersDelightMod.MOD_ID, "textures/gui/cooking_pot.png");
+    private static final Rect2i HEAT_ICON = new Rect2i(47, 55, 17, 15);
+    private static final Rect2i PROGRESS_ARROW = new Rect2i(89, 25, 0, 17);
 
     public CookingPotScreen(CookingPotScreenHandler screenContainer, PlayerInventory inv, Text titleIn) {
         super(screenContainer, inv, titleIn);
@@ -36,6 +40,16 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         renderBackground(ms);
         super.render(ms, mouseX, mouseY, partialTicks);
         renderMealDisplayTooltip(ms, mouseX, mouseY);
+        renderHeatIndicatorTooltip(ms, mouseX, mouseY);
+    }
+
+    private void renderHeatIndicatorTooltip(MatrixStack ms, int mouseX, int mouseY) {
+        if (isPointWithinBounds(HEAT_ICON.getX(), HEAT_ICON.getY(), HEAT_ICON.getWidth(), HEAT_ICON.getHeight(), mouseX, mouseY)) {
+            List<Text> tooltip = new ArrayList<>();
+            String key = "container.cooking_pot." + (handler.isHeated() ? "heated" : "not_heated");
+            tooltip.add(FarmersDelightMod.i18n(key));
+            renderTooltip(ms, tooltip, mouseX, mouseY);
+        }
     }
 
     protected void renderMealDisplayTooltip(MatrixStack ms, int mouseX, int mouseY) {
@@ -74,18 +88,16 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         }
 
         RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
-        int centerX = (width - backgroundWidth) / 2;
-        int centerY = (height - backgroundHeight) / 2;
-        drawTexture(ms, centerX, centerY, 0, 0, backgroundWidth, backgroundHeight);
+        drawTexture(ms, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
         // Render heat indicator
         if (handler.isHeated()) {
-            drawTexture(ms, centerX + 47, centerY + 55, 176, 0, 17, 15);
+            drawTexture(ms, x + HEAT_ICON.getX(), y + HEAT_ICON.getY(), 176, 0, HEAT_ICON.getWidth(), HEAT_ICON.getHeight());
         }
 
         // Render progress arrow
         int l = handler.getCookProgressionScaled();
-        drawTexture(ms, x + 89, y + 25, 176, 15, l + 1, 17);
+        drawTexture(ms, x + PROGRESS_ARROW.getX(), y + PROGRESS_ARROW.getY(), 176, 15, l + 1, PROGRESS_ARROW.getHeight());
     }
 
 }

@@ -7,7 +7,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum ParticleTypesRegistry {
-    STAR("star");
+    STAR("star"),
+    STEAM("steam");
 
     private final String pathName;
     private DefaultParticleType particleType;

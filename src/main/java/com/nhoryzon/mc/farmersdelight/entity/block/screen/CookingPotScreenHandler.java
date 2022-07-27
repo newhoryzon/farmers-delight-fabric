@@ -76,7 +76,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
         });
 
         // Bowl Output
-        addSlot(new CookingPotResultSlot(inventoryHandler, 8, 124, 55));
+        addSlot(new CookingPotResultSlot(playerInventory.player, blockEntity, inventoryHandler, 8, 124, 55));
 
         // Main Player Inventory
         int startPlayerInvY = startY * 4 + 12;
@@ -118,12 +118,11 @@ public class CookingPotScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack transferSlot(PlayerEntity playerIn, int index) {
-        Slot slot = slots.get(index);
-
-        if (!slot.hasStack()) {
+        if (slots.size() - 1 < index || slots.get(index).hasStack()) {
             return ItemStack.EMPTY;
         }
 
+        Slot slot = slots.get(index);
         ItemStack slotItemStack = slot.getStack();
         ItemStack itemStack = slotItemStack.copy();
         if (index == INV_INDEX_OUTPUT) {
@@ -164,7 +163,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
 
     @Environment(value= EnvType.CLIENT)
     public boolean isHeated() {
-        return tileEntity.isAboveLitHeatSource();
+        return tileEntity.isHeated();
     }
 
 }

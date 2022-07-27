@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight;
 
 import com.nhoryzon.mc.farmersdelight.client.particle.StarParticle;
+import com.nhoryzon.mc.farmersdelight.client.particle.SteamParticle;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CanvasSignBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CuttingBoardBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.render.block.StoveBlockEntityRenderer;
@@ -17,8 +18,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -38,9 +39,10 @@ public class FarmersDelightModClient implements ClientModInitializer {
 
 		// Particle register
 		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STAR.get(), StarParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STEAM.get(), SteamParticle.Factory::new);
 
 		// Screen register
-		ScreenRegistry.register(ExtendedScreenTypesRegistry.COOKING_POT.get(), CookingPotScreen::new);
+		HandledScreens.register(ExtendedScreenTypesRegistry.COOKING_POT.get(), CookingPotScreen::new);
 
 		// Standalone textures register
 		ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(

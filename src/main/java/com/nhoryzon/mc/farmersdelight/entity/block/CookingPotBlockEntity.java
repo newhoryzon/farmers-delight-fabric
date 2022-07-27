@@ -10,10 +10,13 @@ import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,27 +34,31 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Nameable {
+public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockEntity, ExtendedScreenHandlerFactory, Nameable {
 
     public static final String TAG_KEY_COOK_TIME = "CookTime";
     public static final String TAG_KEY_COOK_TIME_TOTAL = "CookTimeTotal";
+    public static final String TAG_KEY_COOK_RECIPES_USED = "RecipesUsed";
 
     public static final int MEAL_DISPLAY_SLOT = 6;
     public static final int CONTAINER_SLOT = 7;
     public static final int OUTPUT_SLOT = 8;
-    public static final int INVENTORY_SIZE = 9;
+    public static final int INVENTORY_SIZE = OUTPUT_SLOT + 1;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(INVENTORY_SIZE) {
 
@@ -87,11 +94,6 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
         }
 
         @Override
-        protected void onInventoryLoaded() {
-            // Do nothing when inventory is loaded.
-        }
-
-        @Override
         protected void onInventorySlotChanged(int slot) {
             if (slot >= 0 && slot < MEAL_DISPLAY_SLOT) {
                 cookTimeTotal = getCookTime();
@@ -106,12 +108,14 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
     private int cookTimeTotal;
     private ItemStack container;
     protected final PropertyDelegate cookingPotData = new CookingPotSyncedData();
-    protected final RecipeType<? extends CookingPotRecipe> recipeType;
+    private final Object2IntOpenHashMap<Identifier> experienceTracker;
+    protected final RecipeType<CookingPotRecipe> recipeType;
 
-    public CookingPotBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, RecipeType<? extends CookingPotRecipe> recipeType) {
+    public CookingPotBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState, RecipeType<CookingPotRecipe> recipeType) {
         super(blockEntityType, blockPos, blockState);
         this.recipeType = recipeType;
         this.container = ItemStack.EMPTY;
+        this.experienceTracker = new Object2IntOpenHashMap<>();
     }
 
     public CookingPotBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -132,6 +136,10 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
         if (tag.contains(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, 8)) {
             customName = Text.Serializer.fromJson(tag.getString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME));
         }
+        NbtCompound compoundRecipes = tag.getCompound(TAG_KEY_COOK_RECIPES_USED);
+        for (String key : compoundRecipes.getKeys()) {
+            experienceTracker.put(new Identifier(key), compoundRecipes.getInt(key));
+        }
     }
 
     @Override
@@ -144,6 +152,9 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
             tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
         tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        NbtCompound compoundRecipes = new NbtCompound();
+        experienceTracker.forEach((identifier, craftedAmount) -> compoundRecipes.putInt(identifier.toString(), craftedAmount));
+        tag.put(TAG_KEY_COOK_RECIPES_USED, compoundRecipes);
     }
 
     public NbtCompound writeMeal(NbtCompound tag) {
@@ -151,17 +162,7 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
             return tag;
         }
 
-        ItemStackHandler drops = new ItemStackHandler(INVENTORY_SIZE) {
-            @Override
-            protected void onInventoryLoaded() {
-                // Nothing to do on drops when inventory is loaded
-            }
-
-            @Override
-            protected void onInventorySlotChanged(int slot) {
-                // Nothing to do on drops when inventory slot is changed
-            }
-        };
+        ItemStackHandler drops = new ItemStackHandler(INVENTORY_SIZE);
         for (int i = 0; i < INVENTORY_SIZE; ++i) {
             drops.setStack(i, i == MEAL_DISPLAY_SLOT ? itemHandler.getStack(i) : ItemStack.EMPTY);
         }
@@ -209,57 +210,36 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
         return new CookingPotScreenHandler(syncId, inv, this, cookingPotData);
     }
 
-    @SuppressWarnings("unused")
-    public static void tick(World world, BlockPos pos, BlockState state, CookingPotBlockEntity blockEntity) {
-        if (!world.isClient()) {
-            serverTick(world, blockEntity);
-        } else {
-            clientTick(blockEntity);
-        }
-    }
-
-    protected static void serverTick(World world, CookingPotBlockEntity blockEntity) {
+    public static void cookingTick(World world, BlockPos pos, BlockState state, CookingPotBlockEntity cookingPot) {
+        boolean isHeated = cookingPot.isHeated(world, pos);
         boolean dirty = false;
 
-        if (blockEntity.isAboveLitHeatSource() && blockEntity.hasInput()) {
-            CookingPotRecipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType,
-                    new RecipeWrapper(blockEntity.itemHandler), world).orElse(null);
-            if (blockEntity.canCook(recipe)) {
-                ++blockEntity.cookTime;
-                if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
-                    blockEntity.cookTime = 0;
-                    blockEntity.cookTimeTotal = blockEntity.getCookTime();
-                    blockEntity.cook(recipe);
-                    dirty = true;
-                }
+        if (isHeated && cookingPot.hasInput()) {
+            Optional<CookingPotRecipe> recipe = world.getRecipeManager().getFirstMatch(cookingPot.recipeType,
+                    new RecipeWrapper(cookingPot.itemHandler), world);
+            if (recipe.isPresent() && cookingPot.canCook(recipe.get())) {
+                dirty = cookingPot.processCooking(recipe.get());
             } else {
-                blockEntity.cookTime = 0;
+                cookingPot.cookTime = 0;
             }
-        } else if (blockEntity.cookTime > 0) {
-            blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
+        } else if (cookingPot.cookTime > 0) {
+            cookingPot.cookTime = MathHelper.clamp(cookingPot.cookTime - 2, 0, cookingPot.cookTimeTotal);
         }
 
-        ItemStack meal = blockEntity.getMeal();
+        ItemStack meal = cookingPot.getMeal();
         if (!meal.isEmpty()) {
-            if (!blockEntity.doesMealHaveContainer(meal)) {
-                blockEntity.moveMealToOutput();
+            if (!cookingPot.doesMealHaveContainer(meal)) {
+                cookingPot.moveMealToOutput();
                 dirty = true;
-            } else if (!blockEntity.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
-                blockEntity.useStoredContainersOnMeal();
+            } else if (!cookingPot.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
+                cookingPot.useStoredContainersOnMeal();
                 dirty = true;
             }
         }
 
         if (dirty) {
-            blockEntity.inventoryChanged();
+            cookingPot.inventoryChanged();
         }
-    }
-
-    protected static void clientTick(CookingPotBlockEntity blockEntity) {
-        if (blockEntity.isAboveLitHeatSource()) {
-            blockEntity.animate();
-        }
-
     }
 
     @Nullable
@@ -318,17 +298,26 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
         }
     }
 
-    private void cook(Recipe<?> recipe) {
-        if (recipe != null && canCook(recipe)) {
-            container = getRecipeContainer();
-            ItemStack recipeOutput = recipe.getOutput();
-            ItemStack currentOutput = itemHandler.getStack(MEAL_DISPLAY_SLOT);
-            if (currentOutput.isEmpty()) {
-                itemHandler.setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
-            } else if (currentOutput.getItem() == recipeOutput.getItem()) {
-                currentOutput.increment(recipeOutput.getCount());
-            }
+    private boolean processCooking(CookingPotRecipe recipe) {
+        if (world == null || recipe == null) return false;
+
+        ++cookTime;
+        cookTimeTotal = getCookTime();
+        if (cookTime < cookTimeTotal) {
+            return false;
         }
+
+        cookTime = 0;
+        container = getRecipeContainer();
+        ItemStack recipeOutput = recipe.getOutput();
+        ItemStack currentOutput = itemHandler.getStack(MEAL_DISPLAY_SLOT);
+        if (currentOutput.isEmpty()) {
+            itemHandler.setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
+        } else if (currentOutput.getItem() == recipeOutput.getItem()) {
+            currentOutput.increment(recipeOutput.getCount());
+        }
+        trackRecipeExperience(recipe);
+
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
             ItemStack itemStack = itemHandler.getStack(i);
             if (itemStack.getItem().hasRecipeRemainder() && world != null) {
@@ -346,23 +335,55 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
                 itemHandler.getStack(i).decrement(1);
             }
         }
+
+        return true;
     }
 
-    private void animate() {
-        World world = getWorld();
-        if (world != null) {
-            BlockPos blockpos = getPos();
+    public void trackRecipeExperience(@Nullable Recipe<?> recipe) {
+        if (recipe != null) {
+            Identifier recipeID = recipe.getId();
+            experienceTracker.addTo(recipeID, 1);
+        }
+    }
+
+    public void clearUsedRecipes(PlayerEntity player) {
+        grantStoredRecipeExperience(player.world, player.getPos());
+        experienceTracker.clear();
+    }
+
+    public void grantStoredRecipeExperience(World world, Vec3d pos) {
+        for (Object2IntMap.Entry<Identifier> entry : experienceTracker.object2IntEntrySet()) {
+            world.getRecipeManager().get(entry.getKey()).ifPresent(recipe -> splitAndSpawnExperience(world, pos, entry.getIntValue(), ((CookingPotRecipe) recipe).getExperience()));
+        }
+    }
+
+    private static void splitAndSpawnExperience(World world, Vec3d pos, int craftedAmount, float experience) {
+        int expTotal = MathHelper.floor((float) craftedAmount * experience);
+        float expFraction = MathHelper.fractionalPart((float) craftedAmount * experience);
+        if (expFraction != 0.f && Math.random() < expFraction) {
+            ++expTotal;
+        }
+
+        while (expTotal > 0) {
+            int expValue = ExperienceOrbEntity.roundToOrbSize(expTotal);
+            expTotal -= expValue;
+            world.spawnEntity(new ExperienceOrbEntity(world, pos.x, pos.y, pos.z, expValue));
+        }
+    }
+
+    public static void animationTick(World world, BlockPos pos, BlockState state, CookingPotBlockEntity cookingPot) {
+        if (world != null && cookingPot.isHeated(world, pos)) {
             Random random = world.random;
             if (random.nextFloat() < .2f) {
-                double baseX = blockpos.getX() + .5d + (random.nextDouble() * .6d - .3d);
-                double baseY = blockpos.getY() + .7d;
-                double baseZ = blockpos.getZ() + .5d + (random.nextDouble() * .6d - .3d);
+                double baseX = pos.getX() + .5d + (random.nextDouble() * .6d - .3d);
+                double baseY = pos.getY() + .7d;
+                double baseZ = pos.getZ() + .5d + (random.nextDouble() * .6d - .3d);
                 world.addParticle(ParticleTypes.BUBBLE_POP, baseX, baseY, baseZ, .0d, .0d, .0d);
             }
             if (random.nextFloat() < .05f) {
-                double baseX = blockpos.getX() + .5d + (random.nextDouble() * .4d - .2d);
-                double baseY = blockpos.getY() + .7d;
-                double baseZ = blockpos.getZ() + .5d + (random.nextDouble() * .4d - .2d);
+                double baseX = pos.getX() + .5d + (random.nextDouble() * .4d - .2d);
+                double baseY = pos.getY() + .7d;
+                double baseZ = pos.getZ() + .5d + (random.nextDouble() * .4d - .2d);
                 world.addParticle(ParticleTypes.EFFECT, baseX, baseY, baseZ, .0d, .0d, .0d);
             }
         }
@@ -372,20 +393,12 @@ public class CookingPotBlockEntity extends BlockEntity implements ExtendedScreen
         return itemHandler.getStack(MEAL_DISPLAY_SLOT);
     }
 
-    public boolean isAboveLitHeatSource() {
+    public boolean isHeated() {
         if (world == null) {
             return false;
         }
-        BlockState checkState = world.getBlockState(pos.down());
-        if (checkState.isIn(TagsRegistry.HEAT_SOURCES)) {
-            if (checkState.contains(Properties.LIT)) {
-                return checkState.get(Properties.LIT);
-            }
 
-            return true;
-        }
-
-        return false;
+        return isHeated(world, pos);
     }
 
     /**
