@@ -2,17 +2,17 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.CookingPotBlock;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.CookingPotInventory;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.recipe.CookingPotRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -20,6 +20,7 @@ import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
@@ -32,7 +33,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Nameable;
@@ -47,12 +47,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockEntity, ExtendedScreenHandlerFactory, Nameable {
 
-    public static final String TAG_KEY_COOK_TIME = "CookTime";
-    public static final String TAG_KEY_COOK_TIME_TOTAL = "CookTimeTotal";
     public static final String TAG_KEY_COOK_RECIPES_USED = "RecipesUsed";
 
     public static final int MEAL_DISPLAY_SLOT = 6;
@@ -60,47 +57,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     public static final int OUTPUT_SLOT = 8;
     public static final int INVENTORY_SIZE = OUTPUT_SLOT + 1;
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(INVENTORY_SIZE) {
-
-        @Override
-        public int[] getAvailableSlots(Direction side) {
-            if (side == Direction.DOWN) {
-                return new int[]{OUTPUT_SLOT};
-            }
-
-            if (side == Direction.UP) {
-                return IntStream.range(0, MEAL_DISPLAY_SLOT).toArray();
-            }
-
-            return new int[]{CONTAINER_SLOT};
-        }
-
-        @Override
-        public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-            if (dir == null || dir.equals(Direction.UP)) {
-                return slot < MEAL_DISPLAY_SLOT;
-            } else {
-                return slot == CONTAINER_SLOT;
-            }
-        }
-
-        @Override
-        public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-            if (dir == null || dir.equals(Direction.UP)) {
-                return slot < MEAL_DISPLAY_SLOT;
-            } else {
-                return slot == OUTPUT_SLOT;
-            }
-        }
-
-        @Override
-        protected void onInventorySlotChanged(int slot) {
-            if (slot >= 0 && slot < MEAL_DISPLAY_SLOT) {
-                cookTimeTotal = getCookTime();
-                inventoryChanged();
-            }
-        }
-    };
+    private final CookingPotInventory inventory;
 
     private Text customName;
 
@@ -116,6 +73,8 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
         this.recipeType = recipeType;
         this.container = ItemStack.EMPTY;
         this.experienceTracker = new Object2IntOpenHashMap<>();
+        this.inventory = new CookingPotInventory();
+        //this.inventory.addListener(sender -> inventoryChanged());
     }
 
     public CookingPotBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -129,9 +88,9 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     }
 
     private void fromTag(NbtCompound tag) {
-        itemHandler.fromTag(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
-        cookTime = tag.getInt(TAG_KEY_COOK_TIME);
-        cookTimeTotal = tag.getInt(TAG_KEY_COOK_TIME_TOTAL);
+        inventory.readNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
+        cookTime = tag.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME);
+        cookTimeTotal = tag.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME_TOTAL);
         container = ItemStack.fromNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_CONTAINER));
         if (tag.contains(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, 8)) {
             customName = Text.Serializer.fromJson(tag.getString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME));
@@ -145,13 +104,10 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.putInt(TAG_KEY_COOK_TIME, cookTime);
-        tag.putInt(TAG_KEY_COOK_TIME_TOTAL, cookTimeTotal);
-        tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
-        if (customName != null) {
-            tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
-        }
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        tag.putInt(CompoundTagUtils.TAG_KEY_COOK_TIME, cookTime);
+        tag.putInt(CompoundTagUtils.TAG_KEY_COOK_TIME_TOTAL, cookTimeTotal);
+        writeMeal(tag);
+
         NbtCompound compoundRecipes = new NbtCompound();
         experienceTracker.forEach((identifier, craftedAmount) -> compoundRecipes.putInt(identifier.toString(), craftedAmount));
         tag.put(TAG_KEY_COOK_RECIPES_USED, compoundRecipes);
@@ -162,15 +118,11 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
             return tag;
         }
 
-        ItemStackHandler drops = new ItemStackHandler(INVENTORY_SIZE);
-        for (int i = 0; i < INVENTORY_SIZE; ++i) {
-            drops.setStack(i, i == MEAL_DISPLAY_SLOT ? itemHandler.getStack(i) : ItemStack.EMPTY);
-        }
         if (customName != null) {
             tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
         tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, drops.toTag());
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, inventory.writeNbt(new NbtCompound()));
 
         return tag;
     }
@@ -184,8 +136,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        nbtCompound.put(CompoundTagUtils.TAG_KEY_CONTAINER, container.writeNbt(new NbtCompound()));
-        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        writeNbt(nbtCompound);
 
         return nbtCompound;
     }
@@ -216,7 +167,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
 
         if (isHeated && cookingPot.hasInput()) {
             Optional<CookingPotRecipe> recipe = world.getRecipeManager().getFirstMatch(cookingPot.recipeType,
-                    new RecipeWrapper(cookingPot.itemHandler), world);
+                    cookingPot.getInventory(), world);
             if (recipe.isPresent() && cookingPot.canCook(recipe.get())) {
                 dirty = cookingPot.processCooking(recipe.get());
             } else {
@@ -231,7 +182,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
             if (!cookingPot.doesMealHaveContainer(meal)) {
                 cookingPot.moveMealToOutput();
                 dirty = true;
-            } else if (!cookingPot.itemHandler.getStack(CONTAINER_SLOT).isEmpty()) {
+            } else if (!cookingPot.getInventory().getStack(CONTAINER_SLOT).isEmpty()) {
                 cookingPot.useStoredContainersOnMeal();
                 dirty = true;
             }
@@ -249,12 +200,12 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     }
 
     protected int getCookTime() {
-        return Objects.requireNonNull(world).getRecipeManager().getFirstMatch(recipeType, new RecipeWrapper(itemHandler), world).map(
+        return Objects.requireNonNull(world).getRecipeManager().getFirstMatch(recipeType, inventory, world).map(
                 CookingPotRecipe::getCookTime).orElse(200);
     }
 
     protected ItemStack getRecipeContainer() {
-        return Objects.requireNonNull(world).getRecipeManager().getFirstMatch(recipeType, new RecipeWrapper(itemHandler), world).map(
+        return Objects.requireNonNull(world).getRecipeManager().getFirstMatch(recipeType, inventory, world).map(
                 CookingPotRecipe::getContainer).orElse(ItemStack.EMPTY);
     }
 
@@ -268,7 +219,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
 
     private boolean hasInput() {
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
-            if (!itemHandler.getStack(i).isEmpty()) {
+            if (!inventory.getStack(i).isEmpty()) {
                 return true;
             }
         }
@@ -282,12 +233,12 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
             if (recipeOutput.isEmpty()) {
                 return false;
             } else {
-                ItemStack currentOutput = itemHandler.getStack(MEAL_DISPLAY_SLOT);
+                ItemStack currentOutput = inventory.getStack(MEAL_DISPLAY_SLOT);
                 if (currentOutput.isEmpty()) {
                     return true;
                 } else if (!currentOutput.isItemEqual(recipeOutput)) {
                     return false;
-                } else if (currentOutput.getCount() + recipeOutput.getCount() <= itemHandler.getMaxCountForSlot(MEAL_DISPLAY_SLOT)) {
+                } else if (currentOutput.getCount() + recipeOutput.getCount() <= inventory.getMaxCountPerStack()) {
                     return true;
                 } else {
                     return currentOutput.getCount() + recipeOutput.getCount() <= recipeOutput.getMaxCount();
@@ -310,29 +261,29 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
         cookTime = 0;
         container = getRecipeContainer();
         ItemStack recipeOutput = recipe.getOutput();
-        ItemStack currentOutput = itemHandler.getStack(MEAL_DISPLAY_SLOT);
+        ItemStack currentOutput = inventory.getStack(MEAL_DISPLAY_SLOT);
         if (currentOutput.isEmpty()) {
-            itemHandler.setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
+            inventory.setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
         } else if (currentOutput.getItem() == recipeOutput.getItem()) {
             currentOutput.increment(recipeOutput.getCount());
         }
         trackRecipeExperience(recipe);
 
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
-            ItemStack itemStack = itemHandler.getStack(i);
+            ItemStack itemStack = inventory.getStack(i);
             if (itemStack.getItem().hasRecipeRemainder() && world != null) {
                 Direction direction = getCachedState().get(CookingPotBlock.FACING).rotateYCounterclockwise();
                 double dropX = pos.getX() + .5d + (direction.getOffsetX() * .25d);
                 double dropY = pos.getY() + .7d;
                 double dropZ = pos.getZ() + .5d + (direction.getOffsetZ() * .25d);
-                ItemEntity entity = new ItemEntity(world, dropX, dropY, dropZ, new ItemStack(itemHandler.getStack(i).getItem()
+                ItemEntity entity = new ItemEntity(world, dropX, dropY, dropZ, new ItemStack(inventory.getStack(i).getItem()
                         .getRecipeRemainder()));
                 entity.setVelocity(direction.getOffsetX() * .08f, .25f, direction.getOffsetZ() * .08f);
                 world.spawnEntity(entity);
             }
 
-            if (!itemHandler.getStack(i).isEmpty()) {
-                itemHandler.getStack(i).decrement(1);
+            if (!inventory.getStack(i).isEmpty()) {
+                inventory.getStack(i).decrement(1);
             }
         }
 
@@ -382,15 +333,16 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
             }
             if (random.nextFloat() < .05f) {
                 double baseX = pos.getX() + .5d + (random.nextDouble() * .4d - .2d);
-                double baseY = pos.getY() + .7d;
+                double baseY = pos.getY() + .5d;
                 double baseZ = pos.getZ() + .5d + (random.nextDouble() * .4d - .2d);
-                world.addParticle(ParticleTypes.EFFECT, baseX, baseY, baseZ, .0d, .0d, .0d);
+                double motionY = random.nextBoolean() ? .015d : .005d;
+                world.addParticle(ParticleTypesRegistry.STEAM.get(), baseX, baseY, baseZ, .0d, motionY, .0d);
             }
         }
     }
 
     public ItemStack getMeal() {
-        return itemHandler.getStack(MEAL_DISPLAY_SLOT);
+        return inventory.getStack(MEAL_DISPLAY_SLOT);
     }
 
     public boolean isHeated() {
@@ -409,7 +361,7 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
     public DefaultedList<ItemStack> getDroppableInventory() {
         DefaultedList<ItemStack> drops = DefaultedList.of();
         for (int i = 0; i < INVENTORY_SIZE; ++i) {
-            drops.add(i == MEAL_DISPLAY_SLOT ? ItemStack.EMPTY : itemHandler.getStack(i));
+            drops.add(i == MEAL_DISPLAY_SLOT ? ItemStack.EMPTY : inventory.getStack(i));
         }
 
         return drops;
@@ -419,11 +371,11 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
      * Attempts to move all stored meals to the final output. Does NOT check if the meal has a container; this is done on tick.
      */
     private void moveMealToOutput() {
-        ItemStack mealDisplay = itemHandler.getStack(MEAL_DISPLAY_SLOT);
-        ItemStack finalOutput = itemHandler.getStack(OUTPUT_SLOT);
+        ItemStack mealDisplay = inventory.getStack(MEAL_DISPLAY_SLOT);
+        ItemStack finalOutput = inventory.getStack(OUTPUT_SLOT);
         int mealCount = Math.min(mealDisplay.getCount(), mealDisplay.getMaxCount() - finalOutput.getCount());
         if (finalOutput.isEmpty()) {
-            itemHandler.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
+            inventory.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
         } else if (finalOutput.getItem() == mealDisplay.getItem()) {
             mealDisplay.decrement(mealCount);
             finalOutput.increment(mealCount);
@@ -435,16 +387,16 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
      * match, nothing happens.
      */
     private void useStoredContainersOnMeal() {
-        ItemStack mealDisplay = itemHandler.getStack(MEAL_DISPLAY_SLOT);
-        ItemStack containerInput = itemHandler.getStack(CONTAINER_SLOT);
-        ItemStack finalOutput = itemHandler.getStack(OUTPUT_SLOT);
+        ItemStack mealDisplay = inventory.getStack(MEAL_DISPLAY_SLOT);
+        ItemStack containerInput = inventory.getStack(CONTAINER_SLOT);
+        ItemStack finalOutput = inventory.getStack(OUTPUT_SLOT);
 
         if (isContainerValid(containerInput) && finalOutput.getCount() < finalOutput.getMaxCount()) {
             int smallerStack = Math.min(mealDisplay.getCount(), containerInput.getCount());
             int mealCount = Math.min(smallerStack, mealDisplay.getMaxCount() - finalOutput.getCount());
             if (finalOutput.isEmpty()) {
                 containerInput.decrement(mealCount);
-                itemHandler.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
+                inventory.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
             } else if (finalOutput.getItem() == mealDisplay.getItem()) {
                 mealDisplay.decrement(mealCount);
                 containerInput.decrement(mealCount);
@@ -482,8 +434,8 @@ public class CookingPotBlockEntity extends BlockEntity implements HeatableBlockE
         }
     }
 
-    public ItemStackHandler getInventory() {
-        return itemHandler;
+    public SidedInventory getInventory() {
+        return inventory;
     }
 
     private void inventoryChanged() {

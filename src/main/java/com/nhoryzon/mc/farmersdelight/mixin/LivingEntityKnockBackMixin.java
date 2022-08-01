@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.mixin;
 
 import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
+import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityKnivesKnockBackMixin {
+public abstract class LivingEntityKnockBackMixin {
 
     @Shadow @Nullable public abstract LivingEntity getAttacker();
 
@@ -21,6 +22,8 @@ public abstract class LivingEntityKnivesKnockBackMixin {
 
         if (tool.getItem() instanceof KnifeItem) {
             return strength - .1d;
+        } else if (tool.getItem() instanceof SkilletItem) {
+            return strength * 2.f;
         } else {
             return strength;
         }

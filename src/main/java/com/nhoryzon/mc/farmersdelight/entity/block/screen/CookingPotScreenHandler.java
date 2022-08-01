@@ -5,8 +5,6 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.CookingPotMealSlot;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.CookingPotResultSlot;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.SlotItemHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
 import net.fabricmc.api.EnvType;
@@ -14,6 +12,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
@@ -38,14 +37,14 @@ public class CookingPotScreenHandler extends ScreenHandler {
     private static final int INV_INDEX_END_PLAYER_INV = INV_INDEX_START_PLAYER_INV + 36;
 
     public final CookingPotBlockEntity tileEntity;
-    public final ItemStackHandler inventoryHandler;
+    public final Inventory inventory;
     private final PropertyDelegate cookingPotData;
     private final ScreenHandlerContext canInteractWithCallable;
 
     public CookingPotScreenHandler(final int windowId, final PlayerInventory playerInventory, final CookingPotBlockEntity blockEntity, PropertyDelegate cookingPotDataIn) {
         super(ExtendedScreenTypesRegistry.COOKING_POT.get(), windowId);
         this.tileEntity = blockEntity;
-        this.inventoryHandler = blockEntity.getInventory();
+        this.inventory = blockEntity.getInventory();
         this.cookingPotData = cookingPotDataIn;
         this.canInteractWithCallable = ScreenHandlerContext.create(blockEntity.getWorld(), blockEntity.getPos());
 
@@ -57,17 +56,17 @@ public class CookingPotScreenHandler extends ScreenHandler {
         int borderSlotSize = 18;
         for (int row = 0; row < 2; ++row) {
             for (int column = 0; column < 3; ++column) {
-                addSlot(new SlotItemHandler(inventoryHandler, (row * 3) + column,
+                addSlot(new Slot(inventory, (row * 3) + column,
                         inputStartX + (column * borderSlotSize),
                         inputStartY + (row * borderSlotSize)));
             }
         }
 
         // Meal Display
-        addSlot(new CookingPotMealSlot(inventoryHandler, 6, 124, 26));
+        addSlot(new CookingPotMealSlot(inventory, 6, 124, 26));
 
         // Bowl Input
-        addSlot(new SlotItemHandler(inventoryHandler, 7, 92, 55) {
+        addSlot(new Slot(inventory, 7, 92, 55) {
             @Environment(value= EnvType.CLIENT)
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
@@ -76,7 +75,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
         });
 
         // Bowl Output
-        addSlot(new CookingPotResultSlot(playerInventory.player, blockEntity, inventoryHandler, 8, 124, 55));
+        addSlot(new CookingPotResultSlot(playerInventory.player, blockEntity, inventory, 8, 124, 55));
 
         // Main Player Inventory
         int startPlayerInvY = startY * 4 + 12;

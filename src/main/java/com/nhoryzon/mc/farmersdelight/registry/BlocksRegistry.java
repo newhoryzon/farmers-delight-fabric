@@ -22,6 +22,7 @@ import com.nhoryzon.mc.farmersdelight.block.RoastChickenBlock;
 import com.nhoryzon.mc.farmersdelight.block.RopeBlock;
 import com.nhoryzon.mc.farmersdelight.block.SafetyNetBlock;
 import com.nhoryzon.mc.farmersdelight.block.ShepherdsPieBlock;
+import com.nhoryzon.mc.farmersdelight.block.SkilletBlock;
 import com.nhoryzon.mc.farmersdelight.block.StoveBlock;
 import com.nhoryzon.mc.farmersdelight.block.TatamiBlock;
 import com.nhoryzon.mc.farmersdelight.block.TatamiHalfMatBlock;
@@ -56,6 +57,7 @@ public enum BlocksRegistry {
     COOKING_POT("cooking_pot", CookingPotBlock::new, true),
     BASKET("basket", BasketBlock::new, true),
     CUTTING_BOARD("cutting_board", CuttingBoardBlock::new, true),
+    SKILLET("skillet", SkilletBlock::new, true),
 
     CARROT_CRATE("carrot_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),
     POTATO_CRATE("potato_crate", () -> new Block(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(3.f).sounds(BlockSoundGroup.WOOD))),

@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.mixin;
 
 import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
+import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
 import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -35,6 +36,12 @@ public class EnchantmentHelperEnhancementMixin {
                     .forEach(enchantment -> addEntry(possibleEnchantmentList, power, enchantment));
             possibleEnchantmentList.removeIf(enchantmentLevelEntry ->
                     KnifeItem.DENIED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
+        } else if (stack.getItem() instanceof SkilletItem) {
+            SkilletItem.ALLOWED_ENCHANTMENTS.stream()
+                    .filter(enchantment -> !containsEnchantment(possibleEnchantmentList, enchantment))
+                    .forEach(enchantment -> addEntry(possibleEnchantmentList, power, enchantment));
+            possibleEnchantmentList.removeIf(enchantmentLevelEntry ->
+                    SkilletItem.DENIED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
         } else if (containsEnchantment(possibleEnchantmentList, EnchantmentsRegistry.BACKSTABBING.get())) {
             possibleEnchantmentList.removeIf(enchantmentLevelEntry -> enchantmentLevelEntry.enchantment == EnchantmentsRegistry.BACKSTABBING.get());
         }

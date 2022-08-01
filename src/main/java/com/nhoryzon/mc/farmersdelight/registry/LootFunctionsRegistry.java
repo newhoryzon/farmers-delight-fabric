@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.loot.function.CopyMealFunctionSerializer;
+import com.nhoryzon.mc.farmersdelight.loot.function.CopySkilletFunctionSerializer;
 import com.nhoryzon.mc.farmersdelight.loot.function.SmokerCookFunctionSerializer;
 import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunction;
@@ -13,7 +14,9 @@ import java.util.function.Supplier;
 
 public enum LootFunctionsRegistry {
     COPY_MEAL("copy_meal", CopyMealFunctionSerializer::new),
-    SMOKER_COOK("smoker_cook", SmokerCookFunctionSerializer::new);
+    SMOKER_COOK("smoker_cook", SmokerCookFunctionSerializer::new),
+
+    COPY_SKILLET("copy_skillet", CopySkilletFunctionSerializer::new);
 
     private final String pathName;
     private final Supplier<ConditionalLootFunction.Serializer<? extends LootFunction>> lootFunctionSerializerSupplier;

@@ -1,14 +1,14 @@
 package com.nhoryzon.mc.farmersdelight.entity.block.inventory;
 
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.SlotItemHandler;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
-public class CookingPotMealSlot extends SlotItemHandler {
+public class CookingPotMealSlot extends Slot {
     
-    public CookingPotMealSlot(ItemHandler itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+    public CookingPotMealSlot(Inventory inventory, int index, int xPosition, int yPosition) {
+        super(inventory, index, xPosition, yPosition);
     }
 
     @Override

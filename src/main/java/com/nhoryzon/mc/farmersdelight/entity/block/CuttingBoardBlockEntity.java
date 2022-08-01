@@ -3,9 +3,6 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.advancement.CuttingBoardTrigger;
 import com.nhoryzon.mc.farmersdelight.block.CuttingBoardBlock;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
-import com.nhoryzon.mc.farmersdelight.item.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.recipe.CuttingBoardRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
@@ -20,6 +17,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -49,35 +48,33 @@ public class CuttingBoardBlockEntity extends BlockEntity {
     public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
 
     private boolean isItemCarvingBoard;
-    private final ItemStackHandler itemHandler;
+    private final SimpleInventory inventory;
 
     public CuttingBoardBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState);
         this.isItemCarvingBoard = false;
-        this.itemHandler = new ItemStackHandler() {
+        this.inventory = new SimpleInventory(1) {
             @Override
-            public int getMaxCountForSlot(int slot) {
+            public int getMaxCountPerStack() {
                 return 1;
             }
-
-            @Override
-            protected void onInventorySlotChanged(int slot) {
-                inventoryChanged();
-            }
         };
+        this.inventory.addListener(sender -> inventoryChanged());
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         isItemCarvingBoard = tag.getBoolean(TAG_KEY_IS_ITEM_CARVED);
-        itemHandler.fromTag(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
+        inventory.readNbtList(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY).getList("Items", CompoundTagUtils.TAG_COMPOUND));
     }
 
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        NbtCompound invNbt = new NbtCompound();
+        invNbt.put("Items", inventory.toNbtList());
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, invNbt);
         tag.putBoolean(TAG_KEY_IS_ITEM_CARVED, isItemCarvingBoard);
     }
 
@@ -90,7 +87,9 @@ public class CuttingBoardBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, itemHandler.toTag());
+        NbtCompound invNbt = new NbtCompound();
+        invNbt.put("Items", inventory.toNbtList());
+        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, invNbt);
 
         return nbtCompound;
     }
@@ -108,7 +107,7 @@ public class CuttingBoardBlockEntity extends BlockEntity {
         }
 
         List<CuttingBoardRecipe> recipeList = world.getRecipeManager()
-                .getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), new RecipeWrapper(itemHandler), world);
+                .getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), inventory, world);
         Optional<CuttingBoardRecipe> matchingRecipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(tool)).findAny();
 
         if (player != null) {
@@ -192,21 +191,21 @@ public class CuttingBoardBlockEntity extends BlockEntity {
         return isItemCarvingBoard;
     }
 
-    public ItemHandler getInventory() {
-        return itemHandler;
+    public Inventory getInventory() {
+        return inventory;
     }
 
     public boolean isEmpty() {
-        return itemHandler.getStack(0).isEmpty();
+        return inventory.getStack(0).isEmpty();
     }
 
     public ItemStack getStoredItem() {
-        return itemHandler.getStack(0);
+        return inventory.getStack(0);
     }
 
     public boolean addItem(ItemStack itemStack) {
         if (isEmpty() && !itemStack.isEmpty()) {
-            itemHandler.setStack(0, itemStack.split(1));
+            inventory.setStack(0, itemStack.split(1));
             isItemCarvingBoard = false;
             inventoryChanged();
 
