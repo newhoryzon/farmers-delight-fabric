@@ -3,6 +3,9 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.advancement.CuttingBoardTrigger;
 import com.nhoryzon.mc.farmersdelight.block.CuttingBoardBlock;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.RecipeWrapper;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.RecipeManagerAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.recipe.CuttingBoardRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
@@ -12,13 +15,11 @@ import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -43,38 +45,41 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CuttingBoardBlockEntity extends BlockEntity {
+public class CuttingBoardBlockEntity extends SyncedBlockEntity {
 
     public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
 
     private boolean isItemCarvingBoard;
-    private final SimpleInventory inventory;
+    private final ItemStackHandler inventory;
+
+    private Identifier lastRecipeID;
 
     public CuttingBoardBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState);
         this.isItemCarvingBoard = false;
-        this.inventory = new SimpleInventory(1) {
+        this.inventory = new ItemStackHandler() {
             @Override
-            public int getMaxCountPerStack() {
+            public int getMaxCountForSlot(int slot) {
                 return 1;
             }
+            @Override
+            protected void onInventorySlotChanged(int slot) {
+                inventoryChanged();
+            }
         };
-        this.inventory.addListener(sender -> inventoryChanged());
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         isItemCarvingBoard = tag.getBoolean(TAG_KEY_IS_ITEM_CARVED);
-        inventory.readNbtList(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY).getList("Items", CompoundTagUtils.TAG_COMPOUND));
+        inventory.readNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
     }
 
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        NbtCompound invNbt = new NbtCompound();
-        invNbt.put("Items", inventory.toNbtList());
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, invNbt);
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, inventory.writeNbt(new NbtCompound()));
         tag.putBoolean(TAG_KEY_IS_ITEM_CARVED, isItemCarvingBoard);
     }
 
@@ -86,12 +91,10 @@ public class CuttingBoardBlockEntity extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbtCompound = new NbtCompound();
-        NbtCompound invNbt = new NbtCompound();
-        invNbt.put("Items", inventory.toNbtList());
-        nbtCompound.put(CompoundTagUtils.TAG_KEY_INVENTORY, invNbt);
+        NbtCompound nbt = new NbtCompound();
+        writeNbt(nbt);
 
-        return nbtCompound;
+        return nbt;
     }
 
     /**
@@ -106,17 +109,7 @@ public class CuttingBoardBlockEntity extends BlockEntity {
             return false;
         }
 
-        List<CuttingBoardRecipe> recipeList = world.getRecipeManager()
-                .getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), inventory, world);
-        Optional<CuttingBoardRecipe> matchingRecipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(tool)).findAny();
-
-        if (player != null) {
-            if (recipeList.isEmpty()) {
-                player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_item"), true);
-            } else if (matchingRecipe.isEmpty()) {
-                player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_tool"), true);
-            }
-        }
+        Optional<CuttingBoardRecipe> matchingRecipe = getMatchingRecipe(new RecipeWrapper(inventory), tool, player);
 
         matchingRecipe.ifPresent(recipe -> {
             List<ItemStack> results = recipe.getRolledResults(world.getRandom(), EnchantmentHelper.getLevel(Enchantments.FORTUNE, tool));
@@ -138,13 +131,47 @@ public class CuttingBoardBlockEntity extends BlockEntity {
             }
             playProcessingSound(recipe.getSoundEvent(), tool.getItem(), getStoredItem().getItem());
             removeItem();
-            inventoryChanged();
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 ((CuttingBoardTrigger) AdvancementsRegistry.CUTTING_BOARD.get()).trigger(serverPlayer);
             }
         });
 
         return matchingRecipe.isPresent();
+    }
+
+    private Optional<CuttingBoardRecipe> getMatchingRecipe(RecipeWrapper recipeWrapper, ItemStack toolStack, @Nullable PlayerEntity player) {
+        if (world == null) {
+            return Optional.empty();
+        }
+
+        if (lastRecipeID != null) {
+            Recipe<Inventory> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
+                    .getAllForType(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type())
+                    .get(lastRecipeID);
+            if (recipe instanceof CuttingBoardRecipe && recipe.matches(recipeWrapper, world) && ((CuttingBoardRecipe) recipe).getTool().test(toolStack)) {
+                return Optional.of((CuttingBoardRecipe) recipe);
+            }
+        }
+
+        List<CuttingBoardRecipe> recipeList = world.getRecipeManager().getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), recipeWrapper, world);
+        if (recipeList.isEmpty()) {
+            if (player != null) {
+                player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_item"), true);
+            }
+            return Optional.empty();
+        }
+
+        Optional<CuttingBoardRecipe> recipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(toolStack)).findFirst();
+        if (recipe.isEmpty()) {
+            if (player != null) {
+                player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_tool"), true);
+            }
+
+            return Optional.empty();
+        }
+        lastRecipeID = recipe.get().getId();
+
+        return recipe;
     }
 
     public void playProcessingSound(String soundEventID, Item tool, Item boardItem) {
@@ -225,11 +252,6 @@ public class CuttingBoardBlockEntity extends BlockEntity {
         }
 
         return ItemStack.EMPTY;
-    }
-
-    private void inventoryChanged() {
-        markDirty();
-        Objects.requireNonNull(world).updateListeners(getPos(), getCachedState(), getCachedState(), 3);
     }
 
 }
