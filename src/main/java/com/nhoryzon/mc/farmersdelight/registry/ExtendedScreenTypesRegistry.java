@@ -3,22 +3,22 @@ package com.nhoryzon.mc.farmersdelight.registry;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum ExtendedScreenTypesRegistry {
+
     COOKING_POT("cooking_pot", CookingPotScreenHandler.class, CookingPotScreenHandler::new);
 
     private final String pathName;
     private final Class<? extends ScreenHandler> screenHandlerClass;
-    private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends ScreenHandler> screenHandlerFactory;
+    private final ExtendedScreenHandlerType.ExtendedFactory<? extends ScreenHandler> screenHandlerFactory;
     private ScreenHandlerType<? extends ScreenHandler> screenHandlerType;
 
     ExtendedScreenTypesRegistry(String pathName, Class<? extends ScreenHandler> screenHandlerClass,
-            ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends ScreenHandler> screenHandlerFactory) {
+            ExtendedScreenHandlerType.ExtendedFactory<? extends ScreenHandler> screenHandlerFactory) {
         this.pathName = pathName;
         this.screenHandlerClass = screenHandlerClass;
         this.screenHandlerFactory = screenHandlerFactory;
@@ -38,7 +38,7 @@ public enum ExtendedScreenTypesRegistry {
     @SuppressWarnings({"unchecked","unused"})
     private <T extends ScreenHandler> ScreenHandlerType<T> get(Class<T> clazz) {
         if (screenHandlerType == null) {
-            screenHandlerType = new ExtendedScreenHandlerType<>((ScreenHandlerRegistry.ExtendedClientHandlerFactory<T>) screenHandlerFactory);
+            screenHandlerType = new ExtendedScreenHandlerType<>(screenHandlerFactory);
         }
 
         return (ScreenHandlerType<T>) screenHandlerType;

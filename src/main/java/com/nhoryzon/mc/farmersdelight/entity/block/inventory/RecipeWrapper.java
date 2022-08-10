@@ -1,4 +1,4 @@
-package com.nhoryzon.mc.farmersdelight.item.inventory;
+package com.nhoryzon.mc.farmersdelight.entity.block.inventory;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;

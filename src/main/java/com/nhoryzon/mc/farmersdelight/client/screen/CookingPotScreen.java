@@ -14,7 +14,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,7 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         super.render(ms, mouseX, mouseY, partialTicks);
         renderMealDisplayTooltip(ms, mouseX, mouseY);
         renderHeatIndicatorTooltip(ms, mouseX, mouseY);
+        drawMouseoverTooltip(ms, mouseX, mouseY);
     }
 
     private void renderHeatIndicatorTooltip(MatrixStack ms, int mouseX, int mouseY) {
@@ -61,7 +61,7 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
                 ItemStack meal = focusedSlot.getStack();
                 tooltip.add(((MutableText) meal.getItem().getName()).formatted(meal.getRarity().formatting));
 
-                ItemStack containerItem = handler.tileEntity.getContainer();
+                ItemStack containerItem = handler.tileEntity.getMealContainer();
                 String container = !containerItem.isEmpty() ? containerItem.getItem().getName().getString() : "";
 
                 tooltip.add(FarmersDelightMod.i18n("container.cooking_pot.served_on", container).formatted(Formatting.GRAY));

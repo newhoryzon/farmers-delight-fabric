@@ -1,18 +1,17 @@
-package com.nhoryzon.mc.farmersdelight.item.inventory;
+package com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot;
 
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
 public class SlotItemHandler extends Slot {
-    private static final Inventory EMPTY_INVENTORY = new SimpleInventory(0);
+
     private final ItemHandler itemHandler;
     private final int index;
 
     public SlotItemHandler(ItemHandler itemHandler, int index, int xPosition, int yPosition) {
-        super(EMPTY_INVENTORY, index, xPosition, yPosition);
+        super(itemHandler, index, xPosition, yPosition);
         this.itemHandler = itemHandler;
         this.index = index;
     }
@@ -24,17 +23,6 @@ public class SlotItemHandler extends Slot {
         }
 
         return itemHandler.isValid(index, stack);
-    }
-
-    @Override
-    public ItemStack getStack() {
-        return getItemHandler().getStack(index);
-    }
-
-    @Override
-    public void setStack(ItemStack stack) {
-        getItemHandler().setStack(index, stack);
-        markDirty();
     }
 
     @Override
@@ -71,4 +59,5 @@ public class SlotItemHandler extends Slot {
     public ItemHandler getItemHandler() {
         return itemHandler;
     }
+
 }

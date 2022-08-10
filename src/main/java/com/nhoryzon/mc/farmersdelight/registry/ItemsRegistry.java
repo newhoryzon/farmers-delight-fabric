@@ -10,6 +10,7 @@ import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import com.nhoryzon.mc.farmersdelight.item.MilkBottleItem;
 import com.nhoryzon.mc.farmersdelight.item.ModBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
+import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
 import com.nhoryzon.mc.farmersdelight.item.enumeration.Foods;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
@@ -30,6 +31,7 @@ public enum ItemsRegistry {
 
     STOVE("stove", () -> new ModBlockItem(BlocksRegistry.STOVE.get())),
     COOKING_POT("cooking_pot", () -> new ModBlockItem(BlocksRegistry.COOKING_POT.get())),
+    SKILLET("skillet", SkilletItem::new),
     BASKET("basket", () -> new ModBlockItem(BlocksRegistry.BASKET.get())),
     CUTTING_BOARD("cutting_board", () -> new ModBlockItem(BlocksRegistry.CUTTING_BOARD.get())),
 

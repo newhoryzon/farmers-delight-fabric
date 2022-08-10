@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.state.CookingPotSupport;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
@@ -29,6 +28,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -144,8 +144,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY);
             if (inventoryTag.contains("Items", 9)) {
-                ItemStackHandler handler = new ItemStackHandler();
-                handler.fromTag(inventoryTag);
+                SimpleInventory handler = new SimpleInventory();
+                handler.readNbtList(inventoryTag.getList("Items", CompoundTagUtils.TAG_COMPOUND));
                 ItemStack meal = handler.getStack(6);
                 if (!meal.isEmpty()) {
                     MutableText servingsOf = meal.getCount() == 1
