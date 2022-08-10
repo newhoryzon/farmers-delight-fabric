@@ -3,8 +3,6 @@ package com.nhoryzon.mc.farmersdelight.block.signs;
 import com.nhoryzon.mc.farmersdelight.Configuration;
 import net.minecraft.util.DyeColor;
 
-import java.util.List;
-
 public interface ICanvasSign {
 
     DyeColor getBackgroundColor();

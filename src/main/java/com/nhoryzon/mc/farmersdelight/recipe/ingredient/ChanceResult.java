@@ -18,37 +18,24 @@ import net.minecraft.util.registry.Registry;
 /**
  * Credits to the Create team for the implementation of results with chances!
  */
-public class ChanceResult {
+public record ChanceResult(ItemStack stack, float chance) {
 
     public static final ChanceResult EMPTY = new ChanceResult(ItemStack.EMPTY, 1);
 
     private static final float DEFAULT_CUTTING_BOARD_FORTUNE_BONUS = .2f;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    private final ItemStack stack;
-    private final float chance;
-
-    public ChanceResult(ItemStack stack, float chance) {
-        this.stack = stack;
-        this.chance = chance;
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public float getChance() {
-        return chance;
-    }
-
     public ItemStack rollOutput(Random rand, int fortuneLevel) {
         int outputAmount = stack.getCount();
         double fortuneBonus = DEFAULT_CUTTING_BOARD_FORTUNE_BONUS * fortuneLevel;
-        for (int roll = 0; roll < stack.getCount(); roll++)
-            if (rand.nextFloat() > chance + fortuneBonus)
+        for (int roll = 0; roll < stack.getCount(); roll++) {
+            if (rand.nextFloat() > chance + fortuneBonus) {
                 outputAmount--;
-        if (outputAmount == 0)
+            }
+        }
+        if (outputAmount == 0) {
             return ItemStack.EMPTY;
+        }
         ItemStack out = stack.copy();
         out.setCount(outputAmount);
         return out;
@@ -61,19 +48,23 @@ public class ChanceResult {
         json.addProperty("item", identifier.toString());
 
         int count = stack.getCount();
-        if (count != 1)
+        if (count != 1) {
             json.addProperty("count", count);
-        if (stack.hasNbt())
+        }
+        if (stack.hasNbt()) {
             json.add("nbt", new JsonParser().parse(stack.getNbt().toString()));
-        if (chance != 1)
+        }
+        if (chance != 1) {
             json.addProperty("chance", chance);
+        }
 
         return json;
     }
 
     public static ChanceResult deserialize(JsonElement je) {
-        if (!je.isJsonObject())
+        if (!je.isJsonObject()) {
             throw new JsonSyntaxException("Must be a json object");
+        }
 
         JsonObject json = je.getAsJsonObject();
         String itemId = JsonHelper.getString(json, "item");
@@ -86,8 +77,7 @@ public class ChanceResult {
                 JsonElement element = json.get("nbt");
                 itemstack.setNbt(NbtHelper.fromNbtProviderString(
                         element.isJsonObject() ? GSON.toJson(element) : JsonHelper.asString(element, "nbt")));
-            }
-            catch (CommandSyntaxException e) {
+            } catch (CommandSyntaxException e) {
                 e.printStackTrace();
             }
         }
@@ -96,8 +86,8 @@ public class ChanceResult {
     }
 
     public void write(PacketByteBuf buf) {
-        buf.writeItemStack(getStack());
-        buf.writeFloat(getChance());
+        buf.writeItemStack(stack());
+        buf.writeFloat(chance());
     }
 
     public static ChanceResult read(PacketByteBuf buf) {

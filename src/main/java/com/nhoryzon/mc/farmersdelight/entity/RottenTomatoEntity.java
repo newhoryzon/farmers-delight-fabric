@@ -1,7 +1,5 @@
 package com.nhoryzon.mc.farmersdelight.entity;
 
-import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
-import com.nhoryzon.mc.farmersdelight.FarmersDelightModClient;
 import com.nhoryzon.mc.farmersdelight.registry.EntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
@@ -12,10 +10,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;

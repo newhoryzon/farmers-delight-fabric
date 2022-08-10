@@ -50,9 +50,7 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
 
         int ingredientSize = buf.readVarInt();
         DefaultedList<Ingredient> ingredientList = DefaultedList.ofSize(ingredientSize, Ingredient.EMPTY);
-        for (int j = 0; j < ingredientList.size(); ++j) {
-            ingredientList.set(j, Ingredient.fromPacket(buf));
-        }
+        ingredientList.replaceAll(ignored -> Ingredient.fromPacket(buf));
 
         ItemStack outputIn = buf.readItemStack();
         ItemStack container = buf.readItemStack();

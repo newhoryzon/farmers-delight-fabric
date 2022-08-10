@@ -49,7 +49,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
 
     @Override
     public ItemStack craft(Inventory inv) {
-        return resultList.get(0).getStack().copy();
+        return resultList.get(0).stack().copy();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
 
     @Override
     public ItemStack getOutput() {
-        return resultList.get(0).getStack();
+        return resultList.get(0).stack();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     }
 
     public List<ItemStack> getResultList() {
-        return getRollableResults().stream().map(ChanceResult::getStack).collect(Collectors.toList());
+        return getRollableResults().stream().map(ChanceResult::stack).collect(Collectors.toList());
     }
 
     public DefaultedList<ChanceResult> getRollableResults() {
