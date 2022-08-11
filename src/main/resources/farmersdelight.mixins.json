@@ -6,19 +6,26 @@
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
     "CampfireBaleMixin",
+    "CanvasSignEditScreenMixin",
     "ChickenEntityBreedingMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
     "EnchantmentHelperEnhancementMixin",
     "LivingEntityBackstabbingEnchantmentMixin",
     "LivingEntityComfortImmunitiesMixin",
-    "LivingEntityKnivesKnockBackMixin",
+    "LivingEntityKnockBackMixin",
     "LivingEntityOnUseItemFinishMixin",
+    "MigrationBlockEntityMixin",
+    "MigrationBlockRegistryMixin",
+    "MigrationItemStackMixin",
     "PigEntityBreedingMixin",
     "PlantBlockOnRichSoilMixin",
+    "PlayerEntityAttackWithSkilletMixin",
     "StemBlockOnRichSoilFarmlandMixin",
+    "accessors.DispenserBehaviorsAccessorMixin",
+    "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin",
-    "accessors.DispenserBehaviorsAccessorMixin"
+    "accessors.RecipeManagerAccessorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -11,11 +11,12 @@
       "tag": "farmersdelight:wolf_prey"
     },
     {
-      "tag": "fabric:crops/rice"
+      "tag": "c:crops/rice"
     }
   ],
   "result": {
     "item": "farmersdelight:dog_food"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

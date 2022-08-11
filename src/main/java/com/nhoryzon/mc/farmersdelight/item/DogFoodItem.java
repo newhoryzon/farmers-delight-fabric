@@ -2,13 +2,15 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Lists;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.item.enumeration.Foods;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Hand;
 
@@ -22,8 +24,8 @@ public class DogFoodItem extends LivingEntityFeedItem {
             new StatusEffectInstance(StatusEffects.RESISTANCE, 6000, 0)
     );
 
-    public DogFoodItem(Settings settings) {
-        super(settings);
+    public DogFoodItem() {
+        super(new ModItemSettings().food(Foods.DOG_FOOD.get()).recipeRemainder(Items.BOWL).maxCount(16));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DogFoodItem extends LivingEntityFeedItem {
 
     @Override
     public boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand) {
-        if (entity instanceof WolfEntity wolf && entity.getType().isIn(Tags.DOG_FOOD_USERS)) {
+        if (entity instanceof WolfEntity wolf && entity.getType().isIn(TagsRegistry.DOG_FOOD_USERS)) {
             return wolf.isAlive() && wolf.isTamed();
         }
 

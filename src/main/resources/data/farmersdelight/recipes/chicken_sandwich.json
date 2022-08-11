@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:bread"
+      "tag": "c:bread"
     },
     {
-      "tag": "fabric:cooked_chicken"
+      "tag": "c:cooked_chicken"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     },
     {
       "item": "minecraft:carrot"

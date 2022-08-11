@@ -17,6 +17,11 @@ public class CompoundTagUtils {
     public static final int TAG_LONG_ARRAY  = 12;
     public static final int TAG_ANY_NUMERIC = 99;
 
+    public static final String TAG_KEY_SLOT = "Slot";
+    public static final String TAG_KEY_SIZE = "Size";
+    public static final String TAG_KEY_ITEM_LIST = "Items";
+    public static final String TAG_KEY_COOK_TIME = "CookTime";
+    public static final String TAG_KEY_COOK_TIME_TOTAL = "CookTimeTotal";
     public static final String TAG_KEY_INVENTORY = "Inventory";
     public static final String TAG_KEY_CONTAINER = "Container";
     public static final String TAG_KEY_CUSTOM_NAME = "CustomName";

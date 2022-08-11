@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     },
     {
       "item": "minecraft:cooked_beef"

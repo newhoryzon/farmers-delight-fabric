@@ -5,13 +5,13 @@
       "item": "minecraft:baked_potato"
     },
     {
-      "tag": "fabric:cooked_beef"
+      "tag": "c:cooked_beef"
     },
     {
       "item": "minecraft:carrot"
     },
     {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     }
   ],
   "result": {

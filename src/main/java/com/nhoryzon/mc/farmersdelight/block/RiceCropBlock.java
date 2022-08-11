@@ -39,6 +39,8 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     public static final BooleanProperty SUPPORTING = BooleanProperty.of("supporting");
     public static final int MAX_AGE = 3;
 
+    public static final int GROWTH_CHANCE = 10;
+
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[] {
             Block.createCuboidShape(3.d, .0d, 3.d, 13.d, 8.d, 13.d),
             Block.createCuboidShape(3.d, .0d, 3.d, 13.d, 10.d, 13.d),
@@ -156,19 +158,21 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
         }
 
         if (world.getLightLevel(pos.up(), 0) >= 6 && getAge(state) <= MAX_AGE && random.nextInt(3) == 0) {
-            randomGrowTick(state, world, pos);
+            randomGrowTick(state, world, pos, random);
         }
     }
 
-    private void randomGrowTick(BlockState state, ServerWorld world, BlockPos pos) {
+    private void randomGrowTick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         int currentAge = getAge(state);
-        if (currentAge == MAX_AGE) {
-            RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
-            if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
-                world.setBlockState(pos.up(), riceUpper.getDefaultState());
+        if (currentAge <= MAX_AGE && rand.nextInt((int) (25.0F / GROWTH_CHANCE) + 1) == 0) {
+            if (currentAge == MAX_AGE) {
+                RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
+                if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
+                    world.setBlockState(pos.up(), riceUpper.getDefaultState());
+                }
+            } else {
+                world.setBlockState(pos, withAge(currentAge + 1), 2);
             }
-        } else {
-            world.setBlockState(pos, withAge(currentAge + 1), 2);
         }
     }
 

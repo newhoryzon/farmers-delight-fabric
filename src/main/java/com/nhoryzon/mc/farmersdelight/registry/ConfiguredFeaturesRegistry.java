@@ -15,7 +15,6 @@ import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
