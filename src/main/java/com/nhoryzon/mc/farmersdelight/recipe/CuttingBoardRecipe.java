@@ -97,6 +97,14 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
         return getRollableResults().stream().map(ChanceResult::stack).collect(Collectors.toList());
     }
 
+    public List<ItemStack> getMandatoryResult() {
+        return getRollableResults().stream().filter(chanceResult -> chanceResult.chance() == 1).map(ChanceResult::stack).toList();
+    }
+
+    public List<ChanceResult> getVariableResult() {
+        return getRollableResults().stream().filter(chanceResult -> chanceResult.chance() != 1).toList();
+    }
+
     public DefaultedList<ChanceResult> getRollableResults() {
         return resultList;
     }
