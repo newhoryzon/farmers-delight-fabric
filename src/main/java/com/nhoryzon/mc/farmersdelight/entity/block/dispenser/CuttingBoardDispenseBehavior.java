@@ -5,7 +5,6 @@ import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.DispenserBehaviorsAccessorMixin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;

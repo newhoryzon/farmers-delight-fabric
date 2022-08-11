@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class HotCocoaItem extends MilkBottleItem {
 
-    public HotCocoaItem(Settings settings) {
-        super(settings);
+    public HotCocoaItem() {
+        super();
     }
 
     @Override

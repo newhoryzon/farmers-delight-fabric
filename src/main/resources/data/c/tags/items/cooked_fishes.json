@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#c:cooked_fishes/cod",
+    "#c:cooked_fishes/salmon"
+  ]
+}

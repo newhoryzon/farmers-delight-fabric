@@ -2,14 +2,15 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     },
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     }
   ],
   "result": {
     "item": "farmersdelight:tomato_sauce"
   },
+  "experience": 0.1,
   "cookingtime": 100
 }

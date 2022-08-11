@@ -10,7 +10,7 @@
       "item": "minecraft:sweet_berries"
     },
     "m": {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     },
     "O": {
       "item": "farmersdelight:pie_crust"

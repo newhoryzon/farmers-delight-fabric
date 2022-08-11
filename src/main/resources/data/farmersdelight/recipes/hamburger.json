@@ -2,19 +2,19 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:bread"
+      "tag": "c:bread"
     },
     {
       "item": "farmersdelight:beef_patty"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     },
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     }
   ],
   "result": {

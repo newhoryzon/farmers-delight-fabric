@@ -7,7 +7,7 @@
   ],
   "tool": {
     "type": "farmersdelight:tool",
-    "tag": "fabric:tools/shovels"
+    "tag": "c:tools/shovels"
   },
   "result": [
     {

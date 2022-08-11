@@ -1,12 +1,14 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.block.state.CookingPotSupport;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.item.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
+import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -27,17 +29,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -50,6 +54,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -65,14 +70,15 @@ import java.util.List;
 public class CookingPotBlock extends BlockWithEntity implements InventoryProvider, Waterloggable {
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty SUPPORTED = Properties.DOWN;
+    public static final EnumProperty<CookingPotSupport> SUPPORT = EnumProperty.of("support", CookingPotSupport.class);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.d, .0d, 2.d, 14.d, 10.d, 14.d);
-    protected static final VoxelShape SHAPE_SUPPORTED = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
+    protected static final VoxelShape SHAPE_WITH_TRAY = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
 
     public CookingPotBlock() {
-        super(FabricBlockSettings.of(Material.METAL).hardness(2.f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
-        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORTED, false).with(WATERLOGGED, false));
+        super(FabricBlockSettings.of(Material.METAL).hardness(.5f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
+        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORT, CookingPotSupport.NONE).with(WATERLOGGED, false));
     }
 
     @Nullable
@@ -84,7 +90,11 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::tick);
+        if (world.isClient()) {
+            return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::animationTick);
+        } else {
+            return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::cookingTick);
+        }
     }
 
     @Override
@@ -95,7 +105,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(FACING, SUPPORTED, WATERLOGGED);
+        builder.add(FACING, SUPPORT, WATERLOGGED);
     }
 
     @Nullable
@@ -107,7 +117,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
         return getDefaultState()
                 .with(FACING, context.getPlayerFacing().getOpposite())
-                .with(SUPPORTED, needsTrayForHeatSource(world.getBlockState(blockPos.down())))
+                .with(SUPPORT, context.getSide() == Direction.DOWN ? CookingPotSupport.HANDLE : getTrayState(world, blockPos))
                 .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
     }
 
@@ -134,9 +144,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         NbtCompound tag = stack.getSubNbt("BlockEntityTag");
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY);
-            if (inventoryTag.contains("Items", 9)) {
+            if (inventoryTag.contains(CompoundTagUtils.TAG_KEY_ITEM_LIST, CompoundTagUtils.TAG_LIST)) {
                 ItemStackHandler handler = new ItemStackHandler();
-                handler.fromTag(inventoryTag);
+                handler.readNbt(inventoryTag);
                 ItemStack meal = handler.getStack(6);
                 if (!meal.isEmpty()) {
                     MutableText servingsOf = meal.getCount() == 1
@@ -160,15 +170,17 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     }
 
     @Override
-    @Environment(value=EnvType.CLIENT)
+    @Environment(value = EnvType.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity && cookingPotBlockEntity.isAboveLitHeatSource()) {
+        if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity && cookingPotBlockEntity.isHeated()) {
+            SoundEvent boilSound = !cookingPotBlockEntity.getMeal().isEmpty() ? SoundsRegistry.BLOCK_COOKING_POT_BOIL_SOUP.get()
+                    : SoundsRegistry.BLOCK_COOKING_POT_BOIL.get();
             double dX = pos.getX() + .5d;
             double dY = pos.getY();
             double dZ = pos.getZ() + .5d;
             if (random.nextInt(10) == 0) {
-                world.playSound(dX, dY, dZ, SoundsRegistry.BLOCK_COOKING_POT_BOIL.get(), SoundCategory.BLOCKS, .5f, random.nextFloat() * .2f + .9f, false);
+                world.playSound(dX, dY, dZ, boilSound, SoundCategory.BLOCKS, .5f, random.nextFloat() * .2f + .9f, false);
             }
         }
     }
@@ -181,8 +193,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CookingPotBlockEntity) {
-            return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+        if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+            return MathUtils.calcRedstoneFromItemHandler(cookingPotBlockEntity.getInventory());
         }
 
         return 0;
@@ -190,7 +202,10 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
+        ItemStack heldStack = player.getStackInHand(hand);
+        if (heldStack.isEmpty() && player.isInSneakingPose()) {
+            world.setBlockState(pos, state.with(SUPPORT, state.get(SUPPORT) == CookingPotSupport.HANDLE ? getTrayState(world, pos) : CookingPotSupport.HANDLE));
+        } else if (!world.isClient() && world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
             ItemStack serving = cookingPotBlockEntity.useHeldItemOnMeal(player.getStackInHand(hand));
             if (serving != ItemStack.EMPTY) {
                 if (!player.getInventory().insertStack(serving)) {
@@ -213,6 +228,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
                 ItemScatterer.spawn(world, pos, cookingPotBlockEntity.getDroppableInventory());
+                cookingPotBlockEntity.grantStoredRecipeExperience(world, Vec3d.ofCenter(pos));
+                world.updateNeighbors(pos, this);
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
@@ -226,11 +243,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
             world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
         }
 
-        if (direction == Direction.DOWN) {
-            return state.with(SUPPORTED, needsTrayForHeatSource(newState));
-        }
-
-        return state;
+        return direction.getAxis() == Direction.Axis.Y && !state.get(SUPPORT).equals(CookingPotSupport.HANDLE) ? state.with(SUPPORT,
+                getTrayState(world, pos)) : state;
     }
 
     @Override
@@ -240,7 +254,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return Boolean.TRUE.equals(state.get(SUPPORTED)) ? SHAPE_SUPPORTED : SHAPE;
+        return state.get(SUPPORT).equals(CookingPotSupport.TRAY) ? SHAPE_WITH_TRAY : SHAPE;
     }
 
     @Override
@@ -267,8 +281,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         return null;
     }
 
-    private boolean needsTrayForHeatSource(BlockState state) {
-        return state.isIn(Tags.TRAY_HEAT_SOURCES);
+    private CookingPotSupport getTrayState(WorldAccess world, BlockPos pos) {
+        return world.getBlockState(pos.down()).isIn(TagsRegistry.TRAY_HEAT_SOURCES) ? CookingPotSupport.TRAY : CookingPotSupport.NONE;
     }
 
 }

@@ -1,9 +1,11 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.nhoryzon.mc.farmersdelight.entity.RottenTomatoEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
 import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
 import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -16,20 +18,29 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.*;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Position;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,6 +53,8 @@ import java.util.Set;
  */
 public class FarmersDelightMod implements ModInitializer {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger("Farmer's Delight");
+
     public static final String MOD_ID = "farmersdelight";
 
     public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),
@@ -50,8 +63,6 @@ public class FarmersDelightMod implements ModInitializer {
     public static MutableText i18n(String key, Object... args) {
         return Text.translatable(MOD_ID + "." + key, args);
     }
-
-
 
     @Override
     public void onInitialize() {
@@ -67,6 +78,7 @@ public class FarmersDelightMod implements ModInitializer {
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
         ConfiguredFeaturesRegistry.registerAll();
+        EntityTypesRegistry.registerAll();
 
         registerBiomeModifications();
         registerCompostables();
@@ -74,6 +86,11 @@ public class FarmersDelightMod implements ModInitializer {
         registerLootTable();
         registerDispenserBehavior();
         registerVillagerTradeOffer();
+
+        ParrotsTamingIngredientsAccessorMixin.getTamingIngredients().addAll(List.of(
+                ItemsRegistry.CABBAGE_SEEDS.get(),
+                ItemsRegistry.TOMATO_SEED.get(),
+                ItemsRegistry.RICE.get()));
     }
 
     protected void registerEventListeners() {
@@ -131,6 +148,7 @@ public class FarmersDelightMod implements ModInitializer {
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.SWEET_BERRY_CHEESECAKE_SLICE.get(), .85f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.CHOCOLATE_PIE_SLICE.get(), .85f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.RAW_PASTA.get(), .85f);
+        CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.ROTTEN_TOMATO.get(), .85f);
 
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.APPLE_PIE.get(), 1.f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.SWEET_BERRY_CHEESECAKE.get(), 1.f);
@@ -142,12 +160,21 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerLootTable() {
-        Set<Identifier> villageHouseChestsId = Set.of(
+        Set<Identifier> chestsId = Set.of(
+                LootTables.ABANDONED_MINESHAFT_CHEST,
+                LootTables.BASTION_HOGLIN_STABLE_CHEST,
+                LootTables.BASTION_TREASURE_CHEST,
+                LootTables.END_CITY_TREASURE_CHEST,
+                LootTables.PILLAGER_OUTPOST_CHEST,
+                LootTables.RUINED_PORTAL_CHEST,
+                LootTables.SHIPWRECK_SUPPLY_CHEST,
+                LootTables.SIMPLE_DUNGEON_CHEST,
                 LootTables.VILLAGE_PLAINS_CHEST,
                 LootTables.VILLAGE_SAVANNA_HOUSE_CHEST,
                 LootTables.VILLAGE_SNOWY_HOUSE_CHEST,
                 LootTables.VILLAGE_TAIGA_HOUSE_CHEST,
-                LootTables.VILLAGE_DESERT_HOUSE_CHEST);
+                LootTables.VILLAGE_DESERT_HOUSE_CHEST,
+                LootTables.VILLAGE_BUTCHER_CHEST);
         Set<Identifier> scavengingEntityIdList = Set.of(
                 EntityType.PIG.getLootTableId(),
                 EntityType.HOGLIN.getLootTableId(),
@@ -167,19 +194,11 @@ public class FarmersDelightMod implements ModInitializer {
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             Identifier injectId = new Identifier(FarmersDelightMod.MOD_ID, "inject/" + id.getPath());
-            if (scavengingEntityIdList.contains(id)) {
+            if (scavengingEntityIdList.contains(id) || addItemLootBlockIdList.contains(id)) {
                 tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 
-            if (addItemLootBlockIdList.contains(id)) {
-                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
-            }
-
-            if (villageHouseChestsId.contains(id)) {
-                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
-            }
-
-            if (LootTables.SHIPWRECK_SUPPLY_CHEST.equals(id)) {
+            if (chestsId.contains(id)) {
                 tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
         });
@@ -210,6 +229,12 @@ public class FarmersDelightMod implements ModInitializer {
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.DIAMOND_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
         CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
+        DispenserBlock.registerBehavior(ItemsRegistry.ROTTEN_TOMATO.get(), new ProjectileDispenserBehavior() {
+            @Override
+            protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
+                return new RottenTomatoEntity(world, position.getX(), position.getY(), position.getZ());
+            }
+        });
     }
 
     protected void registerVillagerTradeOffer() {

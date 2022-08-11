@@ -7,13 +7,13 @@
   ],
   "key": {
     "m": {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     },
     "s": {
       "item": "minecraft:sugar"
     },
     "e": {
-      "tag": "fabric:eggs"
+      "tag": "c:eggs"
     },
     "w": {
       "item": "minecraft:wheat"

@@ -2,20 +2,21 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:raw_fishes/cod"
+      "tag": "c:raw_fishes/cod"
     },
     {
       "item": "minecraft:potato"
     },
     {
-      "tag": "fabric:eggs"
+      "tag": "c:eggs"
     },
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     }
   ],
   "result": {
     "item": "farmersdelight:baked_cod_stew"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

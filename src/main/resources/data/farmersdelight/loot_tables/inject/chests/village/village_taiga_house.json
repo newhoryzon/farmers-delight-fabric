@@ -8,23 +8,7 @@
       },
       "entries": [
         {
-          "type": "item",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1.0,
-                "max": 3.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "farmersdelight:tomato_seeds"
-        },
-        {
-          "type": "item",
-          "weight": 4,
+          "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -38,23 +22,7 @@
           "name": "farmersdelight:cabbage_seeds"
         },
         {
-          "type": "item",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "min": 1.0,
-                "max": 3.0,
-                "type": "minecraft:uniform"
-              }
-            }
-          ],
-          "name": "farmersdelight:onion"
-        },
-        {
-          "type": "item",
-          "weight": 6,
+          "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:set_count",

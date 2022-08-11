@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:bread"
+      "tag": "c:bread"
     },
     {
-      "tag": "fabric:cooked_bacon"
+      "tag": "c:cooked_bacon"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     },
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     }
   ],
   "result": {
