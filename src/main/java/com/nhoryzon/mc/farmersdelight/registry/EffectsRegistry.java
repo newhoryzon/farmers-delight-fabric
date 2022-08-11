@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public enum EffectsRegistry {
-    NOURISHED("nourished", new NourishmentEffect()),
+    NOURISHMENT("nourishment", new NourishmentEffect()),
     COMFORT("comfort", new ComfortEffect());
 
     private final String pathName;

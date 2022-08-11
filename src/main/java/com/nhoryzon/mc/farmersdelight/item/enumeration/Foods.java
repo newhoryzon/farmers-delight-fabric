@@ -65,27 +65,27 @@ public enum Foods {
     VEGETABLE_SOUP(10, .8f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
     FISH_STEW(10, .8f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
     CHICKEN_SOUP(10, .8f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    FRIED_RICE(10, .8f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    FRIED_RICE(10, .8f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
     PUMPKIN_SOUP(10, .9f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
     BAKED_COD_STEW(10, .9f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
     NOODLE_SOUP(10, .9f, new StatusEffectInstance(EffectsRegistry.COMFORT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
 
     // Plated Foods
-    BACON_AND_EGGS(9, .6f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.SHORT_DURATION, 0), 12.f),
-    RATATOUILLE(9, .6f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.SHORT_DURATION, 0), 1.f),
-    STEAK_AND_POTATOES(12, .8f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
-    PASTA_WITH_MEATBALLS(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
-    PASTA_WITH_MUTTON_CHOP(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
-    ROASTED_MUTTON_CHOPS(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    VEGETABLE_NOODLES(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    SQUID_INK_PASTA(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    GRILLED_SALMON(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
+    BACON_AND_EGGS(9, .6f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.SHORT_DURATION, 0), 12.f),
+    RATATOUILLE(9, .6f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.SHORT_DURATION, 0), 1.f),
+    STEAK_AND_POTATOES(12, .8f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
+    PASTA_WITH_MEATBALLS(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
+    PASTA_WITH_MUTTON_CHOP(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
+    ROASTED_MUTTON_CHOPS(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    VEGETABLE_NOODLES(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    SQUID_INK_PASTA(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    GRILLED_SALMON(12, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.MEDIUM_DURATION, 0), 1.f),
 
     // Feast Portions
-    ROAST_CHICKEN(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    STUFFED_PUMPKIN(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    HONEY_GLAZED_HAM(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
-    SHEPHERDS_PIE(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHED.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    ROAST_CHICKEN(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    STUFFED_PUMPKIN(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    HONEY_GLAZED_HAM(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
+    SHEPHERDS_PIE(14, .9f, new StatusEffectInstance(EffectsRegistry.NOURISHMENT.get(), ConsumableItem.LONG_DURATION, 0), 1.f),
 
     DOG_FOOD(4, .2f, true);
 

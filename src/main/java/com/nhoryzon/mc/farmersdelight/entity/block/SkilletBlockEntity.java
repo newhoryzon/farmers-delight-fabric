@@ -2,13 +2,14 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.SkilletBlock;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.SkilletBlockInventory;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.RecipeManagerAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
@@ -36,13 +37,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEntity {
+public class SkilletBlockEntity extends SyncedBlockEntity implements HeatableBlockEntity {
 
     public static final String TAG_KEY_SKILLET_STACK = "Skillet";
 
     private int cookTime;
     private int cookTimeTotal;
-    private final SimpleInventory inventory;
+    private final ItemStackHandler inventory;
     private Identifier lastRecipeID;
     private ItemStack skilletStack;
     private int fireAspectLevel;
@@ -50,8 +51,7 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
     public SkilletBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypesRegistry.SKILLET.get(), blockPos, blockState);
         skilletStack = ItemStack.EMPTY;
-        inventory = new SimpleInventory(1);
-        inventory.addListener(sender -> inventoryChanged());
+        inventory = new SkilletBlockInventory(this);
     }
 
     public static void cookingTick(World world, BlockPos pos, BlockState state, SkilletBlockEntity skillet) {
@@ -106,7 +106,7 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
                 entity.setVelocity(direction.getOffsetX() *.08f, .25f, direction.getOffsetZ() * .08f);
                 world.spawnEntity(entity);
                 cookTime = 0;
-                inventory.removeStack(0, 1);
+                inventory.extractItemStack(0, 1, false);
             }
         }
     }
@@ -154,7 +154,7 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
     }
 
     private void fromTag(NbtCompound nbt) {
-        inventory.readNbtList(nbt.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY).getList("Items", CompoundTagUtils.TAG_COMPOUND));
+        inventory.readNbt(nbt.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
         cookTime = nbt.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME);
         cookTimeTotal = nbt.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME_TOTAL);
         skilletStack = ItemStack.fromNbt(nbt.getCompound(TAG_KEY_SKILLET_STACK));
@@ -164,9 +164,7 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        NbtCompound invNbt = new NbtCompound();
-        invNbt.put("Items", inventory.toNbtList());
-        nbt.put(CompoundTagUtils.TAG_KEY_INVENTORY, invNbt);
+        nbt.put(CompoundTagUtils.TAG_KEY_INVENTORY, inventory.writeNbt(new NbtCompound()));
         nbt.putInt(CompoundTagUtils.TAG_KEY_COOK_TIME, cookTime);
         nbt.putInt(CompoundTagUtils.TAG_KEY_COOK_TIME_TOTAL, cookTimeTotal);
         nbt.put(TAG_KEY_SKILLET_STACK, skilletStack.writeNbt(new NbtCompound()));
@@ -202,8 +200,8 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
         if (recipe.isPresent()) {
             cookTimeTotal = SkilletBlock.getSkilletCookingTime(recipe.get().getCookTime(), fireAspectLevel);
             boolean wasEmpty = getStoredStack().isEmpty();
-            ItemStack remainderStack = inventory.addStack(addedStack);
-            if (ItemStack.areEqual(remainderStack, addedStack)) {
+            ItemStack remainderStack = inventory.insertItemStack(0, addedStack.copy(), false);
+            if (!ItemStack.areEqual(remainderStack, addedStack)) {
                 lastRecipeID = recipe.get().getId();
                 cookTime = 0;
                 if (wasEmpty && world != null && isHeated(world, pos)) {
@@ -221,7 +219,7 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
     }
 
     public ItemStack removeItem() {
-        return inventory.removeStack(0, getStoredStack().getMaxCount());
+        return inventory.extractItemStack(0, getStoredStack().getMaxCount(), false);
     }
 
     public Inventory getInventory() {
@@ -236,7 +234,8 @@ public class SkilletBlockEntity extends BlockEntity implements HeatableBlockEnti
         return !getStoredStack().isEmpty();
     }
 
-    private void inventoryChanged() {
+    @Override
+    public void inventoryChanged() {
         markDirty();
         Objects.requireNonNull(world).updateListeners(getPos(), getCachedState(), getCachedState(), 3);
     }

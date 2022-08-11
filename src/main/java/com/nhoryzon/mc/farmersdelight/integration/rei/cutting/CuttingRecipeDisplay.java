@@ -13,7 +13,6 @@ import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class CuttingRecipeDisplay extends BasicDisplay {
