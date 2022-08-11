@@ -135,8 +135,13 @@ public class ItemStackHandler implements ItemHandler {
 
         boolean reachedLimit = stack.getCount() > limit;
 
-        if (!simulate && invItemStack.isEmpty()) {
-            inventory.set(slot, reachedLimit ? copyStackWithNewSize(stack, limit) : stack);
+        if (!simulate) {
+            if (invItemStack.isEmpty()) {
+                inventory.set(slot, reachedLimit ? copyStackWithNewSize(stack, limit) : stack);
+            } else {
+                invItemStack.increment(reachedLimit ? limit : stack.getCount());
+            }
+            onInventorySlotChanged(slot);
         }
 
         return reachedLimit ? copyStackWithNewSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
