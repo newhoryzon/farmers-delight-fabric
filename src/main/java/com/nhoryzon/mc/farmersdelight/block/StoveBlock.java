@@ -2,12 +2,14 @@ package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.StoveBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.DamageSourcesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -20,14 +22,13 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.FlintAndSteelItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.ShovelItem;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.sound.SoundCategory;
@@ -78,8 +79,8 @@ public class StoveBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!Boolean.TRUE.equals(state.get(LIT))) {
-            return tryLightUpByPlayerHand(state, world, pos, player, hand);
+        if (!Boolean.TRUE.equals(state.get(LIT)) && tryLightUpByPlayerHand(state, world, pos, player, hand) == ActionResult.SUCCESS) {
+            return ActionResult.SUCCESS;
         }
 
         if (world.getBlockEntity(pos) instanceof StoveBlockEntity stoveBlockEntity) {
@@ -108,25 +109,37 @@ public class StoveBlock extends BlockWithEntity {
     }
 
     protected ActionResult tryLightUpByPlayerHand(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
+        ActionResult actionResult = ActionResult.PASS;
         ItemStack stackHand = player.getStackInHand(hand);
 
-        if (!(stackHand.getItem() instanceof FlintAndSteelItem)) {
-            return ActionResult.PASS;
+        if (stackHand.getItem() instanceof FlintAndSteelItem) {
+            world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.f,
+                    MathUtils.RAND.nextFloat() * .4f + .8f);
+            stackHand.damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+
+            actionResult = ActionResult.SUCCESS;
+        } else if (stackHand.getItem() instanceof FireChargeItem) {
+            world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.f,
+                    (MathUtils.RAND.nextFloat() - MathUtils.RAND.nextFloat()) * .2f + 1.f);
+            if (!player.isCreative()) {
+                stackHand.decrement(1);
+            }
+
+            actionResult = ActionResult.SUCCESS;
         }
 
-        world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.f,
-                MathUtils.RAND.nextFloat() * .4f + .8f);
-        world.setBlockState(pos, state.with(LIT, Boolean.TRUE), BlockStateUtils.DEFAULT_AND_RERENDER);
-        stackHand.damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+        if (actionResult.isAccepted()) {
+            world.setBlockState(pos, state.with(LIT, Boolean.TRUE), BlockStateUtils.DEFAULT_AND_RERENDER);
+        }
 
-        return ActionResult.SUCCESS;
+        return actionResult;
     }
 
     protected ActionResult tryExtinguishByPlayerHand(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         ItemStack stackHand = player.getStackInHand(hand);
         Item usedItem = stackHand.getItem();
 
-        if (!(usedItem instanceof ShovelItem) && usedItem != Items.WATER_BUCKET) {
+        if (!(stackHand.isIn(ConventionalItemTags.SHOVELS)) && usedItem != Items.WATER_BUCKET) {
             return ActionResult.PASS;
         }
 
@@ -155,7 +168,7 @@ public class StoveBlock extends BlockWithEntity {
         boolean isLit = world.getBlockState(pos).get(LIT);
         if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity livingEntity &&
                 !EnchantmentHelper.hasFrostWalker(livingEntity)) {
-            entity.damage(DamageSource.HOT_FLOOR, 1.f);
+            entity.damage(DamageSourcesRegistry.STOVE_BLOCK, 1.f);
         }
 
         super.onSteppedOn(world, pos, state, entity);

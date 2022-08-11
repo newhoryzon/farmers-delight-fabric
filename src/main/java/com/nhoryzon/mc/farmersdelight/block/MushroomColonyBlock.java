@@ -1,6 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
-import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,6 +30,7 @@ import net.minecraft.world.WorldView;
 import java.util.Random;
 
 public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
+
     public static final int GROWING_LIGHT_LEVEL = 12;
     public static final int PLACING_LIGHT_LEVEL = 13;
 
@@ -58,7 +59,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
 
     @Override
     public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
-        return state.get(AGE) < 3;
+        return false;
     }
 
     @Override
@@ -71,8 +72,8 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         super.scheduledTick(state, world, pos, random);
         int age = state.get(AGE);
         BlockState groundState = world.getBlockState(pos.down());
-        if (age < MAX_AGE && groundState.getBlock() == BlocksRegistry.RICH_SOIL.get() && world.getLightLevel(pos.up(), 0) <=
-                GROWING_LIGHT_LEVEL && random.nextInt(5) == 0) {
+        if (age < MAX_AGE && groundState.isIn(TagsRegistry.MUSHROOM_COLONY_GROWABLE_ON) &&
+                world.getLightLevel(pos.up(), 0) <= GROWING_LIGHT_LEVEL && random.nextInt(5) == 0) {
             world.setBlockState(pos, state.with(AGE, age + 1), BlockStateUtils.BLOCK_UPDATE);
         }
     }

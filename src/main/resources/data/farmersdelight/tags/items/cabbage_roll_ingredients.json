@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#c:raw_pork",
+    "#c:raw_fishes",
+    "#c:raw_chicken",
+    "#c:raw_beef",
+    "#c:raw_mutton",
+    "#c:eggs",
+    "#c:mushrooms",
+    "minecraft:carrot",
+    "minecraft:potato",
+    "minecraft:beetroot"
+  ]
+}

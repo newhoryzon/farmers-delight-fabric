@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -21,8 +22,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class MilkBottleItem extends ConsumableItem {
-    public MilkBottleItem(Settings settings) {
-        super(settings);
+
+    public MilkBottleItem() {
+        super(new ModItemSettings().recipeRemainder(Items.GLASS_BOTTLE).maxCount(16));
     }
 
     @Override
@@ -57,4 +59,5 @@ public class MilkBottleItem extends ConsumableItem {
         TranslatableText empty = FarmersDelightMod.i18n("tooltip.milk_bottle");
         tooltip.add(empty.formatted(Formatting.BLUE));
     }
+
 }

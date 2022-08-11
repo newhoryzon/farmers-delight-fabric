@@ -12,10 +12,9 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(value= EnvType.CLIENT)
 public class StarParticle extends SpriteBillboardParticle {
     protected StarParticle(ClientWorld world, double posX, double posY, double posZ) {
-        super(world, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
+        super(world, posX, posY, posZ, .0d, .0d, .0d);
         this.velocityX *= .01f;
         this.velocityY *= .01f;
         this.velocityY += .1D;
@@ -73,9 +72,9 @@ public class StarParticle extends SpriteBillboardParticle {
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX,
                 double velocityY, double velocityZ) {
-            StarParticle particle = new StarParticle(world, x, y + 0.3D, z);
+            StarParticle particle = new StarParticle(world, x, y + 0.3d, z);
             particle.setSprite(spriteProvider);
-            particle.setColor(1.0F, 1.0F, 1.0F);
+            particle.setColor(1.f, 1.f, 1.f);
             return particle;
         }
 

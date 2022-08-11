@@ -1,7 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -66,7 +66,7 @@ public class OrganicCompostBlock extends Block {
 
         for (BlockPos neighborPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
             BlockState neighborState = world.getBlockState(neighborPos);
-            if (neighborState.isIn(Tags.COMPOST_ACTIVATORS)) {
+            if (neighborState.isIn(TagsRegistry.COMPOST_ACTIVATORS)) {
                 chance += .02f;
             }
             if (neighborState.getFluidState().isIn(FluidTags.WATER)) {

@@ -2,13 +2,13 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:raw_fishes"
+      "tag": "c:raw_fishes"
     },
     {
-      "tag": "fabric:pasta"
+      "tag": "c:pasta"
     },
     {
-      "tag": "fabric:crops/tomato"
+      "tag": "c:crops/tomato"
     },
     {
       "item": "minecraft:ink_sac"
@@ -17,5 +17,6 @@
   "result": {
     "item": "farmersdelight:squid_ink_pasta"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

@@ -10,17 +10,6 @@
           "children": [
             {
               "type": "minecraft:item",
-              "functions": [
-                {
-                  "function": "minecraft:apply_bonus",
-                  "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:binomial_with_bonus_count",
-                  "parameters": {
-                    "extra": 1,
-                    "probability": 0.5714286
-                  }
-                }
-              ],
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
@@ -32,7 +21,7 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "tag": "farmersdelight:tools/knives"
+                    "tag": "c:tools/knives"
                   }
                 }
               ],
@@ -40,17 +29,6 @@
             },
             {
               "type": "minecraft:item",
-              "functions": [
-                {
-                  "function": "minecraft:apply_bonus",
-                  "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:binomial_with_bonus_count",
-                  "parameters": {
-                    "extra": 1,
-                    "probability": 0.5714286
-                  }
-                }
-              ],
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
@@ -63,30 +41,6 @@
               "name": "farmersdelight:rice_panicle"
             }
           ]
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "farmersdelight:straw"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:match_tool",
-          "predicate": {
-            "tag": "farmersdelight:straw_harvesters"
-          }
-        },
-        {
-          "condition": "block_state_property",
-          "block": "farmersdelight:rice_upper_crop",
-          "properties": {
-            "age": "3"
-          }
         }
       ]
     }

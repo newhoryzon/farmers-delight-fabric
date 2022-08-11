@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.integration.rei.cutting;
 
 import com.google.common.collect.ImmutableList;
+import com.nhoryzon.mc.farmersdelight.integration.rei.ChanceArrayIngredient;
 import com.nhoryzon.mc.farmersdelight.integration.rei.FarmersDelightModREI;
 import com.nhoryzon.mc.farmersdelight.recipe.CuttingBoardRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -17,9 +18,13 @@ import java.util.List;
 public class CuttingRecipeDisplay extends BasicDisplay {
 
     private final EntryIngredient toolInput;
+    protected List<ChanceArrayIngredient> chanceOutputs;
+    protected List<EntryIngredient> mandatoryOutputs;
 
     public CuttingRecipeDisplay(CuttingBoardRecipe recipe) {
         super(EntryIngredients.ofIngredients(recipe.getIngredients()), recipe.getResultList().stream().map(EntryIngredients::of).toList());
+        mandatoryOutputs = recipe.getMandatoryResult().stream().map(EntryIngredients::of).toList();
+        chanceOutputs = recipe.getVariableResult().stream().map(ChanceArrayIngredient::new).toList();
         toolInput = EntryIngredients.ofIngredient(recipe.getTool());
     }
 
@@ -50,6 +55,14 @@ public class CuttingRecipeDisplay extends BasicDisplay {
 
     public EntryIngredient getToolInput() {
         return toolInput;
+    }
+
+    public List<EntryIngredient> getMandatoryOutputs() {
+        return mandatoryOutputs;
+    }
+
+    public List<ChanceArrayIngredient> getChanceOutputs() {
+        return chanceOutputs;
     }
 
 }

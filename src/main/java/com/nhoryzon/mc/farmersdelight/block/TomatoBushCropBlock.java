@@ -123,7 +123,12 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
         } else if (isMature) {
             int j = 1 + world.getRandom().nextInt(2);
             dropStack(world, pos, new ItemStack(ItemsRegistry.TOMATO.get(), j));
-            world.playSound(null, pos, SoundsRegistry.ITEM_TOMATO_PICK_FROM_BUSH.get(), SoundCategory.BLOCKS, 1.f, .8f + world.getRandom().nextFloat() * .4f);
+
+            if (world.getRandom().nextFloat() < .05) {
+                dropStack(world, pos, new ItemStack(ItemsRegistry.ROTTEN_TOMATO.get()));
+            }
+
+            world.playSound(null, pos, SoundsRegistry.BLOCK_TOMATO_PICK_FROM_BUSH.get(), SoundCategory.BLOCKS, 1.f, .8f + world.getRandom().nextFloat() * .4f);
             world.setBlockState(pos, state.with(AGE, TOMATO_BEARING_AGE - 2), 2);
 
             return ActionResult.SUCCESS;

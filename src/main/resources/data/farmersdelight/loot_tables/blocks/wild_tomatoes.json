@@ -17,7 +17,7 @@
               "term": {
                 "condition": "minecraft:match_tool",
                 "predicate": {
-                  "tag": "fabric:shears"
+                  "tag": "c:shears"
                 }
               }
             }
@@ -39,7 +39,7 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "tag": "fabric:shears"
+                    "tag": "c:shears"
                   }
                 }
               ],

@@ -11,7 +11,7 @@
       "item": "minecraft:bowl"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     },
     {
       "item": "farmersdelight:cooked_rice"
