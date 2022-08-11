@@ -2,14 +2,18 @@ package com.nhoryzon.mc.farmersdelight.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
+import me.shedaniel.rei.impl.ClientInternals;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -38,7 +42,6 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
     public void render(MatrixStack ms, final int mouseX, final int mouseY, float partialTicks) {
         renderBackground(ms);
         super.render(ms, mouseX, mouseY, partialTicks);
-        renderMealDisplayTooltip(ms, mouseX, mouseY);
         renderHeatIndicatorTooltip(ms, mouseX, mouseY);
         drawMouseoverTooltip(ms, mouseX, mouseY);
     }
@@ -52,14 +55,20 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         }
     }
 
-    protected void renderMealDisplayTooltip(MatrixStack ms, int mouseX, int mouseY) {
-        if (client != null && client.player != null && client.player.getInventory().getMainHandStack().isEmpty() && focusedSlot != null &&
-                focusedSlot.hasStack()) {
-            if (focusedSlot.id == 6) {
+    @Override
+    protected void drawMouseoverTooltip(MatrixStack ms, int mouseX, int mouseY) {
+        if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && this.focusedSlot.hasStack()) {
+            if (focusedSlot.id == CookingPotBlockEntity.MEAL_DISPLAY_SLOT) {
                 List<Text> tooltip = new ArrayList<>();
 
                 ItemStack meal = focusedSlot.getStack();
-                tooltip.add(((MutableText) meal.getItem().getName()).formatted(meal.getRarity().formatting));
+                Text text = meal.getName();
+                if (text instanceof MutableText mutableName) {
+                    tooltip.add(mutableName.formatted(meal.getRarity().formatting));
+                } else {
+                    tooltip.add(text);
+                }
+                meal.getItem().appendTooltip(meal, handler.tileEntity.getWorld(), tooltip, TooltipContext.Default.NORMAL);
 
                 ItemStack containerItem = handler.tileEntity.getMealContainer();
                 String container = !containerItem.isEmpty() ? containerItem.getItem().getName().getString() : "";

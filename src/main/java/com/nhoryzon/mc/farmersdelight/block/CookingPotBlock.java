@@ -3,6 +3,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.state.CookingPotSupport;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
@@ -143,9 +144,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         NbtCompound tag = stack.getSubNbt("BlockEntityTag");
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY);
-            if (inventoryTag.contains("Items", 9)) {
-                SimpleInventory handler = new SimpleInventory();
-                handler.readNbtList(inventoryTag.getList("Items", CompoundTagUtils.TAG_COMPOUND));
+            if (inventoryTag.contains(CompoundTagUtils.TAG_KEY_ITEM_LIST, CompoundTagUtils.TAG_LIST)) {
+                ItemStackHandler handler = new ItemStackHandler();
+                handler.readNbt(inventoryTag);
                 ItemStack meal = handler.getStack(6);
                 if (!meal.isEmpty()) {
                     MutableText servingsOf = meal.getCount() == 1
