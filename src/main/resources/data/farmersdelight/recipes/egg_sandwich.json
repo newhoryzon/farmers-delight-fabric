@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "fabric:bread"
+      "tag": "c:bread"
     },
     {
-      "tag": "fabric:cooked_eggs"
+      "tag": "c:cooked_eggs"
     },
     {
-      "tag": "fabric:cooked_eggs"
+      "tag": "c:cooked_eggs"
     }
   ],
   "result": {

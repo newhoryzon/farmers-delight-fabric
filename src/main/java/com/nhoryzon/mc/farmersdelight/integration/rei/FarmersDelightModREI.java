@@ -12,7 +12,7 @@ import com.nhoryzon.mc.farmersdelight.recipe.CookingPotRecipe;
 import com.nhoryzon.mc.farmersdelight.recipe.CuttingBoardRecipe;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
@@ -64,7 +64,7 @@ public class FarmersDelightModREI implements REIClientPlugin {
         registry.add(new DecompositionRecipeDisplay(
                 EntryIngredients.of(BlocksRegistry.ORGANIC_COMPOST.get()),
                 EntryIngredients.of(BlocksRegistry.RICH_SOIL.get()),
-                EntryIngredients.ofItems(Registry.BLOCK.getEntryList(Tags.COMPOST_ACTIVATORS).stream().flatMap(RegistryEntryList::stream).map(RegistryEntry::value).map(Block::asItem).collect(Collectors.toList()))));
+                EntryIngredients.ofItems(Registry.BLOCK.getEntryList(TagsRegistry.COMPOST_ACTIVATORS).stream().flatMap(RegistryEntryList::stream).map(RegistryEntry::value).map(Block::asItem).collect(Collectors.toList()))));
     }
 
     @Override

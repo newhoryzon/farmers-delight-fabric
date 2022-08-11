@@ -2,20 +2,21 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/rice"
+      "tag": "c:crops/rice"
     },
     {
-      "tag": "fabric:eggs"
+      "tag": "c:eggs"
     },
     {
       "item": "minecraft:carrot"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     }
   ],
   "result": {
     "item": "farmersdelight:fried_rice"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

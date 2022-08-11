@@ -1,7 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import com.nhoryzon.mc.farmersdelight.util.WorldEventUtils;
@@ -60,7 +60,7 @@ public class RichSoilBlock extends Block {
             Block aboveBlock = aboveState.getBlock();
 
             // Do nothing if the plant is unaffected by rich soil
-            if (aboveState.isIn(Tags.UNAFFECTED_BY_RICH_SOIL) || aboveBlock instanceof TallFlowerBlock) {
+            if (aboveState.isIn(TagsRegistry.UNAFFECTED_BY_RICH_SOIL) || aboveBlock instanceof TallFlowerBlock) {
                 return;
             }
 

@@ -69,12 +69,12 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
                     .build();
 
     public BasketBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).hardness(1.5f).resistance(1.5f).sounds(BlockSoundGroup.SCAFFOLDING).nonOpaque());
+        super(FabricBlockSettings.of(Material.WOOD).strength(1.5f).sounds(BlockSoundGroup.WOOD).nonOpaque());
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, false));
     }
 
     private static VoxelShape makeHollowCubeShape(VoxelShape cutout) {
-        return VoxelShapes.combine(OUT_SHAPE, cutout, BooleanBiFunction.ONLY_FIRST).simplify();
+        return VoxelShapes.combineAndSimplify(OUT_SHAPE, cutout, BooleanBiFunction.ONLY_FIRST);
     }
 
     @Nullable

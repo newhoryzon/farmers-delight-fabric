@@ -1,0 +1,53 @@
+{
+  "farmersdelight:rich_soil": "dirt",
+  "farmersdelight:rich_soil_farmland": "dirt",
+
+  "farmersdelight:rice_crop": "NOT_EMITTER",
+  "farmersdelight:rice_crop.messy": "mud",
+  "farmersdelight:rice_crop.foliage": "brush_straw_transition",
+  "farmersdelight:rice_upper_crop": "NOT_EMITTER",
+  "farmersdelight:rice_upper_crop.messy": "MESSY_GROUND",
+  "farmersdelight:rice_upper_crop.foliage": "brush_straw_transition",
+
+  "farmersdelight:tomatoes": "NOT_EMITTER",
+  "farmersdelight:tomatoes.messy": "straw",
+  "farmersdelight:tomatoes[age=4].foliage": "brush",
+  "farmersdelight:tomatoes[age=5].foliage": "brush",
+  "farmersdelight:tomatoes[age=6].foliage": "brush",
+  "farmersdelight:tomatoes[age=7].foliage": "brush",
+
+  "farmersdelight:cabbages": "NOT_EMITTER",
+  "farmersdelight:cabbages.messy": "MESSY_GROUND",
+  "farmersdelight:cabbages[age=4].foliage": "brush",
+  "farmersdelight:cabbages[age=5].foliage": "brush",
+  "farmersdelight:cabbages[age=6].foliage": "brush",
+  "farmersdelight:cabbages[age=7].foliage": "brush",
+
+  "farmersdelight:wild_cabbages": "NOT_EMITTER",
+  "farmersdelight:wild_cabbages.messy": "MESSY_GROUND",
+  "farmersdelight:wild_cabbages.foliage": "brush",
+
+  "farmersdelight:wild_onions": "NOT_EMITTER",
+  "farmersdelight:wild_onions.messy": "MESSY_GROUND",
+  "farmersdelight:wild_onions.foliage": "brush",
+
+  "farmersdelight:wild_tomatoes": "NOT_EMITTER",
+  "farmersdelight:wild_tomatoes.messy": "MESSY_GROUND",
+  "farmersdelight:wild_tomatoes.foliage": "brush",
+
+  "farmersdelight:wild_carrots": "NOT_EMITTER",
+  "farmersdelight:wild_carrots.messy": "MESSY_GROUND",
+  "farmersdelight:wild_carrots.foliage": "brush",
+
+  "farmersdelight:wild_potatoes": "NOT_EMITTER",
+  "farmersdelight:wild_potatoes.messy": "MESSY_GROUND",
+  "farmersdelight:wild_potatoes.foliage": "brush",
+
+  "farmersdelight:wild_beetroots": "NOT_EMITTER",
+  "farmersdelight:wild_beetroots.messy": "MESSY_GROUND",
+  "farmersdelight:wild_beetroots.foliage": "brush",
+
+  "farmersdelight:wild_rice": "NOT_EMITTER",
+  "farmersdelight:wild_rice.messy": "MESSY_GROUND",
+  "farmersdelight:wild_rice.foliage": "brush_straw_transition"
+}

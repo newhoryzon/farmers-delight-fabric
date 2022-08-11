@@ -32,7 +32,7 @@ public class DecompositionRecipeCategory implements DisplayCategory<Decompositio
 
     @Override
     public Text getTitle() {
-        return FarmersDelightMod.i18n("jei.decomposition");
+        return FarmersDelightMod.i18n("rei.decomposition");
     }
 
     @Override
@@ -58,11 +58,11 @@ public class DecompositionRecipeCategory implements DisplayCategory<Decompositio
         widgets.add(Widgets.createSlot(new Point(bgBounds.x + 56, bgBounds.y + 45))
                 .entries(display.getModifier()).markInput().disableBackground());
         widgets.add(Widgets.createLabel(new Point(bgBounds.x + 33, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.light").getString()));
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("rei.decomposition.light")));
         widgets.add(Widgets.createLabel(new Point(bgBounds.x + 46, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.fluid").getString()));
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("rei.decomposition.fluid")));
         widgets.add(Widgets.createLabel(new Point(bgBounds.x + 59, bgBounds.y + 30), new LiteralText("  "))
-                .noShadow().leftAligned().tooltipLine(FarmersDelightMod.i18n("jei.decomposition.accelerators").getString()));
+                .noShadow().leftAligned().tooltip(FarmersDelightMod.i18n("rei.decomposition.accelerators")));
 
         return widgets;
     }

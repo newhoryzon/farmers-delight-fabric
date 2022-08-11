@@ -35,7 +35,7 @@ public class CookingRecipeCategory implements DisplayCategory<CookingRecipeDispl
 
     @Override
     public Text getTitle() {
-        return FarmersDelightMod.i18n("jei.cooking");
+        return FarmersDelightMod.i18n("rei.cooking");
     }
 
     @Override

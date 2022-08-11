@@ -2,7 +2,7 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     },
     {
       "item": "minecraft:sugar"
@@ -17,5 +17,6 @@
   "result": {
     "item": "farmersdelight:hot_cocoa"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

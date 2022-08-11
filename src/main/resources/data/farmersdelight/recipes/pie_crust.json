@@ -9,7 +9,7 @@
       "item": "minecraft:wheat"
     },
     "M": {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     }
   },
   "result": {
