@@ -6,7 +6,6 @@
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
     "CampfireBaleMixin",
-    "CanvasSignEditScreenMixin",
     "ChickenEntityBreedingMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
@@ -26,6 +25,9 @@
     "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin",
     "accessors.RecipeManagerAccessorMixin"
+  ],
+  "client": [
+    "CanvasSignEditScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

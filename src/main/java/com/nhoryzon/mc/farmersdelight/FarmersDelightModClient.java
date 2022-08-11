@@ -1,5 +1,7 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.nhoryzon.mc.farmersdelight.client.particle.StarParticle;
+import com.nhoryzon.mc.farmersdelight.client.particle.SteamParticle;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CanvasSignBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CuttingBoardBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.render.block.SkilletBlockEntityRenderer;
@@ -14,6 +16,7 @@ import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -42,7 +45,8 @@ public class FarmersDelightModClient implements ClientModInitializer {
 		ModelIdentifier skilletCookingId = new ModelIdentifier(new Identifier(FarmersDelightMod.MOD_ID, "skillet_cooking"), "inventory");
 
 		// Particle register
-		ParticleTypesRegistry.registerAllClient();
+		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STAR.get(), StarParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STEAM.get(), SteamParticle.Factory::new);
 
 		// Screen register
 		HandledScreens.register(ExtendedScreenTypesRegistry.COOKING_POT.get(), CookingPotScreen::new);
