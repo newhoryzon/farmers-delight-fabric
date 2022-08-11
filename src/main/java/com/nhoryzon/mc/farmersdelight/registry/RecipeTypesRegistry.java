@@ -34,7 +34,7 @@ public enum RecipeTypesRegistry {
     public static void registerAll() {
         for (RecipeTypesRegistry value : values()) {
             Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.serializer());
-            value.type = RecipeType.register(new Identifier(FarmersDelightMod.MOD_ID, value.pathName).toString());
+            value.type();
         }
     }
 

@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#fabric:raw_chicken",
-    "#fabric:raw_mutton",
+    "#c:raw_chicken",
+    "#c:raw_mutton",
     "minecraft:rabbit"
   ]
 }

@@ -2,7 +2,7 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:raw_beef"
+      "tag": "c:raw_beef"
     },
     {
       "item": "minecraft:carrot"
@@ -14,5 +14,6 @@
   "result": {
     "item": "farmersdelight:beef_stew"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

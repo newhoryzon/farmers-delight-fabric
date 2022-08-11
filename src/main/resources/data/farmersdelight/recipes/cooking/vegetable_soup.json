@@ -11,11 +11,12 @@
       "item": "minecraft:beetroot"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     }
   ],
   "result": {
     "item": "farmersdelight:vegetable_soup"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

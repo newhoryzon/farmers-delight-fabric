@@ -2,26 +2,26 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:pasta"
+      "tag": "c:pasta"
     },
     {
-      "tag": "fabric:crops/cabbage"
+      "tag": "c:crops/cabbage"
     },
     {
-      "tag": "fabric:crops/onion"
+      "tag": "c:crops/onion"
     },
     [
       {
-        "tag": "fabric:raw_chicken"
+        "tag": "c:raw_chicken"
       },
       {
         "item": "minecraft:brown_mushroom"
       },
       {
-        "tag": "fabric:raw_pork"
+        "tag": "c:raw_pork"
       },
       {
-        "tag": "fabric:raw_beef"
+        "tag": "c:raw_beef"
       }
     ]
   ],
@@ -29,5 +29,6 @@
     "item": "farmersdelight:dumplings",
     "count": 2
   },
+  "experience": 0.35,
   "cookingtime": 200
 }

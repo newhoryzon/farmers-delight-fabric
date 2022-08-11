@@ -7,7 +7,7 @@
   ],
   "tool": {
     "type": "farmersdelight:tool",
-    "tag": "fabric:tools/pickaxes"
+    "tag": "c:tools/pickaxes"
   },
   "result": [
     {

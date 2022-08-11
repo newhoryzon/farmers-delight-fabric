@@ -1,7 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.mojang.datafixers.util.Pair;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -66,7 +66,7 @@ public class PieBlock extends Block {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
 
-        if (player.getMainHandStack().isIn(Tags.KNIVES)) {
+        if (player.getMainHandStack().isIn(TagsRegistry.KNIVES)) {
             PieBlock pieBlock = (PieBlock) state.getBlock();
             ItemStack pieSlices = pieBlock.getPieSliceStack();
             pieSlices.setCount(MAX_BITES - state.get(PieBlock.BITES));
@@ -78,7 +78,7 @@ public class PieBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemstack = player.getStackInHand(hand);
         if (world.isClient()) {
-            if (itemstack.isIn(Tags.KNIVES)) {
+            if (itemstack.isIn(TagsRegistry.KNIVES)) {
                 return cutSlice(world, pos, state);
             }
 
@@ -91,7 +91,7 @@ public class PieBlock extends Block {
             }
         }
 
-        if (itemstack.isIn(Tags.KNIVES)) {
+        if (itemstack.isIn(TagsRegistry.KNIVES)) {
             return cutSlice(world, pos, state);
         }
 

@@ -19,6 +19,7 @@ import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class StoveBlockEntityRenderer implements BlockEntityRenderer<StoveBlockEntity> {
+
     public StoveBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
     }
 
@@ -52,4 +53,5 @@ public class StoveBlockEntityRenderer implements BlockEntityRenderer<StoveBlockE
             }
         }
     }
+
 }

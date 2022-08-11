@@ -2,10 +2,10 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "fabric:crops/rice"
+      "tag": "c:crops/rice"
     },
     {
-      "tag": "fabric:vegetables"
+      "tag": "c:vegetables"
     },
     {
       "item": "farmersdelight:tomato_sauce"
@@ -26,5 +26,6 @@
   "container": {
     "item": "minecraft:pumpkin"
   },
+  "experience": 0.5,
   "cookingtime": 400
 }

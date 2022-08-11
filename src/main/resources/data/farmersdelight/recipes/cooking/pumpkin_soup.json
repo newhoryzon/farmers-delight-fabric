@@ -5,17 +5,18 @@
       "item": "farmersdelight:pumpkin_slice"
     },
     {
-      "tag": "fabric:salad_ingredients"
+      "tag": "c:salad_ingredients"
     },
     {
-      "tag": "fabric:raw_pork"
+      "tag": "c:raw_pork"
     },
     {
-      "tag": "fabric:milk"
+      "tag": "c:milk"
     }
   ],
   "result": {
     "item": "farmersdelight:pumpkin_soup"
   },
+  "experience": 0.35,
   "cookingtime": 200
 }
