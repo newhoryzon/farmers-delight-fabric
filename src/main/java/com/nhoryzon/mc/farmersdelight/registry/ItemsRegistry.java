@@ -17,7 +17,6 @@ import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.AliasedBlockItem;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.SignItem;
@@ -136,9 +135,9 @@ public enum ItemsRegistry {
     CABBAGE_SEEDS("cabbage_seeds", () -> new AliasedBlockItem(BlocksRegistry.CABBAGE_CROP.get(), new ModItemSettings())),
     TOMATO("tomato", () -> new Item(new ModItemSettings().food(Foods.TOMATO.get()))),
     TOMATO_SEED("tomato_seeds", () -> new AliasedBlockItem(BlocksRegistry.TOMATO_CROP.get(), new ModItemSettings())),
-    ONION("onion", () -> new BlockItem(BlocksRegistry.ONION_CROP.get(), new ModItemSettings().food(Foods.ONION.get()))),
+    ONION("onion", () -> new AliasedBlockItem(BlocksRegistry.ONION_CROP.get(), new ModItemSettings().food(Foods.ONION.get()))),
     RICE_PANICLE("rice_panicle", () -> new Item(new ModItemSettings())),
-    RICE("rice", () -> new BlockItem(BlocksRegistry.RICE_CROP.get(), new ModItemSettings())),
+    RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE_CROP.get(), new ModItemSettings())),
     ROTTEN_TOMATO("rotten_tomato", RottenTomatoItem::new),
 
     FRIED_EGG("fried_egg", () -> new Item(new ModItemSettings().food(Foods.FRIED_EGG.get()))),
