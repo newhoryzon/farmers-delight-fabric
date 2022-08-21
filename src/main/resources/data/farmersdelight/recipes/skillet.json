@@ -10,7 +10,7 @@
       "item": "minecraft:brick"
     },
     "#": {
-      "tag": "forge:ingots/iron"
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {
