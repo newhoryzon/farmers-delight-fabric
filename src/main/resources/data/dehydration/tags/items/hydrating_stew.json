@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "farmersdelight:beef_stew",
+    "farmersdelight:chicken_soup",
+    "farmersdelight:vegetable_soup",
+    "farmersdelight:fish_stew",
+    "farmersdelight:pumpkin_soup",
+    "farmersdelight:baked_cod_stew",
+    "farmersdelight:noodle_soup"
+  ]
+}
