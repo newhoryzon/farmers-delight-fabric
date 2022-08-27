@@ -24,7 +24,8 @@
     "accessors.DispenserBehaviorsAccessorMixin",
     "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin",
-    "accessors.RecipeManagerAccessorMixin"
+    "accessors.RecipeManagerAccessorMixin",
+    "accessors.StructurePoolAccessorMixin"
   ],
   "client": [
     "CanvasSignEditScreenMixin"

@@ -134,7 +134,7 @@ public enum ItemsRegistry {
     CABBAGE("cabbage", () -> new Item(new ModItemSettings().food(Foods.CABBAGE.get()))),
     CABBAGE_SEEDS("cabbage_seeds", () -> new AliasedBlockItem(BlocksRegistry.CABBAGE_CROP.get(), new ModItemSettings())),
     TOMATO("tomato", () -> new Item(new ModItemSettings().food(Foods.TOMATO.get()))),
-    TOMATO_SEED("tomato_seeds", () -> new AliasedBlockItem(BlocksRegistry.TOMATO_CROP.get(), new ModItemSettings())),
+    TOMATO_SEEDS("tomato_seeds", () -> new AliasedBlockItem(BlocksRegistry.TOMATO_CROP.get(), new ModItemSettings())),
     ONION("onion", () -> new AliasedBlockItem(BlocksRegistry.ONION_CROP.get(), new ModItemSettings().food(Foods.ONION.get()))),
     RICE_PANICLE("rice_panicle", () -> new Item(new ModItemSettings())),
     RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE_CROP.get(), new ModItemSettings())),

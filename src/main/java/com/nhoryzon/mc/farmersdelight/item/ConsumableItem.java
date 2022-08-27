@@ -2,7 +2,6 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import com.nhoryzon.mc.farmersdelight.Configuration;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -98,8 +97,7 @@ public class ConsumableItem extends Item {
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        /* TODO : Add configuration to check if food effect tooltip should be shown */
-        if (Configuration.FOOD_EFFECT_TOOLTIP) {
+        if (FarmersDelightMod.CONFIG.isFoodEffectTooltip()) {
             if (hasCustomTooltip) {
                 tooltip.add(FarmersDelightMod.i18n("tooltip." + this).formatted(Formatting.BLUE));
             }

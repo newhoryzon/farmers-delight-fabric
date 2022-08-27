@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
@@ -64,9 +65,11 @@ public class RichSoilBlock extends Block {
                 return;
             }
 
-            // Convert mushrooms to colonies if it's dark enough
+            // Try convert mushrooms to colonies if it's dark enough or if is a plant, then give it growth boost
             if (!tryConvertToColonies(world, pos, aboveBlock) && (aboveBlock instanceof Fertilizable growable
-                    && MathUtils.RAND.nextFloat() <= .2f && growable.isFertilizable(world, pos.up(), aboveState, false))) {
+                    && FarmersDelightMod.CONFIG.getRichSoilBoostChance() > 0.0
+                    && MathUtils.RAND.nextFloat() <= FarmersDelightMod.CONFIG.getRichSoilBoostChance()
+                    && growable.isFertilizable(world, pos.up(), aboveState, false))) {
                 growable.grow(world, world.getRandom(), pos.up(), aboveState);
                 world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);
             }

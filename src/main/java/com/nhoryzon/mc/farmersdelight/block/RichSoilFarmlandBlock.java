@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
@@ -64,6 +65,10 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
         } else if (moisture < 7) {
             world.setBlockState(pos, state.with(MOISTURE, 7), 2);
         } else if (moisture == 7) {
+            if (FarmersDelightMod.CONFIG.getRichSoilBoostChance() == 0.0) {
+                return;
+            }
+
             BlockState aboveState = world.getBlockState(pos.up());
             Block aboveBlock = aboveState.getBlock();
 
@@ -73,8 +78,9 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
             }
 
             // If all else fails, and it's a plant, give it a growth boost now and then!
-            if (aboveBlock instanceof Fertilizable growable && MathUtils.RAND.nextFloat() <= .2f &&
-                    growable.isFertilizable(world, pos.up(), aboveState, false)) {
+            if (aboveBlock instanceof Fertilizable growable
+                    && MathUtils.RAND.nextFloat() <= FarmersDelightMod.CONFIG.getRichSoilBoostChance()
+                    && growable.isFertilizable(world, pos.up(), aboveState, false)) {
                 growable.grow(world, world.getRandom(), pos.up(), aboveState);
                 if (!world.isClient()) {
                     world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);

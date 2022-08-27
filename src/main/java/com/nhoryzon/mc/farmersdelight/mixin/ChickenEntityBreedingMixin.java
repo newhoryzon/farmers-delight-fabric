@@ -17,7 +17,7 @@ public class ChickenEntityBreedingMixin {
         if (!Boolean.TRUE.equals(cir.getReturnValue())) {
             cir.setReturnValue(Ingredient.ofItems(
                     ItemsRegistry.CABBAGE_SEEDS.get(),
-                    ItemsRegistry.TOMATO_SEED.get(),
+                    ItemsRegistry.TOMATO_SEEDS.get(),
                     ItemsRegistry.RICE.get()).test(stack));
         }
     }
