@@ -12,7 +12,6 @@ import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -26,10 +25,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectUtil;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -37,8 +32,12 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.structure.pool.SinglePoolElement;
+import net.minecraft.structure.pool.StructurePool;
+import net.minecraft.structure.pool.StructurePoolElement;
+import net.minecraft.structure.processor.StructureProcessorList;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.registry.Registry;
@@ -46,7 +45,6 @@ import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
@@ -117,24 +115,6 @@ public class FarmersDelightMod implements ModInitializer {
 
         ResourceConditions.register(new Identifier(MOD_ID, "vanilla_crates_enabled"),
                 jsonObject -> FarmersDelightMod.CONFIG.isEnableVanillaCropCrates());
-
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (FarmersDelightMod.CONFIG.isRabbitStewJumpBoost() && stack.isOf(Items.RABBIT_STEW)) {
-                StatusEffect effect = StatusEffects.JUMP_BOOST;
-                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-                        StatusEffectUtil.durationToString(
-                                new StatusEffectInstance(effect, Configuration.DURATION_RABBIT_STEW_JUMP), 1))
-                        .formatted(effect.getCategory().getFormatting()));
-            }
-
-            if (FarmersDelightMod.CONFIG.isVanillaSoupExtraEffects() && stack.isIn(TagsRegistry.COMFORT_FOODS)) {
-                StatusEffect effect = EffectsRegistry.COMFORT.get();
-                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-                        StatusEffectUtil.durationToString(
-                                new StatusEffectInstance(effect, Configuration.DURATION_VANILLA_SOUP), 1))
-                        .formatted(effect.getCategory().getFormatting()));
-            }
-        });
 
         if (FarmersDelightMod.CONFIG.isGenerateVillageCompostHeaps()) {
             List<Pair<String, Integer>> compostPileList = List.of(
@@ -295,7 +275,7 @@ public class FarmersDelightMod implements ModInitializer {
             }
 
             if (chestsId.contains(id) && FarmersDelightMod.CONFIG.isGenerateFDChestLoot()) {
-                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
+                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
         });
     }

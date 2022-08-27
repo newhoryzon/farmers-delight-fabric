@@ -14,7 +14,7 @@ import java.util.List;
 public interface StructurePoolAccessorMixin {
 
     @Accessor
-    ObjectArrayList<StructurePoolElement> getElements();
+    List<StructurePoolElement> getElements();
 
     @Accessor
     List<Pair<StructurePoolElement, Integer>> getElementCounts();
