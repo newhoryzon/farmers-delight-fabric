@@ -6,10 +6,10 @@
       "tag": "farmersdelight:canvas_signs"
     },
     {
-      "tag": "c:cyan_dyes"
+      "tag": "c:purple_dyes"
     }
   ],
   "result": {
-    "item": "farmersdelight:cyan_canvas_sign"
+    "item": "farmersdelight:purple_canvas_sign"
   }
 }

@@ -10,7 +10,7 @@
       "item": "minecraft:brick"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:iron_ingots"
     },
     "S": {
       "item": "minecraft:wooden_shovel"

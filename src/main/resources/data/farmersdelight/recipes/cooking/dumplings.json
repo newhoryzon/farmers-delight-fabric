@@ -2,7 +2,7 @@
   "type": "farmersdelight:cooking",
   "ingredients": [
     {
-      "tag": "c:pasta"
+      "item": "farmersdelight:wheat_dough"
     },
     {
       "tag": "c:crops/cabbage"
@@ -15,13 +15,13 @@
         "tag": "c:raw_chicken"
       },
       {
-        "item": "minecraft:brown_mushroom"
-      },
-      {
         "tag": "c:raw_pork"
       },
       {
         "tag": "c:raw_beef"
+      },
+	  {
+        "item": "minecraft:brown_mushroom"
       }
     ]
   ],
