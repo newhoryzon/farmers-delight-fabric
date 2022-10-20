@@ -9,6 +9,7 @@
     "ChickenEntityBreedingMixin",
     "CropBlockOnRichSoilFarmlandMixin",
     "DeadBushBlockOnRichSoilMixin",
+    "EnchantmentEnhancementMixin",
     "EnchantmentHelperEnhancementMixin",
     "LivingEntityBackstabbingEnchantmentMixin",
     "LivingEntityComfortImmunitiesMixin",
