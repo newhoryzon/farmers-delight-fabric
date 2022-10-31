@@ -18,11 +18,10 @@ public final class MathUtils {
             int i = 0;
             float f = .0f;
 
-            for (int j = 0; j < inventory.size(); i++) {
-                ItemStack itemStack = inventory.getStack(j);
+            for (; i < inventory.size(); i++) {
+                ItemStack itemStack = inventory.getStack(i);
                 if (!itemStack.isEmpty()) {
                     f += (float) itemStack.getCount() / (float) Math.min(inventory.getMaxCountPerStack(), itemStack.getMaxCount());
-                    i++;
                 }
             }
 
