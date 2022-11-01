@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.item;
 
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -49,8 +50,13 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
     @Override
     @Environment(value= EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(getTooltipTextWhenFeeding().formatted(Formatting.GRAY));
+        super.appendTooltip(stack, world, tooltip, context);
 
+        if (!FarmersDelightMod.CONFIG.isFoodEffectTooltip()) {
+            return;
+        }
+
+        tooltip.add(getTooltipTextWhenFeeding().formatted(Formatting.GRAY));
         for (StatusEffectInstance effectInstance : getStatusEffectApplied()) {
             MutableText effectDescription = Text.literal(" ");
             MutableText effectName = Text.translatable(effectInstance.getTranslationKey());

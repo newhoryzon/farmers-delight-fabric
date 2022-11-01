@@ -15,9 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-/**
- * Thanks to Fourmisain(https://github.com/Fourmisain/) to helping us with this Mixin
- */
 @Mixin(EnchantmentHelper.class)
 public class EnchantmentHelperEnhancementMixin {
 
@@ -35,13 +32,13 @@ public class EnchantmentHelperEnhancementMixin {
                     .filter(enchantment -> !containsEnchantment(possibleEnchantmentList, enchantment))
                     .forEach(enchantment -> addEntry(possibleEnchantmentList, power, enchantment));
             possibleEnchantmentList.removeIf(enchantmentLevelEntry ->
-                    KnifeItem.DENIED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
+                    !KnifeItem.ALLOWED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
         } else if (stack.getItem() instanceof SkilletItem) {
             SkilletItem.ALLOWED_ENCHANTMENTS.stream()
                     .filter(enchantment -> !containsEnchantment(possibleEnchantmentList, enchantment))
                     .forEach(enchantment -> addEntry(possibleEnchantmentList, power, enchantment));
             possibleEnchantmentList.removeIf(enchantmentLevelEntry ->
-                    SkilletItem.DENIED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
+                    !SkilletItem.ALLOWED_ENCHANTMENTS.contains(enchantmentLevelEntry.enchantment));
         } else if (containsEnchantment(possibleEnchantmentList, EnchantmentsRegistry.BACKSTABBING.get())) {
             possibleEnchantmentList.removeIf(enchantmentLevelEntry -> enchantmentLevelEntry.enchantment == EnchantmentsRegistry.BACKSTABBING.get());
         }

@@ -28,6 +28,9 @@
     ],
     "rei_client": [
       "com.nhoryzon.mc.farmersdelight.integration.rei.FarmersDelightModREI"
+    ],
+    "modmenu": [
+      "com.nhoryzon.mc.farmersdelight.integration.modmenu.FarmersDelightModMenu"
     ]
   },
   "mixins": [
@@ -38,6 +41,11 @@
     "fabric": ">=0.56.0+1.19",
     "minecraft": "~1.19"
   },
-  "suggests": {
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/MskvEhPDQz"
+      }
+    }
   }
 }

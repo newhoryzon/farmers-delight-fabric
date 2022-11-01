@@ -1,9 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "farmersdelight:vanilla_crates_enabled"
-    }
-  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###",
@@ -17,5 +12,10 @@
   },
   "result": {
     "item": "farmersdelight:beetroot_crate"
-  }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "farmersdelight:vanilla_crates_enabled"
+    }
+  ]
 }

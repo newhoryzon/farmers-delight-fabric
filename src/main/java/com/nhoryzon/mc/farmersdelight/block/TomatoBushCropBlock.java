@@ -89,7 +89,7 @@ public class TomatoBushCropBlock extends CropBlock implements Fertilizable {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return new ItemStack(ItemsRegistry.TOMATO_SEED.get());
+        return new ItemStack(ItemsRegistry.TOMATO_SEEDS.get());
     }
 
     @Override

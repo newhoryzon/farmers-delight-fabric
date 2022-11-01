@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
@@ -22,12 +23,11 @@ public record ChanceResult(ItemStack stack, float chance) {
 
     public static final ChanceResult EMPTY = new ChanceResult(ItemStack.EMPTY, 1);
 
-    private static final float DEFAULT_CUTTING_BOARD_FORTUNE_BONUS = .2f;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public ItemStack rollOutput(Random rand, int fortuneLevel) {
         int outputAmount = stack.getCount();
-        double fortuneBonus = DEFAULT_CUTTING_BOARD_FORTUNE_BONUS * fortuneLevel;
+        double fortuneBonus = FarmersDelightMod.CONFIG.getCuttingBoardFortuneBonus() * fortuneLevel;
         for (int roll = 0; roll < stack.getCount(); roll++) {
             if (rand.nextFloat() > chance + fortuneBonus) {
                 outputAmount--;
