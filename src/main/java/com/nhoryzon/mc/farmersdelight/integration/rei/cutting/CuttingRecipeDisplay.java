@@ -18,8 +18,8 @@ import java.util.List;
 public class CuttingRecipeDisplay extends BasicDisplay {
 
     private final EntryIngredient toolInput;
-    protected List<ChanceArrayIngredient> chanceOutputs;
-    protected List<EntryIngredient> mandatoryOutputs;
+    protected final List<ChanceArrayIngredient> chanceOutputs;
+    protected final List<EntryIngredient> mandatoryOutputs;
 
     public CuttingRecipeDisplay(CuttingBoardRecipe recipe) {
         super(EntryIngredients.ofIngredients(recipe.getIngredients()), recipe.getResultList().stream().map(EntryIngredients::of).toList());

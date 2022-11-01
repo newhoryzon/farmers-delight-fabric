@@ -193,6 +193,11 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     }
 
     @Override
+    public FluidState getFluidState(BlockState state) {
+        return Boolean.TRUE.equals(state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }

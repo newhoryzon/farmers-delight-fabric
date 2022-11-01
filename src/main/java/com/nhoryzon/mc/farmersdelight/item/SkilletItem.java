@@ -47,7 +47,6 @@ public class SkilletItem extends BlockItem {
     public static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Set.of(Enchantments.VANISHING_CURSE, Enchantments.SHARPNESS,
             Enchantments.SMITE, Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING,
             Enchantments.MENDING, Enchantments.UNBREAKING);
-    public static final Set<Enchantment> DENIED_ENCHANTMENTS = Set.of(Enchantments.SWEEPING);
 
     public static final String TAG_KEY_SKILLET_COOK_TIME_HANDHELD = "CookTimeHandheld";
     public static final String TAG_KEY_SKILLET_COOKING = "Cooking";

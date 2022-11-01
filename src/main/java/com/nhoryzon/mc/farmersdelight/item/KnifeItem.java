@@ -29,8 +29,8 @@ import java.util.Set;
 public class KnifeItem extends MiningToolItem {
 
     public static final Set<Enchantment> ALLOWED_ENCHANTMENTS = Set.of(Enchantments.SHARPNESS, Enchantments.SMITE,
-            Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING, EnchantmentsRegistry.BACKSTABBING.get());
-    public static final Set<Enchantment> DENIED_ENCHANTMENTS = Set.of(Enchantments.FORTUNE);
+            Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING,
+            Enchantments.MENDING, EnchantmentsRegistry.BACKSTABBING.get());
 
     private static final Set<Material> EFFECTIVE_ON_MATERIAL = Set.of(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
 
