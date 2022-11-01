@@ -122,24 +122,6 @@ public class FarmersDelightMod implements ModInitializer {
         ResourceConditions.register(new Identifier(MOD_ID, "vanilla_crates_enabled"),
                 jsonObject -> FarmersDelightMod.CONFIG.isEnableVanillaCropCrates());
 
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (FarmersDelightMod.CONFIG.isRabbitStewJumpBoost() && stack.isOf(Items.RABBIT_STEW)) {
-                StatusEffect effect = StatusEffects.JUMP_BOOST;
-                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-                        StatusEffectUtil.durationToString(
-                                new StatusEffectInstance(effect, Configuration.DURATION_RABBIT_STEW_JUMP), 1))
-                        .formatted(effect.getCategory().getFormatting()));
-            }
-
-            if (FarmersDelightMod.CONFIG.isVanillaSoupExtraEffects() && stack.isIn(TagsRegistry.COMFORT_FOODS)) {
-                StatusEffect effect = EffectsRegistry.COMFORT.get();
-                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-                        StatusEffectUtil.durationToString(
-                                new StatusEffectInstance(effect, Configuration.DURATION_VANILLA_SOUP), 1))
-                        .formatted(effect.getCategory().getFormatting()));
-            }
-        });
-
         if (FarmersDelightMod.CONFIG.isGenerateVillageCompostHeaps()) {
             List<Pair<String, Integer>> compostPileList = List.of(
                     Pair.of("plains", 5),
