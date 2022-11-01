@@ -6,21 +6,30 @@ import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
 import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
 import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.StructurePoolAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.*;
+import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectUtil;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -28,9 +37,13 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Position;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.biome.Biome;
@@ -40,8 +53,10 @@ import net.minecraft.world.gen.GenerationStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 /**
  * This fabric port of Farmer's Delight is <b>NOT</b> implementing these features :
@@ -57,6 +72,8 @@ public class FarmersDelightMod implements ModInitializer {
 
     public static final String MOD_ID = "farmersdelight";
 
+    public static Configuration CONFIG = new Configuration();
+
     public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),
             () -> new ItemStack(ItemsRegistry.STOVE.get()));
 
@@ -66,6 +83,8 @@ public class FarmersDelightMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        initConfiguration();
+
         BlocksRegistry.registerAll();
         ItemsRegistry.registerAll();
         EffectsRegistry.registerAll();
@@ -89,8 +108,65 @@ public class FarmersDelightMod implements ModInitializer {
 
         ParrotsTamingIngredientsAccessorMixin.getTamingIngredients().addAll(List.of(
                 ItemsRegistry.CABBAGE_SEEDS.get(),
-                ItemsRegistry.TOMATO_SEED.get(),
+                ItemsRegistry.TOMATO_SEEDS.get(),
                 ItemsRegistry.RICE.get()));
+    }
+
+    protected void initConfiguration() {
+        CONFIG = Configuration.load();
+
+        ResourceConditions.register(new Identifier(MOD_ID, "vanilla_crates_enabled"),
+                jsonObject -> FarmersDelightMod.CONFIG.isEnableVanillaCropCrates());
+
+        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            if (FarmersDelightMod.CONFIG.isRabbitStewJumpBoost() && stack.isOf(Items.RABBIT_STEW)) {
+                StatusEffect effect = StatusEffects.JUMP_BOOST;
+                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
+                        StatusEffectUtil.durationToString(
+                                new StatusEffectInstance(effect, Configuration.DURATION_RABBIT_STEW_JUMP), 1))
+                        .formatted(effect.getCategory().getFormatting()));
+            }
+
+            if (FarmersDelightMod.CONFIG.isVanillaSoupExtraEffects() && stack.isIn(TagsRegistry.COMFORT_FOODS)) {
+                StatusEffect effect = EffectsRegistry.COMFORT.get();
+                lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
+                        StatusEffectUtil.durationToString(
+                                new StatusEffectInstance(effect, Configuration.DURATION_VANILLA_SOUP), 1))
+                        .formatted(effect.getCategory().getFormatting()));
+            }
+        });
+
+        if (FarmersDelightMod.CONFIG.isGenerateVillageCompostHeaps()) {
+            List<Pair<String, Integer>> compostPileList = List.of(
+                    Pair.of("plains", 5),
+                    Pair.of("savanna", 4),
+                    Pair.of("snowy", 3),
+                    Pair.of("taiga", 4),
+                    Pair.of("desert", 3));
+            ServerLifecycleEvents.SERVER_STARTING.register(server -> compostPileList.forEach(villageType -> {
+                LOGGER.info("Registering compost heaps in village type of {}", villageType.key());
+                Identifier compostPileId = new Identifier(MOD_ID, "village/houses/" + villageType.key() + "_compost_pile");
+                Identifier villageHousePoolId = new Identifier("minecraft:village/" + villageType.key() + "/houses");
+                addToStructurePool(server, villageHousePoolId, compostPileId, villageType.value());
+            }));
+        }
+    }
+
+    protected void addToStructurePool(MinecraftServer server, Identifier poolIdentifier, Identifier nbtIdentifier, int weight) {
+        RegistryEntry<StructureProcessorList> emptyProcessorList = server.getRegistryManager().get(Registry.STRUCTURE_PROCESSOR_LIST_KEY)
+                .entryOf(RegistryKey.of(Registry.STRUCTURE_PROCESSOR_LIST_KEY, new Identifier("minecraft", "empty")));
+
+        server.getRegistryManager().get(Registry.STRUCTURE_POOL_KEY).stream()
+                .filter(structurePoolReference -> structurePoolReference.getId().equals(poolIdentifier))
+                .findFirst().ifPresentOrElse(structurePool -> {
+                    SinglePoolElement compostPilePool = StructurePoolElement.ofProcessedSingle(nbtIdentifier.toString(), emptyProcessorList)
+                            .apply(StructurePool.Projection.RIGID);
+                    List<Pair<StructurePoolElement, Integer>> elementCounts = new ArrayList<>(((StructurePoolAccessorMixin) structurePool).getElementCounts());
+                    elementCounts.add(Pair.of(compostPilePool, weight));
+                    ((StructurePoolAccessorMixin) structurePool).setElementCounts(elementCounts);
+
+                    IntStream.range(0, weight).forEach(value -> ((StructurePoolAccessorMixin) structurePool).getElements().add(compostPilePool));
+                }, () -> LOGGER.warn("No structure pool found for {}, no compost heaps will be added on it.", poolIdentifier));
     }
 
     protected void registerEventListeners() {
@@ -101,27 +177,47 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerBiomeModifications() {
-        BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
-                ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
+        if (FarmersDelightMod.CONFIG.isGenerateWildBeetroots()) {
+            BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
+                    ConfiguredFeaturesRegistry.PATCH_WILD_BEETROOTS.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildCabbages()) {
         BiomeModifications.addFeature(context -> context.getBiomeKey().equals(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION,
                 ConfiguredFeaturesRegistry.PATCH_WILD_CABBAGES.key());
-        BiomeModifications.addFeature(context -> BiomeSelectors.categories(Biome.Category.SWAMP, Biome.Category.JUNGLE).test(context),
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
-                ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_CARROTS.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_ONIONS.key());
-        BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .0f && context.getBiome().getTemperature() < .3f,
-                GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_POTATOES.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildRice()) {
+            BiomeModifications.addFeature(context -> BiomeSelectors.includeByKey(BiomeKeys.SWAMP, BiomeKeys.JUNGLE).test(context),
+                    GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_RICE.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildTomatoes()) {
+            BiomeModifications.addFeature(context -> context.getBiome().getTemperature() >= 1.f, GenerationStep.Feature.VEGETAL_DECORATION,
+                    ConfiguredFeaturesRegistry.PATCH_WILD_TOMATOES.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildCarrots()) {
+            BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
+                    GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_CARROTS.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildOnions()) {
+            BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .3f && context.getBiome().getTemperature() < 1.f,
+                    GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_ONIONS.key());
+        }
+
+        if (FarmersDelightMod.CONFIG.isGenerateWildPotatoes()) {
+            BiomeModifications.addFeature(context -> context.getBiome().getTemperature() > .0f && context.getBiome().getTemperature() < .3f,
+                    GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PATCH_WILD_POTATOES.key());
+        }
     }
 
     protected void registerCompostables() {
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.TREE_BARK.get(), .3f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.STRAW.get(), .3f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.CABBAGE_SEEDS.get(), .3f);
-        CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.TOMATO_SEED.get(), .3f);
+        CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.TOMATO_SEEDS.get(), .3f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.RICE.get(), .5f);
         CompostingChanceRegistry.INSTANCE.add(ItemsRegistry.RICE_PANICLE.get(), .5f);
 
@@ -198,37 +294,40 @@ public class FarmersDelightMod implements ModInitializer {
                 supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId)).build());
             }
 
-            if (chestsId.contains(id)) {
-                supplier.withPool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
+            if (chestsId.contains(id) && FarmersDelightMod.CONFIG.isGenerateFDChestLoot()) {
+                tableBuilder.pool(LootPool.builder().with(LootTableEntry.builder(injectId).weight(1).quality(0)).build());
             }
         });
     }
 
     protected void registerDispenserBehavior() {
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_PICKAXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_AXE, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_SHOVEL, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(Items.SHEARS, new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.FLINT_KNIFE.get(), new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.IRON_KNIFE.get(), new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.DIAMOND_KNIFE.get(), new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
-        CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
+        if (FarmersDelightMod.CONFIG.isDispenserToolsCuttingBoard()) {
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.WOODEN_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.STONE_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.IRON_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.DIAMOND_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.GOLDEN_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_PICKAXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_AXE, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.NETHERITE_SHOVEL, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(Items.SHEARS, new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.FLINT_KNIFE.get(), new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.IRON_KNIFE.get(), new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.DIAMOND_KNIFE.get(), new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.GOLDEN_KNIFE.get(), new CuttingBoardDispenseBehavior());
+            CuttingBoardDispenseBehavior.registerBehaviour(ItemsRegistry.NETHERITE_KNIFE.get(), new CuttingBoardDispenseBehavior());
+        }
+
         DispenserBlock.registerBehavior(ItemsRegistry.ROTTEN_TOMATO.get(), new ProjectileDispenserBehavior() {
             @Override
             protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
@@ -238,18 +337,34 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void registerVillagerTradeOffer() {
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26),
-                        new ItemStack(Items.EMERALD), 16, 2, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.TOMATO.get(), 26),
-                        new ItemStack(Items.EMERALD), 16, 2, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.CABBAGE.get(), 16),
-                        new ItemStack(Items.EMERALD), 16, 5, .05f));
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
-                factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get(), 20),
-                        new ItemStack(Items.EMERALD), 16, 5, .05f));
+        if (FarmersDelightMod.CONFIG.isFarmersBuyFDCrops()) {
+            TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get(), 26),
+                            new ItemStack(Items.EMERALD), 16, 2, .05f));
+            TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.TOMATO.get(), 26),
+                            new ItemStack(Items.EMERALD), 16, 2, .05f));
+            TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.CABBAGE.get(), 16),
+                            new ItemStack(Items.EMERALD), 16, 5, .05f));
+            TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 2,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get(), 20),
+                            new ItemStack(Items.EMERALD), 16, 5, .05f));
+        }
 
+        if (FarmersDelightMod.CONFIG.isWanderingTraderSellsFDItems()) {
+            TradeOfferHelper.registerWanderingTraderOffers(1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.CABBAGE_SEEDS.get()),
+                            new ItemStack(Items.EMERALD), 1, 12, .05f));
+            TradeOfferHelper.registerWanderingTraderOffers(1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.TOMATO_SEEDS.get()),
+                            new ItemStack(Items.EMERALD), 1, 12, .05f));
+            TradeOfferHelper.registerWanderingTraderOffers(1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.RICE.get()),
+                            new ItemStack(Items.EMERALD), 1, 12, .05f));
+            TradeOfferHelper.registerWanderingTraderOffers(1,
+                    factories -> new TradeOffer(new ItemStack(ItemsRegistry.ONION.get()),
+                            new ItemStack(Items.EMERALD), 1, 12, .05f));
+        }
     }
 }
