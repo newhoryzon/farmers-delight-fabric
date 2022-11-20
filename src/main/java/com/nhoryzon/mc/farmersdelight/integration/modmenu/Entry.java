@@ -75,6 +75,19 @@ public abstract class Entry<T> {
         };
     }
 
+    public static Entry<String> str(String name, Supplier<String> current, Consumer<String> saver, String defaultValue, String... tooltip) {
+        return new Entry<>(name, current, saver, defaultValue, tooltip) {
+            @Override
+            TooltipListEntry<String> build(ConfigEntryBuilder builder) {
+                return builder.startStrField(Text.literal(getText()), getCurrent().get())
+                        .setSaveConsumer(getSaver())
+                        .setTooltip(Arrays.stream(getTooltip()).map(Text::literal).toArray(Text[]::new))
+                        .setDefaultValue(getDefaultValue())
+                        .build();
+            }
+        };
+    }
+
     private Entry(String name, Supplier<T> current, Consumer<T> saver, T defaultValue, String... tooltip) {
         this(name, current, saver, defaultValue, null, null, tooltip);
     }

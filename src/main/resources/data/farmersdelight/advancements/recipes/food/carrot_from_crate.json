@@ -1,26 +1,23 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "farmersdelight:carrot_from_crate"
-    ]
-  },
   "criteria": {
     "has_carrot_crate": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": ["farmersdelight:carrot_crate"]
+            "items": [
+              "farmersdelight:carrot_crate"
+            ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "farmersdelight:carrot_from_crate"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -28,5 +25,10 @@
       "has_carrot_crate",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "farmersdelight:carrot_from_crate"
+    ]
+  }
 }

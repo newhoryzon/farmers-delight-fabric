@@ -1,5 +1,7 @@
 {
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
     {
       "tag": "c:raw_beef"
@@ -11,9 +13,8 @@
       "item": "minecraft:potato"
     }
   ],
+  "recipe_book_tab": "meals",
   "result": {
     "item": "farmersdelight:beef_stew"
-  },
-  "experience": 0.35,
-  "cookingtime": 200
+  }
 }

@@ -28,7 +28,12 @@ public final class Configuration {
     private boolean wanderingTraderSellsFDItems = true;
     private double richSoilBoostChance = 0.2;
     private double cuttingBoardFortuneBonus = 0.1;
+    private boolean enableRopeReeling = true;
     private List<String> canvasSignDarkBackgroundList = Arrays.asList("gray", "purple", "blue", "brown", "green", "red", "black");
+
+    /* Farming */
+    private String defaultTomatoVineRope = "farmersdelight:rope";
+    private boolean enableTomatoVineClimbingTaggedRopes = true;
 
     /* Overrides */
     private boolean vanillaSoupExtraEffects = true;
@@ -132,6 +137,14 @@ public final class Configuration {
         cuttingBoardFortuneBonus = limit(0.1, 1.0, pCuttingBoardFortuneBonus);
     }
 
+    public boolean isEnableRopeReeling() {
+        return enableRopeReeling;
+    }
+
+    public void setEnableRopeReeling(boolean pEnableRopeReeling) {
+        enableRopeReeling = pEnableRopeReeling;
+    }
+
     public List<String> getCanvasSignDarkBackgroundList() {
         return canvasSignDarkBackgroundList;
     }
@@ -147,6 +160,22 @@ public final class Configuration {
                 pCanvasSignDarkBackgroundList.stream()
                         .filter(s -> DyeColor.byName(s, null) != null)
                         .collect(Collectors.toList());
+    }
+
+    public String getDefaultTomatoVineRope() {
+        return defaultTomatoVineRope;
+    }
+
+    public void setDefaultTomatoVineRope(String pDefaultTomatoVineRope) {
+        defaultTomatoVineRope = pDefaultTomatoVineRope;
+    }
+
+    public boolean isEnableTomatoVineClimbingTaggedRopes() {
+        return enableTomatoVineClimbingTaggedRopes;
+    }
+
+    public void setEnableTomatoVineClimbingTaggedRopes(boolean pEnableTomatoVineClimbingTaggedRopes) {
+        enableTomatoVineClimbingTaggedRopes = pEnableTomatoVineClimbingTaggedRopes;
     }
 
     public boolean isVanillaSoupExtraEffects() {

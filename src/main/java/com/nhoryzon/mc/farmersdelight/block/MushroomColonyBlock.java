@@ -22,6 +22,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -52,7 +53,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
 
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        int age = Math.min(3, state.get(AGE) + 1);
+        int age = Math.min(MAX_AGE, state.get(AGE) + getBonemealAgeIncrease(world));
         world.setBlockState(pos, state.with(AGE, age), BlockStateUtils.BLOCK_UPDATE);
     }
 
@@ -72,7 +73,7 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
         int age = state.get(AGE);
         BlockState groundState = world.getBlockState(pos.down());
         if (age < MAX_AGE && groundState.isIn(TagsRegistry.MUSHROOM_COLONY_GROWABLE_ON) &&
-                world.getLightLevel(pos.up(), 0) <= GROWING_LIGHT_LEVEL && random.nextInt(5) == 0) {
+                world.getLightLevel(pos.up(), 0) <= GROWING_LIGHT_LEVEL && random.nextInt(4) == 0) {
             world.setBlockState(pos, state.with(AGE, age + 1), BlockStateUtils.BLOCK_UPDATE);
         }
     }
@@ -125,6 +126,10 @@ public class MushroomColonyBlock extends PlantBlock implements Fertilizable {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE_BY_AGE[state.get(AGE)];
+    }
+
+    protected int getBonemealAgeIncrease(World world) {
+        return MathHelper.nextInt(world.random, 1, 2);
     }
 
 }

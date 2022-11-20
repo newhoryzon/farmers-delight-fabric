@@ -161,7 +161,7 @@
   "farmersdelight.container.cooking_pot.not_heated": "Należy podgrzać od dołu",
   "farmersdelight.container.cooking_pot.heated": "Podgrzany",
   "farmersdelight.container.basket": "Koszyk",
-  "farmersdelight.container.cabinet": "Szafka",
+  "farmersdelight.container.pantry": "Szafka",
 
   "farmersdelight.tooltip.cooking_pot.empty": "Pusty",
   "farmersdelight.tooltip.cooking_pot.single_serving": "Przechowuje 1 porcję:",

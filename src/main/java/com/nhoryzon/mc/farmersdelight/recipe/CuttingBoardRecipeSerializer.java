@@ -19,7 +19,7 @@ public class CuttingBoardRecipeSerializer implements RecipeSerializer<CuttingBoa
 
         for (JsonElement ingredientJson : ingredientArray) {
             Ingredient ingredient = Ingredient.fromJson(ingredientJson);
-            if (ingredient.getMatchingStacks() != null && ingredient.getMatchingStacks().length > 0) {
+            if (!ingredient.isEmpty()) {
                 ingredientList.add(ingredient);
             }
         }

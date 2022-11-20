@@ -1,31 +1,32 @@
 {
   "type": "farmersdelight:cooking",
+  "container": {
+    "item": "minecraft:pumpkin"
+  },
+  "cookingtime": 400,
+  "experience": 2.0,
   "ingredients": [
     {
       "tag": "c:crops/rice"
     },
     {
+      "tag": "c:crops/onion"
+    },
+    {
+      "item": "minecraft:brown_mushroom"
+    },
+    {
+      "item": "minecraft:potato"
+    },
+    {
+      "tag": "c:berries"
+    },
+    {
       "tag": "c:vegetables"
-    },
-    {
-      "item": "farmersdelight:tomato_sauce"
-    },
-    {
-      "item": "minecraft:baked_potato"
-    },
-    {
-      "item": "farmersdelight:brown_mushroom_colony"
-    },
-    {
-      "item": "minecraft:sweet_berries"
     }
   ],
+  "recipe_book_tab": "meals",
   "result": {
     "item": "farmersdelight:stuffed_pumpkin_block"
-  },
-  "container": {
-    "item": "minecraft:pumpkin"
-  },
-  "experience": 0.5,
-  "cookingtime": 400
+  }
 }

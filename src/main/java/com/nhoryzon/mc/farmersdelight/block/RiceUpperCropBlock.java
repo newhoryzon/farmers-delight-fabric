@@ -58,7 +58,7 @@ public class RiceUpperCropBlock extends CropBlock {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return (world.getLightLevel(pos, 0) >= 8 || world.isSkyVisible(pos)) && world.getBlockState(pos.down()).isOf(BlocksRegistry.RICE_CROP.get());
+        return (world.getLightLevel(pos, 0) >= 8 || world.isSkyVisible(pos)) && canPlantOnTop(world.getBlockState(pos.down()), world, pos);
     }
 
     @Override

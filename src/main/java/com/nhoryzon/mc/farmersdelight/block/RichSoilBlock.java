@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import java.util.Set;
 
 public class RichSoilBlock extends Block {
-    public static final int COLONY_FORMING_LIGHT_LEVEL = 12;
 
     public RichSoilBlock() {
         super(FabricBlockSettings.copyOf(Blocks.DIRT).ticksRandomly().sounds(BlockSoundGroup.ROOTED_DIRT));
@@ -65,7 +64,7 @@ public class RichSoilBlock extends Block {
                 return;
             }
 
-            // Try convert mushrooms to colonies if it's dark enough or if is a plant, then give it growth boost
+            // Try to convert mushrooms to colonies if it's dark enough or if is a plant, then give it growth boost
             if (!tryConvertToColonies(world, pos, aboveBlock) && (aboveBlock instanceof Fertilizable growable
                     && FarmersDelightMod.CONFIG.getRichSoilBoostChance() > 0.0
                     && MathUtils.RAND.nextFloat() <= FarmersDelightMod.CONFIG.getRichSoilBoostChance()
@@ -81,11 +80,8 @@ public class RichSoilBlock extends Block {
             return false;
         }
 
-        BlocksRegistry colonyBlock =
-                (block == Blocks.BROWN_MUSHROOM) ? BlocksRegistry.BROWN_MUSHROOM_COLONY : BlocksRegistry.RED_MUSHROOM_COLONY;
-        if (world.getLightLevel(pos.up(), 0) <= COLONY_FORMING_LIGHT_LEVEL) {
-            world.setBlockState(pos.up(), colonyBlock.get().getDefaultState());
-        }
+        BlocksRegistry colonyBlock = (block == Blocks.BROWN_MUSHROOM) ? BlocksRegistry.BROWN_MUSHROOM_COLONY : BlocksRegistry.RED_MUSHROOM_COLONY;
+        world.setBlockState(pos.up(), colonyBlock.get().getDefaultState());
 
         return true;
     }

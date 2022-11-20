@@ -5,13 +5,13 @@
       "item": "minecraft:porkchop"
     }
   ],
-  "tool": {
-    "tag": "c:tools/knives"
-  },
   "result": [
     {
-      "item": "farmersdelight:bacon",
-      "count": 2
+      "count": 2,
+      "item": "farmersdelight:bacon"
     }
-  ]
+  ],
+  "tool": {
+    "tag": "c:tools/knives"
+  }
 }

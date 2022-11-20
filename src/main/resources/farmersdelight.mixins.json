@@ -12,7 +12,6 @@
     "EnchantmentEnhancementMixin",
     "EnchantmentHelperEnhancementMixin",
     "LivingEntityBackstabbingEnchantmentMixin",
-    "LivingEntityComfortImmunitiesMixin",
     "LivingEntityKnockBackMixin",
     "LivingEntityOnUseItemFinishMixin",
     "MigrationBlockEntityMixin",

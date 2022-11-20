@@ -14,8 +14,12 @@ public class DrinkableItem extends ConsumableItem {
         super(settings);
     }
 
-    public DrinkableItem(Settings settings, boolean hasPotionEffectTooltip, boolean hasCustomTooltip) {
-        super(settings, hasPotionEffectTooltip, hasCustomTooltip);
+    public DrinkableItem(Settings settings, boolean hasFoodEffectTooltip) {
+        super(settings, hasFoodEffectTooltip);
+    }
+
+    public DrinkableItem(Settings settings, boolean hasFoodEffectTooltip, boolean hasCustomTooltip) {
+        super(settings, hasFoodEffectTooltip, hasCustomTooltip);
     }
 
     @Override
@@ -30,6 +34,17 @@ public class DrinkableItem extends ConsumableItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack heldStack = user.getStackInHand(hand);
+        if (heldStack.isFood()) {
+            if (user.canConsume(heldStack.getItem().getFoodComponent().isAlwaysEdible())) {
+                user.setCurrentHand(hand);
+
+                return TypedActionResult.consume(heldStack);
+            } else {
+                return TypedActionResult.fail(heldStack);
+            }
+        }
+
         return ItemUsage.consumeHeldItem(world, user, hand);
     }
 
