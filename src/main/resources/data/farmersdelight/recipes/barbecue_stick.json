@@ -7,21 +7,31 @@
     {
       "tag": "c:crops/onion"
     },
-    {
-      "item": "minecraft:cooked_beef"
-    },
-    {
-      "item": "minecraft:cooked_chicken"
-    },
-    {
-      "item": "minecraft:stick"
-    },
+    [
+      {
+        "tag": "c:cooked_beef"
+      },
+      {
+        "tag": "c:cooked_pork"
+      },
+      {
+        "tag": "c:cooked_chicken"
+      },
+      {
+        "tag": "c:cooked_mutton"
+      },
+      {
+        "tag": "c:cooked_fishes"
+      },
+      {
+        "item": "minecraft:cooked_rabbit"
+      }
+    ],
     {
       "item": "minecraft:stick"
     }
   ],
   "result": {
-    "item": "farmersdelight:barbecue_stick",
-    "count": 2
+    "item": "farmersdelight:barbecue_stick"
   }
 }

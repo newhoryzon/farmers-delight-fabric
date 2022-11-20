@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,6 +30,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class FeastBlock extends Block {
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final IntProperty SERVINGS = IntProperty.of("servings", 0, 4);
 
@@ -47,7 +49,7 @@ public class FeastBlock extends Block {
         super(settings);
         this.servingItem = servingItem;
         this.hasLeftovers = hasLeftovers;
-        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SERVINGS, 4));
+        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(getServingsProperty(), getMaxServings()));
     }
 
     @Nullable
@@ -58,7 +60,6 @@ public class FeastBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
         builder.add(FACING, SERVINGS);
     }
 
@@ -95,7 +96,7 @@ public class FeastBlock extends Block {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return state.get(SERVINGS);
+        return state.get(getServingsProperty());
     }
 
     @Override
@@ -103,13 +104,21 @@ public class FeastBlock extends Block {
         return SHAPES[state.get(SERVINGS)];
     }
 
-    public ItemStack getServingStack() {
+    public IntProperty getServingsProperty() {
+        return SERVINGS;
+    }
+
+    public int getMaxServings() {
+        return 4;
+    }
+
+    public ItemStack getServingStack(BlockState state) {
         return new ItemStack(servingItem);
     }
 
     @SuppressWarnings("ConstantConditions")
     private ActionResult takeServing(World world, BlockPos pos, BlockState state, PlayerEntity player, Hand hand) {
-        int servings = state.get(SERVINGS);
+        int servings = state.get(getServingsProperty());
 
         if (servings == 0) {
             world.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.PLAYERS, .8f, .8f);
@@ -118,37 +127,31 @@ public class FeastBlock extends Block {
             return ActionResult.SUCCESS;
         }
 
+        ItemStack serving = getServingStack(state);
         ItemStack heldItem = player.getStackInHand(hand);
 
-        if (servings > 0 && servingItem.hasRecipeRemainder()) {
-            Item servingContainerItem = servingItem.getRecipeRemainder();
-            if (heldItem.getItem() == servingContainerItem) {
-                world.setBlockState(pos, state.with(SERVINGS, servings - 1), 3);
-                serveToPlayerFromHand(world, pos, player, hand);
+        if (servings > 0) {
+            if (!serving.getItem().hasRecipeRemainder() || heldItem.isItemEqualIgnoreDamage(new ItemStack(serving.getItem().getRecipeRemainder()))) {
+                world.setBlockState(pos, state.with(getServingsProperty(), servings - 1), BlockStateUtils.DEFAULT);
+                if (!player.getAbilities().creativeMode) {
+                    player.getStackInHand(hand).decrement(1);
+                }
+                if (!player.getInventory().insertStack(serving)) {
+                    player.dropItem(serving, false);
+                }
+                if (world.getBlockState(pos).get(getServingsProperty()) == 0 && !hasLeftovers) {
+                    world.removeBlock(pos, false);
+                }
+
+                world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
 
                 return ActionResult.SUCCESS;
             } else {
-                player.sendMessage(FarmersDelightMod.i18n("block.feast.use_container", servingContainerItem.getName()), true);
+                player.sendMessage(FarmersDelightMod.i18n("block.feast.use_container", serving.getItem().getRecipeRemainder().getName()), true);
             }
         }
 
         return ActionResult.PASS;
-    }
-
-    private void serveToPlayerFromHand(World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        ItemStack servingItemStack = getServingStack();
-
-        if (!player.getAbilities().creativeMode) {
-            player.getStackInHand(hand).decrement(1);
-        }
-        if (!player.getInventory().insertStack(servingItemStack)) {
-            player.dropItem(servingItemStack, false);
-        }
-        if (world.getBlockState(pos).get(SERVINGS) == 0 && !hasLeftovers) {
-            world.removeBlock(pos, false);
-        }
-
-        world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.BLOCKS, 1.f, 1.f);
     }
 
 }

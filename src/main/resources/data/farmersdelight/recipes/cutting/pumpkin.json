@@ -5,13 +5,13 @@
       "item": "minecraft:pumpkin"
     }
   ],
-  "tool": {
-    "tag": "c:tools/knives"
-  },
   "result": [
     {
-      "item": "farmersdelight:pumpkin_slice",
-      "count": 4
+      "count": 4,
+      "item": "farmersdelight:pumpkin_slice"
     }
-  ]
+  ],
+  "tool": {
+    "tag": "c:tools/knives"
+  }
 }

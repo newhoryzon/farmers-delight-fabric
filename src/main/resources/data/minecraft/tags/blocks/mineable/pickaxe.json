@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
+    "farmersdelight:stove",
     "farmersdelight:cooking_pot",
-    "farmersdelight:stove"
+    "farmersdelight:skillet"
   ]
 }
