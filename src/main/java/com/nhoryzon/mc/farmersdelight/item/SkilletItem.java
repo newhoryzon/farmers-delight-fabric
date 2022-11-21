@@ -57,7 +57,7 @@ public class SkilletItem extends BlockItem {
 
     public SkilletItem() {
         super(BlocksRegistry.SKILLET.get(), new ModItemSettings().maxCount(1).maxDamageIfAbsent(SKILLET_MATERIAL.getDurability()));
-        float attackDamage = 4.f + SKILLET_MATERIAL.getAttackDamage();
+        float attackDamage = 5.f + SKILLET_MATERIAL.getAttackDamage();
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", -3.1f, EntityAttributeModifier.Operation.ADDITION));

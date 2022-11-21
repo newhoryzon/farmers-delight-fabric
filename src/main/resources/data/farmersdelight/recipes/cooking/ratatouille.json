@@ -1,5 +1,7 @@
 {
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
     {
       "tag": "c:crops/tomato"
@@ -14,9 +16,8 @@
       "tag": "c:vegetables"
     }
   ],
+  "recipe_book_tab": "meals",
   "result": {
     "item": "farmersdelight:ratatouille"
-  },
-  "experience": 0.35,
-  "cookingtime": 200
+  }
 }

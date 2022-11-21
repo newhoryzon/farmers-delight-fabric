@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
+import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -86,7 +87,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
                 int remainingGrowth = ageGrowth - MAX_AGE - 1;
                 if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
                     world.setBlockState(pos, state.with(AGE, MAX_AGE));
-                    world.setBlockState(pos.up(), riceUpper.getDefaultState().with(RiceUpperCropBlock.RICE_AGE, remainingGrowth), 2);
+                    world.setBlockState(pos.up(), riceUpper.getDefaultState().with(RiceUpperCropBlock.RICE_AGE, remainingGrowth), BlockStateUtils.BLOCK_UPDATE);
                 }
             }
         }

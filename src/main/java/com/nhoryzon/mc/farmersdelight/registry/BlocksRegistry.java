@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.BasketBlock;
+import com.nhoryzon.mc.farmersdelight.block.BuddingTomatoBlock;
 import com.nhoryzon.mc.farmersdelight.block.CabbageCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.CanvasRugBlock;
 import com.nhoryzon.mc.farmersdelight.block.CookingPotBlock;
@@ -15,19 +16,21 @@ import com.nhoryzon.mc.farmersdelight.block.CabinetBlock;
 import com.nhoryzon.mc.farmersdelight.block.PieBlock;
 import com.nhoryzon.mc.farmersdelight.block.RiceBaleBlock;
 import com.nhoryzon.mc.farmersdelight.block.RiceCropBlock;
+import com.nhoryzon.mc.farmersdelight.block.RiceRollMedleyBlock;
 import com.nhoryzon.mc.farmersdelight.block.RiceUpperCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.RichSoilBlock;
 import com.nhoryzon.mc.farmersdelight.block.RichSoilFarmlandBlock;
 import com.nhoryzon.mc.farmersdelight.block.RoastChickenBlock;
 import com.nhoryzon.mc.farmersdelight.block.RopeBlock;
 import com.nhoryzon.mc.farmersdelight.block.SafetyNetBlock;
+import com.nhoryzon.mc.farmersdelight.block.SandyShrubBlock;
 import com.nhoryzon.mc.farmersdelight.block.ShepherdsPieBlock;
 import com.nhoryzon.mc.farmersdelight.block.SkilletBlock;
 import com.nhoryzon.mc.farmersdelight.block.StoveBlock;
 import com.nhoryzon.mc.farmersdelight.block.TatamiBlock;
 import com.nhoryzon.mc.farmersdelight.block.TatamiHalfMatBlock;
 import com.nhoryzon.mc.farmersdelight.block.TatamiMatBlock;
-import com.nhoryzon.mc.farmersdelight.block.TomatoBushCropBlock;
+import com.nhoryzon.mc.farmersdelight.block.TomatoVineBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildPatchBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildRiceCropBlock;
@@ -126,6 +129,7 @@ public enum BlocksRegistry {
     RICH_SOIL("rich_soil", RichSoilBlock::new),
     RICH_SOIL_FARMLAND("rich_soil_farmland", RichSoilFarmlandBlock::new),
 
+    SANDY_SHRUB("sandy_shrub", SandyShrubBlock::new),
     WILD_CABBAGES("wild_cabbages", WildPatchBlock::new, true, flammable(100, 60)),
     WILD_ONIONS("wild_onions", WildCropBlock::new, true, flammable(100, 60)),
     WILD_TOMATOES("wild_tomatoes", WildPatchBlock::new, true, flammable(100, 60)),
@@ -136,7 +140,8 @@ public enum BlocksRegistry {
 
     CABBAGE_CROP("cabbages", CabbageCropBlock::new, true),
     ONION_CROP("onions", OnionCropBlock::new, true),
-    TOMATO_CROP("tomatoes", TomatoBushCropBlock::new, true),
+    BUDDING_TOMATO_CROP("budding_tomatoes", BuddingTomatoBlock::new, true),
+    TOMATO_CROP("tomatoes", TomatoVineBlock::new, true),
     RICE_CROP("rice_crop", RiceCropBlock::new, true),
     RICE_UPPER_CROP("rice_upper_crop", RiceUpperCropBlock::new, true),
 
@@ -147,7 +152,8 @@ public enum BlocksRegistry {
     ROAST_CHICKEN_BLOCK("roast_chicken_block", RoastChickenBlock::new, true),
     STUFFED_PUMPKIN_BLOCK("stuffed_pumpkin_block", () -> new FeastBlock(FabricBlockSettings.copyOf(Blocks.PUMPKIN), ItemsRegistry.STUFFED_PUMPKIN.get(), false)),
     HONEY_GLAZED_HAM_BLOCK("honey_glazed_ham_block", HoneyGlazedHamBlock::new),
-    SHEPHERDS_PIE_BLOCK("shepherds_pie_block", ShepherdsPieBlock::new);
+    SHEPHERDS_PIE_BLOCK("shepherds_pie_block", ShepherdsPieBlock::new),
+    RICE_ROLL_MEDLEY_BLOCK("rice_roll_medley_block", RiceRollMedleyBlock::new);
 
     private static FlammableBlockRegistry.Entry flammable(int burnChance, @SuppressWarnings("SameParameterValue") int spreadChance) {
         return new FlammableBlockRegistry.Entry(burnChance, spreadChance);

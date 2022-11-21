@@ -19,7 +19,7 @@
               }
             }
           ],
-          "name": "farmersdelight:cabbage_seeds"
+          "name": "farmersdelight:onion"
         },
         {
           "type": "minecraft:item",
@@ -33,7 +33,7 @@
               }
             }
           ],
-          "name": "farmersdelight:onion"
+          "name": "farmersdelight:cabbage_seeds"
         }
       ]
     }

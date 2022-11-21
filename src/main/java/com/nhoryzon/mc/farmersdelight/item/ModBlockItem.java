@@ -9,4 +9,8 @@ public class ModBlockItem extends BlockItem {
         super(block, new ModItemSettings());
     }
 
+    public ModBlockItem(Block block, Settings settings) {
+        super(block, settings);
+    }
+
 }

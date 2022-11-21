@@ -3,6 +3,7 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.CabinetBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ViewerCountManager;
@@ -46,12 +47,12 @@ public class CabinetBlockEntity extends LootableContainerBlockEntity {
         this.content = DefaultedList.ofSize(MAX_INVENTORY_SIZE, ItemStack.EMPTY);
         this.viewerManager = new ViewerCountManager() {
             protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-                CabinetBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                CabinetBlockEntity.this.playSound(state, SoundsRegistry.BLOCK_CABINET_OPEN.get());
                 CabinetBlockEntity.this.setOpen(state, true);
             }
 
             protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-                CabinetBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                CabinetBlockEntity.this.playSound(state, SoundsRegistry.BLOCK_CABINET_CLOSE.get());
                 CabinetBlockEntity.this.setOpen(state, false);
             }
 

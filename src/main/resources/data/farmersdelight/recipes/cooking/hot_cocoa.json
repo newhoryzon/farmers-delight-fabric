@@ -1,5 +1,7 @@
 {
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
     {
       "tag": "c:milk"
@@ -14,9 +16,8 @@
       "item": "minecraft:cocoa_beans"
     }
   ],
+  "recipe_book_tab": "drinks",
   "result": {
     "item": "farmersdelight:hot_cocoa"
-  },
-  "experience": 0.35,
-  "cookingtime": 200
+  }
 }

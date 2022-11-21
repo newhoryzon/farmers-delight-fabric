@@ -14,6 +14,9 @@ public enum SoundsRegistry {
 
     BLOCK_CUTTING_BOARD_KNIFE("block.cutting_board.knife"),
 
+    BLOCK_CABINET_OPEN("block.cabinet.open"),
+    BLOCK_CABINET_CLOSE("block.cabinet.close"),
+
     BLOCK_SKILLET_SIZZLE("block.skillet.sizzle"),
     BLOCK_SKILLET_ADD_FOOD("block.skillet.add_food"),
     ITEM_SKILLET_ATTACK_STRONG("item.skillet.attack.strong"),

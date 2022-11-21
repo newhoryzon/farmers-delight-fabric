@@ -17,7 +17,9 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
 
         for (int i = 0; i < ingredientArray.size(); ++i) {
             Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
-            ingredientList.add(ingredient);
+            if (!ingredient.isEmpty()) {
+                ingredientList.add(ingredient);
+            }
         }
 
         return ingredientList;

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "farmersdelight:wheat_dough",
+    { "id": "#c:doughs", "required": false }
+  ]
+}

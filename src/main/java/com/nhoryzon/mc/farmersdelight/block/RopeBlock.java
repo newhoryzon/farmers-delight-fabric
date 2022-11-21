@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BellBlock;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -26,20 +28,24 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.tick.OrderedTick;
 
 public class RopeBlock extends PaneBlock {
     private static final BooleanProperty TIED_TO_BELL = BooleanProperty.of("tied_to_bell");
 
     public RopeBlock() {
         super(FabricBlockSettings.of(Material.CARPET).noCollision().nonOpaque().hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
-        setDefaultState(getStateManager().getDefaultState().with(TIED_TO_BELL, false));
+        setDefaultState(getStateManager().getDefaultState()
+                .with(NORTH, false)
+                .with(SOUTH, false)
+                .with(EAST, false)
+                .with(WEST, false)
+                .with(TIED_TO_BELL, false)
+                .with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(TIED_TO_BELL);
+        builder.add(NORTH, SOUTH, EAST, WEST, TIED_TO_BELL, WATERLOGGED);
     }
 
     @Override
@@ -59,19 +65,38 @@ public class RopeBlock extends PaneBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getStackInHand(hand).isEmpty()) {
-            BlockPos.Mutable mutable = pos.mutableCopy().move(Direction.UP);
+            if (FarmersDelightMod.CONFIG.isEnableRopeReeling() && player.isSneaking()) {
+                if (player.getAbilities().allowModifyWorld && (player.getAbilities().creativeMode || player.getInventory().insertStack(new ItemStack(asItem())))) {
+                    BlockPos.Mutable reelingPos = pos.mutableCopy().move(Direction.DOWN);
+                    int minBuildHeight = world.getDimension().getMinimumY();
 
-            for (int i = 0; i < 24; i++) {
-                BlockState blockStateAbove = world.getBlockState(mutable);
-                Block blockAbove = blockStateAbove.getBlock();
-                if (blockAbove == Blocks.BELL) {
-                    ((BellBlock) blockAbove).ring(world, mutable, blockStateAbove.get(BellBlock.FACING).rotateYClockwise());
+                    while (reelingPos.getY() >= minBuildHeight) {
+                        BlockState blockStateBelow = world.getBlockState(reelingPos);
+                        if (blockStateBelow.isOf(this)) {
+                            reelingPos.move(Direction.DOWN);
+                        } else {
+                            reelingPos.move(Direction.UP);
+                            world.breakBlock(reelingPos, false, player);
 
-                    return ActionResult.SUCCESS;
-                } else if (blockAbove == BlocksRegistry.ROPE.get()) {
-                    mutable.move(Direction.UP);
-                } else {
-                    return ActionResult.PASS;
+                            return ActionResult.success(world.isClient());
+                        }
+                    }
+                }
+            } else {
+                BlockPos.Mutable reelingPos = pos.mutableCopy().move(Direction.UP);
+
+                for (int i = 0; i < 24; i++) {
+                    BlockState blockStateAbove = world.getBlockState(reelingPos);
+                    Block blockAbove = blockStateAbove.getBlock();
+                    if (blockAbove == Blocks.BELL) {
+                        ((BellBlock) blockAbove).ring(world, reelingPos, blockStateAbove.get(BellBlock.FACING).rotateYClockwise());
+
+                        return ActionResult.SUCCESS;
+                    } else if (blockAbove == BlocksRegistry.ROPE.get()) {
+                        reelingPos.move(Direction.UP);
+                    } else {
+                        return ActionResult.PASS;
+                    }
                 }
             }
         }
@@ -93,7 +118,7 @@ public class RopeBlock extends PaneBlock {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
-            world.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
         boolean tiedToBell = state.get(TIED_TO_BELL);
@@ -101,8 +126,8 @@ public class RopeBlock extends PaneBlock {
             tiedToBell = world.getBlockState(posFrom).getBlock() == Blocks.BELL;
         }
 
-        return (direction.getAxis().isHorizontal() ? state.with(TIED_TO_BELL, tiedToBell).with(FACING_PROPERTIES.get(direction),
-                connectsTo(newState, newState.isSideSolidFullSquare(world, posFrom, direction.getOpposite())))
+        return (direction.getAxis().isHorizontal()
+                ? state.with(TIED_TO_BELL, tiedToBell).with(FACING_PROPERTIES.get(direction), connectsTo(newState, newState.isSideSolidFullSquare(world, posFrom, direction.getOpposite())))
                 : super.getStateForNeighborUpdate(state.with(TIED_TO_BELL, tiedToBell), direction, newState, world, pos, posFrom));
     }
 }

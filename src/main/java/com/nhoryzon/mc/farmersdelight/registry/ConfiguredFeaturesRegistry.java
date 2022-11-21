@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.minecraft.block.Block;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -47,7 +48,10 @@ public enum ConfiguredFeaturesRegistry {
     PATCH_WILD_RICE("patch_wild_rice",
             () -> new ConfiguredFeature<>(Feature.RANDOM_PATCH, createRandomPatchFeatureConfig(BlocksRegistry.WILD_RICE.get(), 64, 4, BlockPredicate.not(BlockPredicate.IS_AIR))),
             "rice", RarityFilterPlacementModifier.of(FarmersDelightMod.CONFIG.getChanceWildRice()),
-            SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
+            SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of()),
+    PATCH_SANDY_SHRUB_BONEMEAL("patch_sandy_shrub",
+            () -> new ConfiguredFeature<>(Feature.RANDOM_PATCH, createRandomPatchFeatureConfig(BlocksRegistry.SANDY_SHRUB.get(), 32, 2, BlockPredicate.matchingBlockTag(
+                    BlockTags.SAND))));
 
     private final String configPathName;
     private final String featurePathName;
@@ -58,6 +62,14 @@ public enum ConfiguredFeaturesRegistry {
     private RegistryKey<ConfiguredFeature<?, ?>> configuredFeatureRegistryKey;
     private PlacedFeature feature;
     private RegistryKey<PlacedFeature> featureRegistryKey;
+
+    ConfiguredFeaturesRegistry(String configPathName,
+            Supplier<? extends ConfiguredFeature<?, ?>> featureConfigSupplier) {
+        this.configPathName = configPathName;
+        this.featureConfigSupplier = featureConfigSupplier;
+        this.featurePathName = null;
+        this.placementModifierList = null;
+    }
 
     ConfiguredFeaturesRegistry(String configPathName,
             Supplier<? extends ConfiguredFeature<?, ?>> featureConfigSupplier,
@@ -86,10 +98,12 @@ public enum ConfiguredFeaturesRegistry {
             value.configuredFeature = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, configId, value.featureConfigSupplier.get());
             value.configuredFeatureRegistryKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, configId);
 
-            Identifier featureId = new Identifier(FarmersDelightMod.MOD_ID, value.featurePathName);
-            value.feature = Registry.register(BuiltinRegistries.PLACED_FEATURE, featureId,
-                    new PlacedFeature(RegistryEntry.of(value.configuredFeature), List.of(value.placementModifierList)));
-            value.featureRegistryKey = RegistryKey.of(Registry.PLACED_FEATURE_KEY, featureId);
+            if (value.featurePathName != null && value.placementModifierList != null) {
+                Identifier featureId = new Identifier(FarmersDelightMod.MOD_ID, value.featurePathName);
+                value.feature = Registry.register(BuiltinRegistries.PLACED_FEATURE, featureId,
+                        new PlacedFeature(RegistryEntry.of(value.configuredFeature), List.of(value.placementModifierList)));
+                value.featureRegistryKey = RegistryKey.of(Registry.PLACED_FEATURE_KEY, featureId);
+            }
         }
     }
 

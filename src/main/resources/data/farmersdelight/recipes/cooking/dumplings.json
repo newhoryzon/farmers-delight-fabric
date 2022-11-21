@@ -1,8 +1,10 @@
 {
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
     {
-      "tag": "c:pasta"
+      "tag": "c:dough"
     },
     {
       "tag": "c:crops/cabbage"
@@ -15,20 +17,19 @@
         "tag": "c:raw_chicken"
       },
       {
-        "item": "minecraft:brown_mushroom"
-      },
-      {
         "tag": "c:raw_pork"
       },
       {
         "tag": "c:raw_beef"
+      },
+      {
+        "item": "minecraft:brown_mushroom"
       }
     ]
   ],
+  "recipe_book_tab": "misc",
   "result": {
-    "item": "farmersdelight:dumplings",
-    "count": 2
-  },
-  "experience": 0.35,
-  "cookingtime": 200
+    "count": 2,
+    "item": "farmersdelight:dumplings"
+  }
 }

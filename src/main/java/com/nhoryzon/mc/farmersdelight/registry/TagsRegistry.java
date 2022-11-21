@@ -19,6 +19,8 @@ public class TagsRegistry {
     public static final TagKey<Item> KNIVES = TagRegistration.ITEM_TAG_REGISTRATION.registerCommon("tools/knives");
 
     public static final TagKey<Block> WILD_CROPS = create("wild_crops", Registry.BLOCK_KEY);
+    public static final TagKey<Block> ROPES = create("ropes", Registry.BLOCK_KEY);
+
     public static final TagKey<Block> HEAT_SOURCES = create("heat_sources", Registry.BLOCK_KEY);
     public static final TagKey<Block> HEAT_CONDUCTORS = create("heat_conductors", Registry.BLOCK_KEY);
     public static final TagKey<Block> TRAY_HEAT_SOURCES = create("tray_heat_sources", Registry.BLOCK_KEY);

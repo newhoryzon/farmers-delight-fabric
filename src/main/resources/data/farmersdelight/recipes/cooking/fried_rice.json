@@ -1,5 +1,7 @@
 {
   "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
   "ingredients": [
     {
       "tag": "c:crops/rice"
@@ -14,9 +16,8 @@
       "tag": "c:crops/onion"
     }
   ],
+  "recipe_book_tab": "meals",
   "result": {
     "item": "farmersdelight:fried_rice"
-  },
-  "experience": 0.35,
-  "cookingtime": 200
+  }
 }
