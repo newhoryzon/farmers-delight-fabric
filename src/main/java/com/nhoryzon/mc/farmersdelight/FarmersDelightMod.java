@@ -1,5 +1,6 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.mojang.datafixers.util.Pair;
 import com.nhoryzon.mc.farmersdelight.entity.RottenTomatoEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.dispenser.CuttingBoardDispenseBehavior;
 import com.nhoryzon.mc.farmersdelight.event.CuttingBoardEventListener;
@@ -8,7 +9,6 @@ import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.StructurePoolAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.registry.*;
-import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -125,10 +125,10 @@ public class FarmersDelightMod implements ModInitializer {
                     Pair.of("taiga", 4),
                     Pair.of("desert", 3));
             ServerLifecycleEvents.SERVER_STARTING.register(server -> compostPileList.forEach(villageType -> {
-                LOGGER.info("Registering compost heaps in village type of {}", villageType.key());
-                Identifier compostPileId = new Identifier(MOD_ID, "village/houses/" + villageType.key() + "_compost_pile");
-                Identifier villageHousePoolId = new Identifier("minecraft:village/" + villageType.key() + "/houses");
-                addToStructurePool(server, villageHousePoolId, compostPileId, villageType.value());
+                LOGGER.info("Registering compost heaps in village type of {}", villageType.getFirst());
+                Identifier compostPileId = new Identifier(MOD_ID, "village/houses/" + villageType.getFirst() + "_compost_pile");
+                Identifier villageHousePoolId = new Identifier("minecraft:village/" + villageType.getFirst() + "/houses");
+                addToStructurePool(server, villageHousePoolId, compostPileId, villageType.getSecond());
             }));
         }
     }
