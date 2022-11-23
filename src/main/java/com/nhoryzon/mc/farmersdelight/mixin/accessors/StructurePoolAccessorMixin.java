@@ -1,6 +1,6 @@
 package com.nhoryzon.mc.farmersdelight.mixin.accessors;
 
-import it.unimi.dsi.fastutil.Pair;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
