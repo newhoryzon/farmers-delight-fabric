@@ -59,9 +59,7 @@ import java.util.stream.IntStream;
 /**
  * This fabric port of Farmer's Delight is <b>NOT</b> implementing these features :
  * <ul>
- *     <li>the "Nourished Hunger" overlay</li>
- *     <li>the possibility to disable vanilla "Crops Crates"</li>
- *     <li>the integrations of others mods like : CraftTweaker, BotanyPots, Create, Immersive Engineering and Silent Gear</li>
+ *     <li>visual cooking on pan in hand</li>
  * </ul>
  */
 public class FarmersDelightMod implements ModInitializer {
