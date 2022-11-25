@@ -21,6 +21,7 @@
     "PlantBlockOnRichSoilMixin",
     "PlayerEntityAttackWithSkilletMixin",
     "StemBlockOnRichSoilFarmlandMixin",
+    "StewItemMixin",
     "accessors.DispenserBehaviorsAccessorMixin",
     "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin",

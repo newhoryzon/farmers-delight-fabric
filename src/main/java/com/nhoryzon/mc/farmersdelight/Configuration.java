@@ -40,6 +40,12 @@ public final class Configuration {
     private boolean rabbitStewJumpBoost = true;
     private boolean dispenserToolsCuttingBoard = true;
 
+    /* Stack size */
+
+    private boolean enableStackableSoupSize = true;
+    private List<String> soupItemList = Arrays.asList("minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew");
+    private boolean overrideAllSoupItems = false;
+
     /* World */
     private boolean generateFDChestLoot = true;
     private boolean generateVillageCompostHeaps = true;
@@ -200,6 +206,30 @@ public final class Configuration {
 
     public void setDispenserToolsCuttingBoard(boolean pDispenserToolsCuttingBoard) {
         dispenserToolsCuttingBoard = pDispenserToolsCuttingBoard;
+    }
+
+    public boolean isEnableStackableSoupSize() {
+        return enableStackableSoupSize;
+    }
+
+    public void setEnableStackableSoupSize(boolean pEnableStackableSoupSize) {
+        enableStackableSoupSize = pEnableStackableSoupSize;
+    }
+
+    public List<String> getSoupItemList() {
+        return soupItemList;
+    }
+
+    public void setSoupItemList(List<String> pSoupItemList) {
+        soupItemList = pSoupItemList;
+    }
+
+    public boolean isOverrideAllSoupItems() {
+        return overrideAllSoupItems;
+    }
+
+    public void setOverrideAllSoupItems(boolean pOverrideAllSoupItems) {
+        overrideAllSoupItems = pOverrideAllSoupItems;
     }
 
     public boolean isGenerateFDChestLoot() {
