@@ -1,5 +1,7 @@
 package com.nhoryzon.mc.farmersdelight;
 
+import com.nhoryzon.mc.farmersdelight.client.gui.ComfortHealthOverlay;
+import com.nhoryzon.mc.farmersdelight.client.gui.NourishmentHungerOverlay;
 import com.nhoryzon.mc.farmersdelight.client.particle.StarParticle;
 import com.nhoryzon.mc.farmersdelight.client.particle.SteamParticle;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CanvasSignBlockEntityRenderer;
@@ -42,6 +44,8 @@ public class FarmersDelightModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlocksRegistry.registerRenderLayer();
+		NourishmentHungerOverlay.init();
+		ComfortHealthOverlay.init();
 
 		// BlockEntityRenderer register
 		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntityRenderer::new);

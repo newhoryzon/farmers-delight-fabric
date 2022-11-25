@@ -21,6 +21,7 @@
     "PlantBlockOnRichSoilMixin",
     "PlayerEntityAttackWithSkilletMixin",
     "StemBlockOnRichSoilFarmlandMixin",
+    "StewItemMixin",
     "accessors.DispenserBehaviorsAccessorMixin",
     "accessors.ParrotsTamingIngredientsAccessorMixin",
     "accessors.PlayerExhaustionAccessorMixin",
@@ -28,7 +29,8 @@
     "accessors.StructurePoolAccessorMixin"
   ],
   "client": [
-    "CanvasSignEditScreenMixin"
+    "CanvasSignEditScreenMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
