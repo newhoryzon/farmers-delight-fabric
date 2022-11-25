@@ -21,7 +21,7 @@ public class ComfortEffect extends StatusEffect {
     }
 
     @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         if (entity.hasStatusEffect(StatusEffects.REGENERATION) ||
                 (entity instanceof PlayerEntity player && player.getHungerManager().getSaturationLevel() > 0.0)) {
             return;
@@ -34,8 +34,8 @@ public class ComfortEffect extends StatusEffect {
 
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        return duration % 80 == 0;
+    public boolean canApplyUpdateEffect(int tickDuration, int amplifier) {
+        return tickDuration % 80 == 0;
     }
 
 }
