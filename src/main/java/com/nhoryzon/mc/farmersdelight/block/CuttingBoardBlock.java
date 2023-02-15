@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
+import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -127,6 +128,9 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     private ActionResult tryAddItemFromPlayerHand(World world, CuttingBoardBlockEntity cuttingBoardBlockEntity, PlayerEntity player, Hand hand) {
         ItemStack itemHeld = player.getStackInHand(hand);
         ItemStack itemOffhand = player.getOffHandStack();
+		if (itemHeld.getItem() instanceof KnifeItem){
+			return ActionResult.PASS;
+		}
 
         boolean canAddItemForHand = (itemOffhand.isEmpty() || !hand.equals(Hand.MAIN_HAND) || (itemHeld.getItem() instanceof BlockItem))
                 && !itemHeld.isEmpty();
