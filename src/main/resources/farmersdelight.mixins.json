@@ -4,36 +4,37 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "farmers-delight-fabric-refmap.json",
   "mixins": [
-    "AttachedStemBlockOnRichSoilFarmlandMixin",
-    "CampfireBaleMixin",
-    "ChickenEntityBreedingMixin",
-    "CropBlockOnRichSoilFarmlandMixin",
-    "DeadBushBlockOnRichSoilMixin",
-    "EnchantmentEnhancementMixin",
-    "EnchantmentHelperEnhancementMixin",
-    "LivingEntityBackstabbingEnchantmentMixin",
-    "LivingEntityKnockBackMixin",
-    "LivingEntityOnUseItemFinishMixin",
-    "MigrationBlockEntityMixin",
-    "MigrationBlockRegistryMixin",
-    "MigrationItemStackMixin",
-    "PigEntityBreedingMixin",
-    "PlantBlockOnRichSoilMixin",
-    "PlayerEntityAttackWithSkilletMixin",
-    "StemBlockOnRichSoilFarmlandMixin",
-    "StewItemMixin",
-    "accessors.DispenserBehaviorsAccessorMixin",
-    "accessors.ParrotsTamingIngredientsAccessorMixin",
-    "accessors.PlayerExhaustionAccessorMixin",
-    "accessors.RecipeManagerAccessorMixin",
-    "accessors.StructurePoolAccessorMixin"
+	"AttachedStemBlockOnRichSoilFarmlandMixin",
+	"CampfireBaleMixin",
+	"ChickenEntityBreedingMixin",
+	"CropBlockOnRichSoilFarmlandMixin",
+	"DeadBushBlockOnRichSoilMixin",
+	"EnchantmentEnhancementMixin",
+	"EnchantmentHelperEnhancementMixin",
+	"ItemMixin",
+	"LivingEntityBackstabbingEnchantmentMixin",
+	"LivingEntityKnockBackMixin",
+	"LivingEntityOnUseItemFinishMixin",
+	"MigrationBlockEntityMixin",
+	"MigrationBlockRegistryMixin",
+	"MigrationItemStackMixin",
+	"PigEntityBreedingMixin",
+	"PlantBlockOnRichSoilMixin",
+	"PlayerEntityAttackWithSkilletMixin",
+	"StemBlockOnRichSoilFarmlandMixin",
+	"StewItemMixin",
+	"accessors.DispenserBehaviorsAccessorMixin",
+	"accessors.ParrotsTamingIngredientsAccessorMixin",
+	"accessors.PlayerExhaustionAccessorMixin",
+	"accessors.RecipeManagerAccessorMixin",
+	"accessors.StructurePoolAccessorMixin"
   ],
   "client": [
-    "CanvasSignEditScreenMixin",
-    "InGameHudMixin"
+	"CanvasSignEditScreenMixin",
+	"InGameHudMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+	"defaultRequire": 1
   },
   "minVersion": "0.8"
 }

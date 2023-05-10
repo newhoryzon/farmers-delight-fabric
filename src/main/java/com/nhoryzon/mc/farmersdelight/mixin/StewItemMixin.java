@@ -1,32 +1,36 @@
 package com.nhoryzon.mc.farmersdelight.mixin;
 
-import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsage;
 import net.minecraft.item.StewItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import org.apache.commons.lang3.StringUtils;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-
-@Mixin(Item.class)
-public abstract class StewItemMixin {
-
-    @Inject(method = "getMaxCount", at = @At("RETURN"), cancellable = true)
-    public void getMaxCount(CallbackInfoReturnable<Integer> cir) {
-        if (((Object) this) instanceof StewItem stewItem && FarmersDelightMod.CONFIG.isEnableStackableSoupSize()) {
-            Identifier itemId = Registry.ITEM.getId(stewItem);
-            String strItemId = itemId != null ? itemId.toString() : StringUtils.EMPTY;
-            boolean isOverrideAllSoupItem = FarmersDelightMod.CONFIG.isOverrideAllSoupItems();
-            List<String> soupItemList = FarmersDelightMod.CONFIG.getSoupItemList();
-            if ((isOverrideAllSoupItem && !soupItemList.contains(strItemId)) || (!isOverrideAllSoupItem && soupItemList.contains(strItemId))) {
-                cir.setReturnValue(16);
-            }
-        }
-    }
-
+@Mixin(StewItem.class)
+public class StewItemMixin extends Item {
+	public StewItemMixin(Settings settings) {
+			super(settings);
+		}
+		
+	@Inject(method = "finishUsing", at = @At("HEAD"), cancellable = true)
+	public void finishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+		ItemStack itemStack = super.finishUsing(stack, world, user);
+		
+		if (user instanceof PlayerEntity player) {
+			if (player.getAbilities().creativeMode) {
+				cir.setReturnValue(itemStack);
+			} else {
+				cir.setReturnValue(ItemUsage.exchangeStack(itemStack, player, new ItemStack(Items.BOWL)));
+			}
+		} else {
+			cir.setReturnValue(new ItemStack(Items.BOWL));
+		}
+	}
 }
