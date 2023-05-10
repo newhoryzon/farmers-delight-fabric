@@ -5,11 +5,10 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,6 +73,10 @@ public class NourishmentHungerOverlay {
 
             if (saturation <= 0.0F && ticks % (foodLevel * 3 + 1) == 0) {
                 y = top + (rand.nextInt(3) - 1);
+            }
+            // Raised mod compat
+            if (FabricLoader.getInstance().getObjectShare().get("raised:distance") instanceof Integer distance) {
+                y -= distance;
             }
 
             // Background texture

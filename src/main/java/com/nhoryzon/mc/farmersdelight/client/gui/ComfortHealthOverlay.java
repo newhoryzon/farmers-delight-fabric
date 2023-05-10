@@ -5,6 +5,7 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,7 +17,6 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameRules;
 
 import java.util.Random;
 
@@ -69,16 +69,12 @@ public class ComfortHealthOverlay {
         RenderSystem.setShaderTexture(0, MOD_ICONS_TEXTURE);
 
         int health = MathHelper.ceil(player.getHealth());
-        float absorb = MathHelper.ceil(player.getAbsorptionAmount());
         EntityAttributeInstance attrMaxHealth = player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
         if (attrMaxHealth != null) {
             float healthMax = (float) attrMaxHealth.getValue();
 
             int regen = -1;
             if (player.hasStatusEffect(StatusEffects.REGENERATION)) regen = ticks % 25;
-
-            int healthRows = MathHelper.ceil((healthMax + absorb) / 2.0F / 10.0F);
-            int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
             int comfortSheen = ticks % 50;
             int comfortHeartFrame = comfortSheen % 2;
@@ -88,12 +84,15 @@ public class ComfortHealthOverlay {
             RenderSystem.enableBlend();
 
             int healthMaxSingleRow = MathHelper.ceil(Math.min(healthMax, 20) / 2.0F);
-            int leftHeightOffset = ((healthRows - 1) * rowHeight); // This keeps the overlay on the bottommost row of hearts
 
             for (int i = 0; i < healthMaxSingleRow; ++i) {
                 int column = i % 10;
                 int x = left + column * 8;
-                int y = top + leftHeightOffset;
+                int y = top;
+                // Raised mod compat
+                if (FabricLoader.getInstance().getObjectShare().get("raised:distance") instanceof Integer distance) {
+                    y -= distance;
+                }
 
                 if (health <= 4) y += rand.nextInt(2);
                 if (i == regen) y -= 2;
