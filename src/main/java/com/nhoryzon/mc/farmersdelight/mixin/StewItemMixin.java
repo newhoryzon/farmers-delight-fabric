@@ -16,18 +16,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StewItem.class)
 public class StewItemMixin extends Item {
 	public StewItemMixin(Settings settings) {
-			super(settings);
-		}
-		
+		super(settings);
+	}
+	
 	@Inject(method = "finishUsing", at = @At("HEAD"), cancellable = true)
 	public void finishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-		ItemStack itemStack = super.finishUsing(stack, world, user);
+		super.finishUsing(stack.copy(), world, user);
 		
 		if (user instanceof PlayerEntity player) {
 			if (player.getAbilities().creativeMode) {
-				cir.setReturnValue(itemStack);
+				cir.setReturnValue(stack);
 			} else {
-				cir.setReturnValue(ItemUsage.exchangeStack(itemStack, player, new ItemStack(Items.BOWL)));
+				cir.setReturnValue(ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BOWL)));
 			}
 		} else {
 			cir.setReturnValue(new ItemStack(Items.BOWL));
