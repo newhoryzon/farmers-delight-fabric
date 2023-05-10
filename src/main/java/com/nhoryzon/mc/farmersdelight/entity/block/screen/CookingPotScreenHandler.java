@@ -1,11 +1,9 @@
 package com.nhoryzon.mc.farmersdelight.entity.block.screen;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemHandler;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot.CookingPotBowlSlot;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot.CookingPotMealSlot;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot.CookingPotResultSlot;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot.SlotItemHandler;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
 import net.fabricmc.api.EnvType;
@@ -33,14 +31,12 @@ public class CookingPotScreenHandler extends ScreenHandler {
     private static final int INV_INDEX_END_PLAYER_INV = INV_INDEX_START_PLAYER_INV + 36;
 
     public final CookingPotBlockEntity tileEntity;
-    public final ItemHandler inventory;
     private final PropertyDelegate cookingPotData;
     private final ScreenHandlerContext canInteractWithCallable;
 
     public CookingPotScreenHandler(final int windowId, final PlayerInventory playerInventory, final CookingPotBlockEntity blockEntity, PropertyDelegate cookingPotDataIn) {
         super(ExtendedScreenTypesRegistry.COOKING_POT.get(), windowId);
         this.tileEntity = blockEntity;
-        this.inventory = blockEntity.getInventory();
         this.cookingPotData = cookingPotDataIn;
         this.canInteractWithCallable = ScreenHandlerContext.create(blockEntity.getWorld(), blockEntity.getPos());
 
@@ -52,20 +48,20 @@ public class CookingPotScreenHandler extends ScreenHandler {
         int borderSlotSize = 18;
         for (int row = 0; row < 2; ++row) {
             for (int column = 0; column < 3; ++column) {
-                addSlot(new SlotItemHandler(inventory, (row * 3) + column,
+                addSlot(new Slot(tileEntity, (row * 3) + column,
                         inputStartX + (column * borderSlotSize),
                         inputStartY + (row * borderSlotSize)));
             }
         }
 
         // Meal Display
-        addSlot(new CookingPotMealSlot(inventory, 6, 124, 26));
+        addSlot(new CookingPotMealSlot(tileEntity, 6, 124, 26));
 
         // Bowl Input
-        addSlot(new CookingPotBowlSlot(inventory, 7, 92, 55));
+        addSlot(new CookingPotBowlSlot(tileEntity, 7, 92, 55));
 
         // Bowl Output
-        addSlot(new CookingPotResultSlot(playerInventory.player, blockEntity, inventory, 8, 124, 55));
+        addSlot(new CookingPotResultSlot(playerInventory.player, blockEntity, 8, 124, 55));
 
         // Main Player Inventory
         int startPlayerInvY = startY * 4 + 12;

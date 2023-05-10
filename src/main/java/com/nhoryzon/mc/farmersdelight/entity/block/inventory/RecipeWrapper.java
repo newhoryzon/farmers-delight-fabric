@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 
 public class RecipeWrapper implements Inventory {
 
-    protected final ItemHandler inventory;
+    protected final ItemStackInventory inventory;
 
-    public RecipeWrapper(ItemHandler inventory) {
+    public RecipeWrapper(ItemStackInventory inventory) {
         this.inventory = inventory;
     }
 

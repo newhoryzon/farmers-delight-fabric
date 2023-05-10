@@ -3,7 +3,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.state.CookingPotSupport;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackInventory;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
@@ -28,6 +28,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -50,6 +51,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -144,9 +146,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         if (tag != null) {
             NbtCompound inventoryTag = tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY);
             if (inventoryTag.contains(CompoundTagUtils.TAG_KEY_ITEM_LIST, CompoundTagUtils.TAG_LIST)) {
-                ItemStackHandler handler = new ItemStackHandler();
-                handler.readNbt(inventoryTag);
-                ItemStack meal = handler.getStack(6);
+                DefaultedList<ItemStack> inventory = DefaultedList.ofSize(CookingPotBlockEntity.INVENTORY_SIZE, ItemStack.EMPTY);
+                Inventories.readNbt(inventoryTag, inventory);
+                ItemStack meal = inventory.get(CookingPotBlockEntity.MEAL_DISPLAY_SLOT);
                 if (!meal.isEmpty()) {
                     MutableText servingsOf = meal.getCount() == 1
                             ? FarmersDelightMod.i18n("tooltip.cooking_pot.single_serving")
@@ -154,6 +156,8 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
                     tooltip.add(servingsOf.formatted(Formatting.GRAY));
                     MutableText mealName = meal.getName().copy();
                     tooltip.add(mealName.formatted(meal.getRarity().formatting));
+                } else {
+                    tooltip.add(FarmersDelightMod.i18n("tooltip.cooking_pot.empty").formatted(Formatting.GRAY));
                 }
             }
         } else {
@@ -193,7 +197,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CookingPotBlockEntity cookingPotBlockEntity) {
-            return MathUtils.calcRedstoneFromItemHandler(cookingPotBlockEntity.getInventory());
+            return MathUtils.calcRedstoneFromItemHandler(cookingPotBlockEntity);
         }
 
         return 0;
@@ -224,7 +228,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
+        if (!state.isOf(newState.getBlock())) {
             if (world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
                 ItemScatterer.spawn(world, pos, cookingPotBlockEntity.getDroppableInventory());
                 cookingPotBlockEntity.grantStoredRecipeExperience(world, Vec3d.ofCenter(pos));
@@ -274,7 +278,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof CookingPotBlockEntity cookingPotBlockEntity) {
-            return cookingPotBlockEntity.getInventory();
+            return cookingPotBlockEntity;
         }
 
         return null;

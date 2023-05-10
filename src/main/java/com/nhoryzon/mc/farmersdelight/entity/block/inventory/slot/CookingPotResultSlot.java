@@ -1,19 +1,19 @@
 package com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
-public class CookingPotResultSlot extends SlotItemHandler {
+public class CookingPotResultSlot extends Slot {
 
     public final CookingPotBlockEntity blockEntity;
 
     private final PlayerEntity player;
     private int removeCount;
 
-    public CookingPotResultSlot(PlayerEntity player, CookingPotBlockEntity blockEntity, ItemHandler inventory, int index, int xPosition, int yPosition) {
-        super(inventory, index, xPosition, yPosition);
+    public CookingPotResultSlot(PlayerEntity player, CookingPotBlockEntity blockEntity, int index, int xPosition, int yPosition) {
+        super(blockEntity, index, xPosition, yPosition);
         this.blockEntity = blockEntity;
         this.player = player;
     }

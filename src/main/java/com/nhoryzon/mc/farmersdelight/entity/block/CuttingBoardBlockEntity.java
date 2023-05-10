@@ -3,7 +3,7 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.advancement.CuttingBoardTrigger;
 import com.nhoryzon.mc.farmersdelight.block.CuttingBoardBlock;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackInventory;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.RecipeManagerAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.recipe.CuttingBoardRecipe;
@@ -12,7 +12,6 @@ import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
-import com.nhoryzon.mc.farmersdelight.util.CompoundTagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -36,6 +35,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -45,41 +45,42 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CuttingBoardBlockEntity extends SyncedBlockEntity {
+public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemStackInventory {
 
     public static final String TAG_KEY_IS_ITEM_CARVED = "IsItemCarved";
 
     private boolean isItemCarvingBoard;
-    private final ItemStackHandler inventory;
+    private final DefaultedList<ItemStack> inventory;
 
     private Identifier lastRecipeID;
 
     public CuttingBoardBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypesRegistry.CUTTING_BOARD.get(), blockPos, blockState);
         this.isItemCarvingBoard = false;
-        this.inventory = new ItemStackHandler() {
-            @Override
-            public int getMaxCountForSlot(int slot) {
-                return 1;
-            }
-            @Override
-            protected void onInventorySlotChanged(int slot) {
-                inventoryChanged();
-            }
-        };
+        this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return 1;
     }
 
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
         isItemCarvingBoard = tag.getBoolean(TAG_KEY_IS_ITEM_CARVED);
-        inventory.readNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
+        readInventoryNbt(tag);
     }
 
     @Override
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, inventory.writeNbt(new NbtCompound()));
+        writeInventoryNbt(tag);
         tag.putBoolean(TAG_KEY_IS_ITEM_CARVED, isItemCarvingBoard);
     }
 
@@ -109,7 +110,7 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity {
             return false;
         }
 
-        Optional<CuttingBoardRecipe> matchingRecipe = getMatchingRecipe(new RecipeWrapper(inventory), tool, player);
+        Optional<CuttingBoardRecipe> matchingRecipe = getMatchingRecipe(new RecipeWrapper(this), tool, player);
 
         matchingRecipe.ifPresent(recipe -> {
             List<ItemStack> results = recipe.getRolledResults(world.getRandom(), EnchantmentHelper.getLevel(Enchantments.FORTUNE, tool));
@@ -218,21 +219,17 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity {
         return isItemCarvingBoard;
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     public boolean isEmpty() {
-        return inventory.getStack(0).isEmpty();
+        return getStack(0).isEmpty();
     }
 
     public ItemStack getStoredItem() {
-        return inventory.getStack(0);
+        return getStack(0);
     }
 
     public boolean addItem(ItemStack itemStack) {
         if (isEmpty() && !itemStack.isEmpty()) {
-            inventory.setStack(0, itemStack.split(1));
+            setStack(0, itemStack.split(1));
             isItemCarvingBoard = false;
             inventoryChanged();
 
@@ -252,6 +249,16 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity {
         }
 
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void onContentsChanged(int slot) {
+        inventoryChanged();
+    }
+
+    @Override
+    public int getMaxCountForSlot(int slot) {
+        return 1;
     }
 
 }

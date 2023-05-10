@@ -30,10 +30,9 @@ public class SkilletBlockEntityRenderer implements BlockEntityRenderer<SkilletBl
     public void render(SkilletBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
             int overlay) {
         Direction direction = entity.getCachedState().get(StoveBlock.FACING);
-        Inventory inventory = entity.getInventory();
         int posLong = (int) entity.getPos().asLong();
 
-        ItemStack stack = inventory.getStack(0);
+        ItemStack stack = entity.getStack(0);
         int seed = stack.isEmpty() ? 187 : Registry.ITEM.getRawId(stack.getItem()) + stack.getDamage();
         this.random.setSeed(seed);
 
