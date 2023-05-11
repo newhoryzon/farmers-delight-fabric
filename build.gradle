@@ -1,15 +1,15 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'maven-publish'
-	id 'net.researchgate.release' version '2.8.1'
+	id "fabric-loom" version "1.1.+"
+	id "maven-publish"
+	id "net.researchgate.release" version "2.8.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-archivesBaseName = project.archives_base_name
-version = project.version
+archivesBaseName = archives_base_name
 group = project.maven_group
+version = "$mod_version+$minecraft_version"
 
 repositories {
 	/* REI Integration */
@@ -18,31 +18,60 @@ repositories {
 	maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
+configurations.configureEach {
+	resolutionStrategy.eachDependency {
+		if (requested.module.name == "fabric-loader") {
+			useVersion(loader_version)
+		}
+	}
+}
+
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	minecraft "com.mojang:minecraft:$minecraft_version"
+	mappings "net.fabricmc:yarn:$yarn_mappings:v2"
+	modImplementation "net.fabricmc:fabric-loader:$loader_version"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$fabric_version"
 
 	/* Mod Menu Integration */
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {
+	modCompileOnly "com.terraformersmc:modmenu:$modmenu_version"
+	modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:$clothconfig_version") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 	/* REI Integration */
-	modApi "dev.architectury:architectury-fabric:6.2.43"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version"
 
-	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+	devEnvDependencies(dependencies)
+}
+
+def devEnvDependencies(DependencyHandler deps) {
+	/* Mod Menu Integration */
+	deps.modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
+	deps.modLocalRuntime("me.shedaniel.cloth:cloth-config-fabric:$clothconfig_version") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+
+	/* REI */
+	deps.modLocalRuntime("dev.architectury:architectury-fabric:$architectury_version")
+	deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version")
 }
 
 processResources {
-	inputs.property "version", "${project.minecraft_version}-${project.version}"
+	Map<String, String> properties = new HashMap<>()
+	properties.put("version", project.version)
+	properties.put("loader_version", loader_version)
+	properties.put("fabric_version", fabric_version)
+	properties.put("minecraft_version", minecraft_version)
+
+	properties.forEach((k, v) -> inputs.property(k, v))
 
 	filesMatching("fabric.mod.json") {
-		expand "version": "${project.minecraft_version}-${project.version}"
+		expand properties
+	}
+
+	filesMatching("farmersdelight.mixins.json") {
+		expand "archivesBaseName": archivesBaseName
 	}
 }
 
@@ -67,7 +96,7 @@ release {
 	if (project.hasProperty('development_commit_prefix')) {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
-	tagTemplate = "${project.minecraft_version}".concat('-$version')
+	tagTemplate = "$minecraft_version".concat('-$version')
 	pushReleaseVersionBranch = 'master'
     git {
         requireBranch = /master|develop/
@@ -80,15 +109,15 @@ publishing {
 		mavenJava(MavenPublication) {
 			groupId = "${group}"
 			artifactId = "${archivesBaseName}"
-			version = "${project.minecraft_version}-${version}"
+			version = "${version}"
 			from components.java
 			pom {
-				name = "${project.pretty_name}"
-				url = "${project.website_url}"
+				name = "${pretty_name}"
+				url = "${website_url}"
 				if (project.hasProperty('scm_connection_url') && project.hasProperty('scm_project_url')) {
 					scm {
-						connection = "scm:git:${project.scm_connection_url}"
-						url = project.scm_project_url
+						connection = "scm:git:${scm_connection_url}"
+						url = scm_project_url
 					}
 				}
 			}
@@ -98,7 +127,7 @@ publishing {
 	repositories {
 		maven {
 			if (project.hasProperty("publish_maven_repo_releases_url") && project.hasProperty("publish_maven_repo_snapshots_url")) {
-				url = version.endsWith('-SNAPSHOT') ? project.publish_maven_repo_snapshots_url : project.publish_maven_repo_releases_url
+				url = version.contains('-SNAPSHOT') ? project.publish_maven_repo_snapshots_url : project.publish_maven_repo_releases_url
 				if (project.hasProperty("publish_maven_repo_username") && project.hasProperty("publish_maven_repo_password")) {
 					credentials {
 						username = project.publish_maven_repo_username
