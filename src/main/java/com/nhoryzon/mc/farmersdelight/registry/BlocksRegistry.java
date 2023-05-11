@@ -130,7 +130,7 @@ public enum BlocksRegistry {
     RICH_SOIL("rich_soil", RichSoilBlock::new),
     RICH_SOIL_FARMLAND("rich_soil_farmland", RichSoilFarmlandBlock::new),
 
-    SANDY_SHRUB("sandy_shrub", SandyShrubBlock::new),
+    SANDY_SHRUB("sandy_shrub", SandyShrubBlock::new, true),
     WILD_CABBAGES("wild_cabbages", WildPatchBlock::new, true, flammable(100, 60)),
     WILD_ONIONS("wild_onions", WildCropBlock::new, true, flammable(100, 60)),
     WILD_TOMATOES("wild_tomatoes", WildPatchBlock::new, true, flammable(100, 60)),
