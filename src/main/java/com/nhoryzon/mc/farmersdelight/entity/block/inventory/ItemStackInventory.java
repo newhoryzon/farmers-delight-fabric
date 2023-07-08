@@ -47,7 +47,7 @@ public interface ItemStackInventory extends Inventory {
 
     @Override
     default boolean isEmpty() {
-        return getItems().stream().anyMatch(stack -> !isEmpty());
+        return getItems().stream().anyMatch(stack -> !stack.isEmpty());
     }
 
     @Override
