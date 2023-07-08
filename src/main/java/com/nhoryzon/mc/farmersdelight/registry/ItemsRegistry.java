@@ -11,6 +11,7 @@ import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import com.nhoryzon.mc.farmersdelight.item.MelonJuiceItem;
 import com.nhoryzon.mc.farmersdelight.item.MilkBottleItem;
 import com.nhoryzon.mc.farmersdelight.item.ModBlockItem;
+import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
@@ -134,7 +135,7 @@ public enum ItemsRegistry {
     IRON_KNIFE("iron_knife", () -> new KnifeItem(ToolMaterials.IRON)),
     GOLDEN_KNIFE("golden_knife", () -> new KnifeItem(ToolMaterials.GOLD)),
     DIAMOND_KNIFE("diamond_knife", () -> new KnifeItem(ToolMaterials.DIAMOND)),
-    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE)),
+    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE, new ModItemSettings().fireproof())),
 
     STRAW("straw", () -> new Item(base()), 100),
     CANVAS("canvas", () -> new Item(base()), 400),
