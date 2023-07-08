@@ -3,7 +3,7 @@
   "criteria": {
     "plant_rice": {
       "conditions": {
-        "block": "farmersdelight:rice_crop"
+        "block": "farmersdelight:rice"
       },
       "trigger": "minecraft:placed_block"
     }

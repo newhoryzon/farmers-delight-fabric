@@ -52,8 +52,8 @@
   "block.farmersdelight.tomatoes": "Tomaatit",
   "block.farmersdelight.cabbages": "Keräkaali",
   "block.farmersdelight.onions": "Sipuli",
-  "block.farmersdelight.rice_crop": "Riisi",
-  "block.farmersdelight.rice_upper_crop": "Riisi",
+  "block.farmersdelight.rice": "Riisi",
+  "block.farmersdelight.rice_panicle": "Riisi",
   "block.farmersdelight.brown_mushroom_colony": "Ruskea sienirykelmä",
   "block.farmersdelight.red_mushroom_colony": "Kärpässienirykelmä",
 

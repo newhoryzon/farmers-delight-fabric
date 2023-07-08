@@ -2,12 +2,12 @@
   "farmersdelight:rich_soil": "dirt",
   "farmersdelight:rich_soil_farmland": "dirt",
 
-  "farmersdelight:rice_crop": "NOT_EMITTER",
-  "farmersdelight:rice_crop.messy": "mud",
-  "farmersdelight:rice_crop.foliage": "brush_straw_transition",
-  "farmersdelight:rice_upper_crop": "NOT_EMITTER",
-  "farmersdelight:rice_upper_crop.messy": "MESSY_GROUND",
-  "farmersdelight:rice_upper_crop.foliage": "brush_straw_transition",
+  "farmersdelight:rice": "NOT_EMITTER",
+  "farmersdelight:rice.messy": "mud",
+  "farmersdelight:rice.foliage": "brush_straw_transition",
+  "farmersdelight:rice_panicle": "NOT_EMITTER",
+  "farmersdelight:rice_panicle.messy": "MESSY_GROUND",
+  "farmersdelight:rice_panicle.foliage": "brush_straw_transition",
 
   "farmersdelight:tomatoes": "NOT_EMITTER",
   "farmersdelight:tomatoes.messy": "straw",

@@ -147,7 +147,7 @@ public enum ItemsRegistry {
     TOMATO_SEEDS("tomato_seeds", () -> new AliasedBlockItem(BlocksRegistry.BUDDING_TOMATO_CROP.get(), base())),
     ONION("onion", () -> new AliasedBlockItem(BlocksRegistry.ONION_CROP.get(), food(Foods.ONION))),
     RICE_PANICLE("rice_panicle", () -> new Item(base())),
-    RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE_CROP.get(), base())),
+    RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE.get(), base())),
     ROTTEN_TOMATO("rotten_tomato", RottenTomatoItem::new),
 
     FRIED_EGG("fried_egg", () -> new Item(food(Foods.FRIED_EGG))),

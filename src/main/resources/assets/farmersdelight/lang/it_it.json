@@ -52,8 +52,8 @@
   "block.farmersdelight.tomatoes": "Pomodori",
   "block.farmersdelight.cabbages": "Cavoli",
   "block.farmersdelight.onions": "Cipolle",
-  "block.farmersdelight.rice_crop": "Coltura di riso",
-  "block.farmersdelight.rice_upper_crop": "Colture di riso",
+  "block.farmersdelight.rice": "Coltura di riso",
+  "block.farmersdelight.rice_panicle": "Colture di riso",
   "block.farmersdelight.brown_mushroom_colony": "Colonia di funghi marroni",
   "block.farmersdelight.red_mushroom_colony": "Colonia di funghi rossi",
 
