@@ -13,6 +13,7 @@ import com.nhoryzon.mc.farmersdelight.item.MilkBottleItem;
 import com.nhoryzon.mc.farmersdelight.item.ModBlockItem;
 import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
+import com.nhoryzon.mc.farmersdelight.item.PopsicleItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
 import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
@@ -182,7 +183,7 @@ public enum ItemsRegistry {
     CHOCOLATE_PIE_SLICE("chocolate_pie_slice", () -> new Item(food(Foods.PIE_SLICE))),
     SWEET_BERRY_COOKIE("sweet_berry_cookie", () -> new Item(food(Foods.COOKIES))),
     HONEY_COOKIE("honey_cookie", () -> new Item(food(Foods.COOKIES))),
-    MELON_POPSICLE("melon_popsicle", () -> new Item(food(Foods.POPSICLE))),
+    MELON_POPSICLE("melon_popsicle", () -> new PopsicleItem(food(Foods.POPSICLE))),
     GLOW_BERRY_CUSTARD("glow_berry_custard", () -> new ConsumableItem(food(Foods.GLOW_BERRY_CUSTARD, Items.GLASS_BOTTLE, 16), true)),
     FRUIT_SALAD("fruit_salad", () -> new ConsumableItem(food(Foods.FRUIT_SALAD, Items.BOWL, 16), true)),
 
