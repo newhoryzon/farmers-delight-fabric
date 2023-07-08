@@ -96,7 +96,7 @@ release {
 	if (project.hasProperty('development_commit_prefix')) {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
-	tagTemplate = "$minecraft_version".concat('-$version')
+	tagTemplate = "$minecraft_version".concat('-$mod_version')
 	pushReleaseVersionBranch = 'master'
     git {
         requireBranch = /master|develop/
