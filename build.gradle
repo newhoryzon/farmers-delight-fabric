@@ -7,9 +7,9 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-archivesBaseName = archives_base_name
+archivesBaseName = project.archives_base_name
 group = project.maven_group
-version = "$mod_version+$minecraft_version"
+version = project.version
 
 repositories {
 	/* REI Integration */
@@ -59,7 +59,7 @@ def devEnvDependencies(DependencyHandler deps) {
 
 processResources {
 	Map<String, String> properties = new HashMap<>()
-	properties.put("version", project.version)
+	properties.put("version", "$minecraft_version-$version")
 	properties.put("loader_version", loader_version)
 	properties.put("fabric_version", fabric_version)
 	properties.put("minecraft_version", minecraft_version)
@@ -96,45 +96,10 @@ release {
 	if (project.hasProperty('development_commit_prefix')) {
 		newVersionCommitMessage = project.development_commit_prefix
 	}
-	tagTemplate = "$minecraft_version".concat('-$mod_version')
+	tagTemplate = "$minecraft_version".concat('-$version')
 	pushReleaseVersionBranch = 'master'
     git {
         requireBranch = /master|develop/
     }
 	ignoredSnapshotDependencies = ['fabric-loom:fabric-loom.gradle.plugin']
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			groupId = "${group}"
-			artifactId = "${archivesBaseName}"
-			version = "${version}"
-			from components.java
-			pom {
-				name = "${pretty_name}"
-				url = "${website_url}"
-				if (project.hasProperty('scm_connection_url') && project.hasProperty('scm_project_url')) {
-					scm {
-						connection = "scm:git:${scm_connection_url}"
-						url = scm_project_url
-					}
-				}
-			}
-		}
-	}
-
-	repositories {
-		maven {
-			if (project.hasProperty("publish_maven_repo_releases_url") && project.hasProperty("publish_maven_repo_snapshots_url")) {
-				url = version.contains('-SNAPSHOT') ? project.publish_maven_repo_snapshots_url : project.publish_maven_repo_releases_url
-				if (project.hasProperty("publish_maven_repo_username") && project.hasProperty("publish_maven_repo_password")) {
-					credentials {
-						username = project.publish_maven_repo_username
-						password = project.publish_maven_repo_password
-					}
-				}
-			}
-		}
-	}
 }

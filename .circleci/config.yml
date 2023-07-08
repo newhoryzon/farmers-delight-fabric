@@ -20,16 +20,17 @@ workflows:
           filters:
             branches:
               only: /master/
-      - deploy:
-          context:
-            - maven-public
-          requires:
-            - build_n_test
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+#      - deploy:
+#          context:
+#            - maven-public
+#          requires:
+#            - build_n_test
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/
+
 jobs:
   code_analysis:
     name: Code Analysis
