@@ -14,8 +14,9 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 
-public class RiceCropFeature extends Feature<RandomPatchFeatureConfig> {
-    public RiceCropFeature(Codec<RandomPatchFeatureConfig> configCodec) {
+public class WildRiceCropFeature extends Feature<RandomPatchFeatureConfig> {
+
+    public WildRiceCropFeature(Codec<RandomPatchFeatureConfig> configCodec) {
         super(configCodec);
     }
 

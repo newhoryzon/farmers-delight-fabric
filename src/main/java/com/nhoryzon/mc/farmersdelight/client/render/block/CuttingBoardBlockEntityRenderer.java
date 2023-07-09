@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.TridentItem;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 @Environment(value= EnvType.CLIENT)
 public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<CuttingBoardBlockEntity> {
@@ -59,10 +59,10 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
 
         // Rotate item to face the cutting board's front side
         float f = -direction.asRotation();
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(f));
 
         // Rotate item flat on the cutting board. Use X and Y from now on
-        matrixStackIn.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.f));
+        matrixStackIn.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.f));
 
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);
@@ -74,7 +74,7 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
 
         // Rotate block to face the cutting board's front side
         float f = -direction.asRotation();
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(f));
 
         // Resize the block
         matrixStackIn.scale(.8f, .8f, .8f);
@@ -86,7 +86,7 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
 
         // Rotate item to face the cutting board's front side
         float f = -direction.asRotation() + 180;
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f));
+        matrixStackIn.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(f));
 
         // Rotate item to be carved on the surface, A little less so for hoes and pickaxes.
         Item tool = itemStack.getItem();
@@ -96,7 +96,7 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
         } else if (tool instanceof TridentItem) {
             poseAngle = 135.f;
         }
-        matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(poseAngle));
+        matrixStackIn.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(poseAngle));
 
         // Resize the item
         matrixStackIn.scale(.6f, .6f, .6f);

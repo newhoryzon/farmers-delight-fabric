@@ -119,7 +119,7 @@ public class RopeBlock extends PaneBlock {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos,
             BlockPos posFrom) {
         if (Boolean.TRUE.equals(state.get(WATERLOGGED))) {
-            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
         boolean tiedToBell = state.get(TIED_TO_BELL);

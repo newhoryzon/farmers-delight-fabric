@@ -18,15 +18,19 @@ import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
 import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
 import com.nhoryzon.mc.farmersdelight.item.enumeration.Foods;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.item.AliasedBlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SignItem;
 import net.minecraft.item.ToolMaterials;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import static com.nhoryzon.mc.farmersdelight.item.ModItemSettings.base;
@@ -250,11 +254,13 @@ public enum ItemsRegistry {
 
     public static void registerAll() {
         for (ItemsRegistry value : values()) {
-            Registry.register(Registry.ITEM, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.get());
+            Registry.register(Registries.ITEM, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.get());
             if (value.burnTime != null && value.burnTime > 0) {
                 FuelRegistry.INSTANCE.add(value.get(), value.burnTime);
             }
         }
+        ItemGroupEvents.modifyEntriesEvent(FarmersDelightMod.ITEM_GROUP).register(entries -> entries.addAll(
+                Arrays.stream(values()).map(item -> item.get().getDefaultStack()).toList()));
     }
 
     public Item get() {
@@ -265,7 +271,7 @@ public enum ItemsRegistry {
     }
 
     public String getId() {
-        return Registry.ITEM.getId(get()).toString();
+        return Registries.ITEM.getId(get()).toString();
     }
 
 }

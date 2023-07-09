@@ -25,7 +25,6 @@ public class ModItemSettings extends FabricItemSettings {
 
     public ModItemSettings() {
         super();
-        group(FarmersDelightMod.ITEM_GROUP);
     }
 
 }

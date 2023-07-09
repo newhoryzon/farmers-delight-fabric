@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin({LivingEntity.class, PlayerEntity.class})
-public class LivingEntityBackstabbingEnchantmentMixin {
+public abstract class LivingEntityBackstabbingEnchantmentMixin {
 
     @ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
     private float takeDamage(float amount, DamageSource source, float originalAmount) {

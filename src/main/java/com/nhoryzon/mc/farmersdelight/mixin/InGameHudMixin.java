@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
-public class InGameHudMixin {
+public abstract class InGameHudMixin {
 
     @Inject(slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=food")), at = @At(value = "com.nhoryzon.mc.farmersdelight.mixin.util.BeforeInc", args = "intValue=-10", ordinal = 0), method = "renderStatusBars(Lnet/minecraft/client/util/math/MatrixStack;)V")
     private void renderFoodPost(MatrixStack stack, CallbackInfo info) {

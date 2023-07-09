@@ -66,7 +66,7 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
                 } else {
                     tooltip.add(text);
                 }
-                meal.getItem().appendTooltip(meal, handler.tileEntity.getWorld(), tooltip, TooltipContext.Default.NORMAL);
+                meal.getItem().appendTooltip(meal, handler.tileEntity.getWorld(), tooltip, TooltipContext.Default.BASIC);
 
                 ItemStack containerItem = handler.tileEntity.getMealContainer();
                 String container = !containerItem.isEmpty() ? containerItem.getItem().getName().getString() : "";

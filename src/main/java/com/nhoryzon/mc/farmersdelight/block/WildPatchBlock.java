@@ -16,6 +16,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
 
     /* FORGE : canGrow */
     @Override
-    public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
         return true;
     }
 

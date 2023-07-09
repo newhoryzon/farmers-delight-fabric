@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChickenEntity.class)
-public class ChickenEntityBreedingMixin {
+public abstract class ChickenEntityBreedingMixin {
 
     @Inject(method = "isBreedingItem", at = @At("TAIL"), cancellable = true)
     private void isBreedingItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {

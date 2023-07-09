@@ -10,11 +10,10 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.RotationAxis;
 
 import java.util.Random;
 
@@ -33,7 +32,7 @@ public class SkilletBlockEntityRenderer implements BlockEntityRenderer<SkilletBl
         int posLong = (int) entity.getPos().asLong();
 
         ItemStack stack = entity.getStack(0);
-        int seed = stack.isEmpty() ? 187 : Registry.ITEM.getRawId(stack.getItem()) + stack.getDamage();
+        int seed = stack.isEmpty() ? 187 : Registries.ITEM.getRawId(stack.getItem()) + stack.getDamage();
         this.random.setSeed(seed);
 
         if (!stack.isEmpty()) {
@@ -47,8 +46,8 @@ public class SkilletBlockEntityRenderer implements BlockEntityRenderer<SkilletBl
                 matrices.translate(.5d + xOffset, .1d + .03 * (i + 1), .5d + zOffset);
 
                 float degrees = -direction.asRotation();
-                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(degrees));
-                matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.f));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(degrees));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.f));
 
                 // Resize the items
                 matrices.scale(.5f, .5f, .5f);

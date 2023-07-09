@@ -11,9 +11,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AttachedStemBlock.class)
-public class AttachedStemBlockOnRichSoilFarmlandMixin {
+public abstract class AttachedStemBlockOnRichSoilFarmlandMixin {
+
     @Inject(at = @At("TAIL"), method = "canPlantOnTop", cancellable = true)
     private void attachedStemBlockCanPlantOnTopOfRichSoil(BlockState floor, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValue() || floor.isOf(BlocksRegistry.RICH_SOIL_FARMLAND.get()));
     }
+
 }

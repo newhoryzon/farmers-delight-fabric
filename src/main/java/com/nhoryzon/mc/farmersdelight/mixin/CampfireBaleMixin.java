@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Set;
 
 @Mixin(CampfireBlock.class)
-public class CampfireBaleMixin {
+public abstract class CampfireBaleMixin {
 
     @Inject(at = @At("HEAD"), method = "isSignalFireBaseBlock", cancellable = true)
     public void doesBlockCauseSignalFire(BlockState state, CallbackInfoReturnable<Boolean> cir) {

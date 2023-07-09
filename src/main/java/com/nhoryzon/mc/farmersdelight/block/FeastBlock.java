@@ -131,7 +131,7 @@ public class FeastBlock extends Block {
         ItemStack heldItem = player.getStackInHand(hand);
 
         if (servings > 0) {
-            if (!serving.getItem().hasRecipeRemainder() || heldItem.isItemEqualIgnoreDamage(new ItemStack(serving.getItem().getRecipeRemainder()))) {
+            if (!serving.getItem().hasRecipeRemainder() || heldItem.isItemEqual(new ItemStack(serving.getItem().getRecipeRemainder()))) {
                 world.setBlockState(pos, state.with(getServingsProperty(), servings - 1), BlockStateUtils.DEFAULT);
                 if (!player.getAbilities().creativeMode && serving.getItem().hasRecipeRemainder()) {
                     heldItem.decrement(1);
