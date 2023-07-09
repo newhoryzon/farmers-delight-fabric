@@ -27,7 +27,9 @@ public abstract class MigrationBlockRegistryMixin {
             "farmersdelight:jungle_pantry", BlocksRegistry.JUNGLE_CABINET::getId,
             "farmersdelight:dark_oak_pantry", BlocksRegistry.DARK_OAK_CABINET::getId,
             "farmersdelight:spruce_pantry", BlocksRegistry.SPRUCE_CABINET::getId,
-            "farmersdelight:warped_pantry", BlocksRegistry.WARPED_CABINET::getId
+            "farmersdelight:warped_pantry", BlocksRegistry.WARPED_CABINET::getId,
+            "farmersdelight:rice_crop", BlocksRegistry.RICE::getId,
+            "farmersdelight:rice_upper_crop", BlocksRegistry.RICE_PANICLE::getId
     );
 
     @ModifyVariable(method = "get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", at = @At(value = "HEAD"), argsOnly = true)

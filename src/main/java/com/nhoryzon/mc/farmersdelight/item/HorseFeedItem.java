@@ -2,10 +2,12 @@ package com.nhoryzon.mc.farmersdelight.item;
 
 import com.google.common.collect.Lists;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,11 +38,22 @@ public class HorseFeedItem extends LivingEntityFeedItem {
 
     @Override
     public boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand) {
-        if (entity instanceof HorseEntity horse && entity.getType().isIn(TagsRegistry.HORSE_FEED_USERS)) {
-            return horse.isAlive() && horse.isTame();
+        if (entity.getType().isIn(TagsRegistry.HORSE_FEED_USERS)) {
+            boolean isHorseTameable = entity instanceof AbstractHorseEntity;
+            return entity.isAlive() && (!isHorseTameable || ((AbstractHorseEntity) entity).isTame()
+                    && stack.isOf(ItemsRegistry.HORSE_FEED.get()));
         }
 
         return false;
+    }
+
+    @Override
+    public boolean canInteract(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand) {
+        if (entity instanceof HorseEntity horse) {
+            return horse.isAlive() && horse.isTame();
+        } else {
+            return false;
+        }
     }
 
 }

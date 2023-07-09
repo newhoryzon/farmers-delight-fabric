@@ -28,18 +28,20 @@
     ],
     "rei_client": [
       "com.nhoryzon.mc.farmersdelight.integration.rei.FarmersDelightModREI"
-    ],
-    "modmenu": [
-      "com.nhoryzon.mc.farmersdelight.integration.modmenu.FarmersDelightModMenu"
     ]
   },
   "mixins": [
     "farmersdelight.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.7",
-    "fabric": ">=0.56.0+1.19",
-    "minecraft": "~1.19"
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=0.58.0+1.19",
+    "minecraft": "<=1.19.2 >=1.19"
+  },
+  "recommends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=${fabric_version}",
+    "minecraft": "${minecraft_version}"
   },
   "custom": {
     "modmenu": {

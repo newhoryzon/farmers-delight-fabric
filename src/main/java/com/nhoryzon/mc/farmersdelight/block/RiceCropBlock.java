@@ -76,13 +76,13 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
             world.setBlockState(pos, state.with(AGE, ageGrowth));
         } else {
             BlockState top = world.getBlockState(pos.up());
-            if (top.getBlock() == BlocksRegistry.RICE_UPPER_CROP.get()) {
+            if (top.getBlock() == BlocksRegistry.RICE_PANICLE.get()) {
                 Fertilizable growable = (Fertilizable) world.getBlockState(pos.up()).getBlock();
                 if (growable.isFertilizable(world, pos.up(), top, false)) {
                     growable.grow(world, world.getRandom(), pos.up(), top);
                 }
             } else {
-                RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
+                RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_PANICLE.get();
                 int remainingGrowth = ageGrowth - MAX_AGE - 1;
                 if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
                     world.setBlockState(pos, state.with(AGE, MAX_AGE));
@@ -167,7 +167,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
         int currentAge = getAge(state);
         if (currentAge <= MAX_AGE && rand.nextInt((int) (25.0F / GROWTH_CHANCE) + 1) == 0) {
             if (currentAge == MAX_AGE) {
-                RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_UPPER_CROP.get();
+                RiceUpperCropBlock riceUpper = (RiceUpperCropBlock) BlocksRegistry.RICE_PANICLE.get();
                 if (riceUpper.getDefaultState().canPlaceAt(world, pos.up()) && world.isAir(pos.up())) {
                     world.setBlockState(pos.up(), riceUpper.getDefaultState());
                 }
@@ -183,7 +183,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     }
 
     public boolean isSupportingRiceUpper(BlockState topState) {
-        return topState.isOf(BlocksRegistry.RICE_UPPER_CROP.get());
+        return topState.isOf(BlocksRegistry.RICE_PANICLE.get());
     }
 
     public BlockState withAge(int age) {

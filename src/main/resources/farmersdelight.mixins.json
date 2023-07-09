@@ -1,8 +1,9 @@
 {
   "required": true,
+  "priority": 1100,
   "package": "com.nhoryzon.mc.farmersdelight.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "refmap": "farmers-delight-fabric-refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "${archivesBaseName}-refmap.json",
   "mixins": [
     "AttachedStemBlockOnRichSoilFarmlandMixin",
     "CampfireBaleMixin",
@@ -11,6 +12,7 @@
     "DeadBushBlockOnRichSoilMixin",
     "EnchantmentEnhancementMixin",
     "EnchantmentHelperEnhancementMixin",
+    "ItemMixin",
     "LivingEntityBackstabbingEnchantmentMixin",
     "LivingEntityKnockBackMixin",
     "LivingEntityOnUseItemFinishMixin",

@@ -3,8 +3,7 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.CookingPotBlock;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.CookingPotInventory;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemHandler;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackHandler;
+import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackInventory;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.RecipeManagerAccessorMixin;
@@ -21,6 +20,7 @@ import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class CookingPotBlockEntity extends SyncedBlockEntity implements HeatableBlockEntity, ExtendedScreenHandlerFactory, Nameable {
+public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingPotInventory, HeatableBlockEntity, ExtendedScreenHandlerFactory, Nameable {
 
     public static final String TAG_KEY_COOK_RECIPES_USED = "RecipesUsed";
 
@@ -53,7 +53,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
     public static final int OUTPUT_SLOT = 8;
     public static final int INVENTORY_SIZE = OUTPUT_SLOT + 1;
 
-    private final CookingPotInventory inventory;
+    private final DefaultedList<ItemStack> inventory;
     private Text customName;
 
     private int cookTime;
@@ -67,11 +67,16 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
 
     public CookingPotBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityTypesRegistry.COOKING_POT.get(), blockPos, blockState);
-        inventory = new CookingPotInventory(this);
+        inventory = DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
         mealContainer = ItemStack.EMPTY;
         cookingPotData = new CookingPotSyncedData();
         experienceTracker = new Object2IntOpenHashMap<>();
         checkNewRecipe = true;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return inventory;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
     @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
-        inventory.readNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_INVENTORY));
+        readInventoryNbt(tag);
         cookTime = tag.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME);
         cookTimeTotal = tag.getInt(CompoundTagUtils.TAG_KEY_COOK_TIME_TOTAL);
         mealContainer = ItemStack.fromNbt(tag.getCompound(CompoundTagUtils.TAG_KEY_CONTAINER));
@@ -108,7 +113,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
             tag.putString(CompoundTagUtils.TAG_KEY_CUSTOM_NAME, Text.Serializer.toJson(customName));
         }
         tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, mealContainer.writeNbt(new NbtCompound()));
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, inventory.writeNbt(new NbtCompound()));
+        writeInventoryNbt(tag);
 
         NbtCompound compoundRecipes = new NbtCompound();
         experienceTracker.forEach((identifier, craftedAmount) -> compoundRecipes.putInt(identifier.toString(), craftedAmount));
@@ -125,11 +130,11 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
         }
         tag.put(CompoundTagUtils.TAG_KEY_CONTAINER, mealContainer.writeNbt(new NbtCompound()));
 
-        ItemStackHandler drops = new ItemStackHandler(INVENTORY_SIZE);
+        DefaultedList<ItemStack> drops = DefaultedList.ofSize(INVENTORY_SIZE, ItemStack.EMPTY);
         for (int i = 0; i < INVENTORY_SIZE; ++i) {
-            drops.setStack(i, i == MEAL_DISPLAY_SLOT ? inventory.getStack(i) : ItemStack.EMPTY);
+            drops.set(i, i == MEAL_DISPLAY_SLOT ? getStack(i) : ItemStack.EMPTY);
         }
-        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, drops.writeNbt(new NbtCompound()));
+        tag.put(CompoundTagUtils.TAG_KEY_INVENTORY, Inventories.writeNbt(new NbtCompound(), drops));
 
         return tag;
     }
@@ -159,7 +164,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
         boolean dirty = false;
 
         if (isHeated && cookingPot.hasInput()) {
-            Optional<CookingPotRecipe> recipe = cookingPot.getMatchingRecipe(new RecipeWrapper(cookingPot.inventory));
+            Optional<CookingPotRecipe> recipe = cookingPot.getMatchingRecipe(new RecipeWrapper(cookingPot));
             if (recipe.isPresent() && cookingPot.canCook(recipe.get())) {
                 dirty = cookingPot.processCooking(recipe.get());
             } else {
@@ -174,7 +179,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
             if (!cookingPot.doesMealHaveContainer(meal)) {
                 cookingPot.moveMealToOutput();
                 dirty = true;
-            } else if (!cookingPot.getInventory().getStack(CONTAINER_SLOT).isEmpty()) {
+            } else if (!cookingPot.getStack(CONTAINER_SLOT).isEmpty()) {
                 cookingPot.useStoredContainersOnMeal();
                 dirty = true;
             }
@@ -235,7 +240,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
 
     private boolean hasInput() {
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
-            if (!inventory.getStack(i).isEmpty()) {
+            if (!getStack(i).isEmpty()) {
                 return true;
             }
         }
@@ -249,12 +254,12 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
             if (recipeOutput.isEmpty()) {
                 return false;
             } else {
-                ItemStack currentOutput = inventory.getStack(MEAL_DISPLAY_SLOT);
+                ItemStack currentOutput = getStack(MEAL_DISPLAY_SLOT);
                 if (currentOutput.isEmpty()) {
                     return true;
                 } else if (!currentOutput.isItemEqual(recipeOutput)) {
                     return false;
-                } else if (currentOutput.getCount() + recipeOutput.getCount() <= inventory.getMaxCountPerStack()) {
+                } else if (currentOutput.getCount() + recipeOutput.getCount() <= getMaxCountPerStack()) {
                     return true;
                 } else {
                     return currentOutput.getCount() + recipeOutput.getCount() <= recipeOutput.getMaxCount();
@@ -277,29 +282,29 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
         cookTime = 0;
         mealContainer = recipe.getContainer();
         ItemStack recipeOutput = recipe.getOutput();
-        ItemStack currentOutput = inventory.getStack(MEAL_DISPLAY_SLOT);
+        ItemStack currentOutput = getStack(MEAL_DISPLAY_SLOT);
         if (currentOutput.isEmpty()) {
-            inventory.setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
+            setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
         } else if (currentOutput.getItem() == recipeOutput.getItem()) {
             currentOutput.increment(recipeOutput.getCount());
         }
         trackRecipeExperience(recipe);
 
         for (int i = 0; i < MEAL_DISPLAY_SLOT; ++i) {
-            ItemStack itemStack = inventory.getStack(i);
+            ItemStack itemStack = getStack(i);
             if (itemStack.getItem().hasRecipeRemainder() && world != null) {
                 Direction direction = getCachedState().get(CookingPotBlock.FACING).rotateYCounterclockwise();
                 double dropX = pos.getX() + .5d + (direction.getOffsetX() * .25d);
                 double dropY = pos.getY() + .7d;
                 double dropZ = pos.getZ() + .5d + (direction.getOffsetZ() * .25d);
-                ItemEntity entity = new ItemEntity(world, dropX, dropY, dropZ, new ItemStack(inventory.getStack(i).getItem()
+                ItemEntity entity = new ItemEntity(world, dropX, dropY, dropZ, new ItemStack(getStack(i).getItem()
                         .getRecipeRemainder()));
                 entity.setVelocity(direction.getOffsetX() * .08f, .25f, direction.getOffsetZ() * .08f);
                 world.spawnEntity(entity);
             }
 
-            if (!inventory.getStack(i).isEmpty()) {
-                inventory.getStack(i).decrement(1);
+            if (!getStack(i).isEmpty()) {
+                getStack(i).decrement(1);
             }
         }
 
@@ -358,7 +363,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
     }
 
     public ItemStack getMeal() {
-        return inventory.getStack(MEAL_DISPLAY_SLOT);
+        return getStack(MEAL_DISPLAY_SLOT);
     }
 
     public boolean isHeated() {
@@ -377,7 +382,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
     public DefaultedList<ItemStack> getDroppableInventory() {
         DefaultedList<ItemStack> drops = DefaultedList.of();
         for (int i = 0; i < INVENTORY_SIZE; ++i) {
-            drops.add(i == MEAL_DISPLAY_SLOT ? ItemStack.EMPTY : inventory.getStack(i));
+            drops.add(i == MEAL_DISPLAY_SLOT ? ItemStack.EMPTY : getStack(i));
         }
 
         return drops;
@@ -387,11 +392,11 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
      * Attempts to move all stored meals to the final output. Does NOT check if the meal has a container; this is done on tick.
      */
     private void moveMealToOutput() {
-        ItemStack mealDisplay = inventory.getStack(MEAL_DISPLAY_SLOT);
-        ItemStack finalOutput = inventory.getStack(OUTPUT_SLOT);
+        ItemStack mealDisplay = getStack(MEAL_DISPLAY_SLOT);
+        ItemStack finalOutput = getStack(OUTPUT_SLOT);
         int mealCount = Math.min(mealDisplay.getCount(), mealDisplay.getMaxCount() - finalOutput.getCount());
         if (finalOutput.isEmpty()) {
-            inventory.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
+            setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
         } else if (finalOutput.getItem() == mealDisplay.getItem()) {
             mealDisplay.decrement(mealCount);
             finalOutput.increment(mealCount);
@@ -403,16 +408,16 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
      * match, nothing happens.
      */
     private void useStoredContainersOnMeal() {
-        ItemStack mealDisplay = inventory.getStack(MEAL_DISPLAY_SLOT);
-        ItemStack containerInput = inventory.getStack(CONTAINER_SLOT);
-        ItemStack finalOutput = inventory.getStack(OUTPUT_SLOT);
+        ItemStack mealDisplay = getStack(MEAL_DISPLAY_SLOT);
+        ItemStack containerInput = getStack(CONTAINER_SLOT);
+        ItemStack finalOutput = getStack(OUTPUT_SLOT);
 
         if (isContainerValid(containerInput) && finalOutput.getCount() < finalOutput.getMaxCount()) {
             int smallerStack = Math.min(mealDisplay.getCount(), containerInput.getCount());
             int mealCount = Math.min(smallerStack, mealDisplay.getMaxCount() - finalOutput.getCount());
             if (finalOutput.isEmpty()) {
                 containerInput.decrement(mealCount);
-                inventory.setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
+                setStack(OUTPUT_SLOT, mealDisplay.split(mealCount));
             } else if (finalOutput.getItem() == mealDisplay.getItem()) {
                 mealDisplay.decrement(mealCount);
                 containerInput.decrement(mealCount);
@@ -450,10 +455,6 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
         }
     }
 
-    public ItemHandler getInventory() {
-        return inventory;
-    }
-
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         buf.writeBlockPos(pos);
@@ -461,6 +462,15 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements Heatable
 
     public void setCheckNewRecipe(boolean checkNewRecipe) {
         this.checkNewRecipe = checkNewRecipe;
+    }
+
+    @Override
+    public void onContentsChanged(int slot) {
+        if (slot >= 0 && slot < MEAL_DISPLAY_SLOT) {
+            checkNewRecipe = true;
+        }
+
+        inventoryChanged();
     }
 
     private class CookingPotSyncedData implements PropertyDelegate {

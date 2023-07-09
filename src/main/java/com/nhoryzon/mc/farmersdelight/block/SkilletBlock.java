@@ -116,7 +116,7 @@ public class SkilletBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof SkilletBlockEntity skilletBlockEntity) {
-                ItemScatterer.spawn(world, pos, skilletBlockEntity.getInventory());
+                ItemScatterer.spawn(world, pos, skilletBlockEntity);
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);

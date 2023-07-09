@@ -130,7 +130,7 @@ public enum BlocksRegistry {
     RICH_SOIL("rich_soil", RichSoilBlock::new),
     RICH_SOIL_FARMLAND("rich_soil_farmland", RichSoilFarmlandBlock::new),
 
-    SANDY_SHRUB("sandy_shrub", SandyShrubBlock::new),
+    SANDY_SHRUB("sandy_shrub", SandyShrubBlock::new, true),
     WILD_CABBAGES("wild_cabbages", WildPatchBlock::new, true, flammable(100, 60)),
     WILD_ONIONS("wild_onions", WildCropBlock::new, true, flammable(100, 60)),
     WILD_TOMATOES("wild_tomatoes", WildPatchBlock::new, true, flammable(100, 60)),
@@ -143,8 +143,8 @@ public enum BlocksRegistry {
     ONION_CROP("onions", OnionCropBlock::new, true),
     BUDDING_TOMATO_CROP("budding_tomatoes", BuddingTomatoBlock::new, true),
     TOMATO_CROP("tomatoes", TomatoVineBlock::new, true),
-    RICE_CROP("rice_crop", RiceCropBlock::new, true),
-    RICE_UPPER_CROP("rice_upper_crop", RiceUpperCropBlock::new, true),
+    RICE("rice", RiceCropBlock::new, true),
+    RICE_PANICLE("rice_panicle", RiceUpperCropBlock::new, true),
 
     APPLE_PIE("apple_pie", () -> new PieBlock(ItemsRegistry.APPLE_PIE_SLICE.get())),
     SWEET_BERRY_CHEESECAKE("sweet_berry_cheesecake", () -> new PieBlock(ItemsRegistry.SWEET_BERRY_CHEESECAKE_SLICE.get())),

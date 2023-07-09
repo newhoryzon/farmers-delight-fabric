@@ -63,7 +63,7 @@ public class RiceUpperCropBlock extends CropBlock {
 
     @Override
     protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
-        return floor.isOf(BlocksRegistry.RICE_CROP.get());
+        return floor.isOf(BlocksRegistry.RICE.get());
     }
 
     @Override

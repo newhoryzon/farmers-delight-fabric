@@ -12,6 +12,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
@@ -36,6 +37,10 @@ public class KnifeItem extends MiningToolItem {
 
     public KnifeItem(ToolMaterial material) {
         super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, new ModItemSettings());
+    }
+
+    public KnifeItem(ToolMaterial material, Item.Settings settings) {
+        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, settings);
     }
 
     @Override

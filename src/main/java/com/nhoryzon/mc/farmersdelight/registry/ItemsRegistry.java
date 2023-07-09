@@ -11,7 +11,9 @@ import com.nhoryzon.mc.farmersdelight.item.KnifeItem;
 import com.nhoryzon.mc.farmersdelight.item.MelonJuiceItem;
 import com.nhoryzon.mc.farmersdelight.item.MilkBottleItem;
 import com.nhoryzon.mc.farmersdelight.item.ModBlockItem;
+import com.nhoryzon.mc.farmersdelight.item.ModItemSettings;
 import com.nhoryzon.mc.farmersdelight.item.MushroomColonyBlockItem;
+import com.nhoryzon.mc.farmersdelight.item.PopsicleItem;
 import com.nhoryzon.mc.farmersdelight.item.RopeItem;
 import com.nhoryzon.mc.farmersdelight.item.RottenTomatoItem;
 import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
@@ -134,7 +136,7 @@ public enum ItemsRegistry {
     IRON_KNIFE("iron_knife", () -> new KnifeItem(ToolMaterials.IRON)),
     GOLDEN_KNIFE("golden_knife", () -> new KnifeItem(ToolMaterials.GOLD)),
     DIAMOND_KNIFE("diamond_knife", () -> new KnifeItem(ToolMaterials.DIAMOND)),
-    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE)),
+    NETHERITE_KNIFE("netherite_knife", () -> new KnifeItem(ToolMaterials.NETHERITE, new ModItemSettings().fireproof())),
 
     STRAW("straw", () -> new Item(base()), 100),
     CANVAS("canvas", () -> new Item(base()), 400),
@@ -146,7 +148,7 @@ public enum ItemsRegistry {
     TOMATO_SEEDS("tomato_seeds", () -> new AliasedBlockItem(BlocksRegistry.BUDDING_TOMATO_CROP.get(), base())),
     ONION("onion", () -> new AliasedBlockItem(BlocksRegistry.ONION_CROP.get(), food(Foods.ONION))),
     RICE_PANICLE("rice_panicle", () -> new Item(base())),
-    RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE_CROP.get(), base())),
+    RICE("rice", () -> new AliasedBlockItem(BlocksRegistry.RICE.get(), base())),
     ROTTEN_TOMATO("rotten_tomato", RottenTomatoItem::new),
 
     FRIED_EGG("fried_egg", () -> new Item(food(Foods.FRIED_EGG))),
@@ -181,7 +183,7 @@ public enum ItemsRegistry {
     CHOCOLATE_PIE_SLICE("chocolate_pie_slice", () -> new Item(food(Foods.PIE_SLICE))),
     SWEET_BERRY_COOKIE("sweet_berry_cookie", () -> new Item(food(Foods.COOKIES))),
     HONEY_COOKIE("honey_cookie", () -> new Item(food(Foods.COOKIES))),
-    MELON_POPSICLE("melon_popsicle", () -> new Item(food(Foods.POPSICLE))),
+    MELON_POPSICLE("melon_popsicle", () -> new PopsicleItem(food(Foods.POPSICLE))),
     GLOW_BERRY_CUSTARD("glow_berry_custard", () -> new ConsumableItem(food(Foods.GLOW_BERRY_CUSTARD, Items.GLASS_BOTTLE, 16), true)),
     FRUIT_SALAD("fruit_salad", () -> new ConsumableItem(food(Foods.FRUIT_SALAD, Items.BOWL, 16), true)),
 

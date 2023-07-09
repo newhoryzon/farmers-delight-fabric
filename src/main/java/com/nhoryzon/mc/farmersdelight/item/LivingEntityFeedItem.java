@@ -32,6 +32,8 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
 
     public abstract boolean canFeed(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand);
 
+    public abstract boolean canInteract(ItemStack stack, PlayerEntity feeder, LivingEntity entity, Hand hand);
+
     public boolean isConsumable() {
         return false;
     }
@@ -77,7 +79,7 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (canFeed(stack, user, entity, hand)) {
+        if (canInteract(stack, user, entity, hand)) {
             return ActionResult.SUCCESS;
         }
 
