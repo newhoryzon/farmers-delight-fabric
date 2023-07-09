@@ -54,9 +54,6 @@ public class FarmersDelightModClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntityRenderer::new);
 		EntityRendererRegistry.register(EntityTypesRegistry.ROTTEN_TOMATO, FlyingItemEntityRenderer::new);
 
-		ModelIdentifier skilletId = new ModelIdentifier(new Identifier(FarmersDelightMod.MOD_ID, "skillet"), "inventory");
-		ModelIdentifier skilletCookingId = new ModelIdentifier(new Identifier(FarmersDelightMod.MOD_ID, "skillet_cooking"), "inventory");
-
 		// Particle register
 		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STAR.get(), StarParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(ParticleTypesRegistry.STEAM.get(), SteamParticle.Factory::new);

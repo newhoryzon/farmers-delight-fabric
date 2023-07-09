@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 
 import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -118,7 +119,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
             result = tryProcessCuttingUsingToolInHand(world, cuttingBoardBlockEntity, player, hand);
         } else if (hand.equals(Hand.MAIN_HAND)) {
             pullOutItemWithPlayer(world, cuttingBoardBlockEntity, player);
-            return ActionResult.SUCCESS;
+            result = ActionResult.SUCCESS;
         }
 
         return result;
@@ -128,9 +129,17 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
         ItemStack itemHeld = player.getStackInHand(hand);
         ItemStack itemOffhand = player.getOffHandStack();
 
-        boolean canAddItemForHand = (itemOffhand.isEmpty() || !hand.equals(Hand.MAIN_HAND) || (itemHeld.getItem() instanceof BlockItem))
-                && !itemHeld.isEmpty();
-        if (canAddItemForHand && cuttingBoardBlockEntity.addItem(player.getAbilities().creativeMode ? itemHeld.copy() : itemHeld)) {
+        if (!itemOffhand.isEmpty()) {
+            if (hand.equals(Hand.MAIN_HAND) && !itemOffhand.isIn(TagsRegistry.OFFHAND_EQUIPMENT) && !(itemHeld.getItem() instanceof BlockItem)) {
+                return ActionResult.PASS;
+            }
+            if (hand.equals(Hand.OFF_HAND) && itemOffhand.isIn(TagsRegistry.OFFHAND_EQUIPMENT)) {
+                return ActionResult.PASS;
+            }
+        }
+        if (itemHeld.isEmpty()) {
+            return ActionResult.PASS;
+        } else if (cuttingBoardBlockEntity.addItem(player.getAbilities().creativeMode ? itemHeld.copy() : itemHeld)) {
             world.playSound(null, cuttingBoardBlockEntity.getPos(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.f, .8f);
 
             return ActionResult.SUCCESS;

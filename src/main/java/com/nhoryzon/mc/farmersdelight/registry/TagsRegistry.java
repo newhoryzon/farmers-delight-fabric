@@ -32,6 +32,7 @@ public class TagsRegistry {
     public static final TagKey<Item> COMFORT_FOODS = create("comfort_foods", Registry.ITEM_KEY);
     public static final TagKey<Item> WOLF_PREY = create("wolf_prey", Registry.ITEM_KEY);
     public static final TagKey<Item> CABBAGE_ROLL_INGREDIENTS = create("cabbage_roll_ingredients", Registry.ITEM_KEY);
+    public static final TagKey<Item> OFFHAND_EQUIPMENT = create("offhand_equipment", Registry.ITEM_KEY);
 
     public static final TagKey<EntityType<?>> DOG_FOOD_USERS = create("dog_food_users", Registry.ENTITY_TYPE_KEY);
     public static final TagKey<EntityType<?>> HORSE_FEED_USERS = create("horse_feed_users", Registry.ENTITY_TYPE_KEY);
