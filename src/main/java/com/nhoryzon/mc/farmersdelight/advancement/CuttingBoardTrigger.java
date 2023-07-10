@@ -5,7 +5,7 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -13,7 +13,7 @@ public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.I
     private static final Identifier ID = new Identifier(FarmersDelightMod.MOD_ID, "use_cutting_board");
 
     @Override
-    protected Instance conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate,
+    protected Instance conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate,
             AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new CuttingBoardTrigger.Instance(playerPredicate);
     }
@@ -29,12 +29,8 @@ public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.I
 
     public static class Instance extends AbstractCriterionConditions {
 
-        public Instance(EntityPredicate.Extended playerPredicate) {
+        public Instance(LootContextPredicate playerPredicate) {
             super(ID, playerPredicate);
-        }
-
-        public static CuttingBoardTrigger.Instance simple() {
-            return new CuttingBoardTrigger.Instance(EntityPredicate.Extended.ofLegacy(EntityPredicate.ANY));
         }
 
         public boolean test() {

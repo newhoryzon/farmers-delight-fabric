@@ -2,6 +2,7 @@ package com.nhoryzon.mc.farmersdelight.mixin;
 
 import com.nhoryzon.mc.farmersdelight.block.signs.ICanvasSign;
 import com.nhoryzon.mc.farmersdelight.client.render.block.CanvasSignBlockEntityRenderer;
+import com.nhoryzon.mc.farmersdelight.mixin.accessors.AbstractSignEditScreenAccessorMixin;
 import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
@@ -15,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(SignEditScreen.class)
 public abstract class CanvasSignEditScreenMixin extends AbstractSignEditScreen {
 
-    public CanvasSignEditScreenMixin(SignBlockEntity blockEntity, boolean filtered) {
-        super(blockEntity, filtered);
+    public CanvasSignEditScreenMixin(SignBlockEntity blockEntity, boolean front, boolean filtered) {
+        super(blockEntity, front, filtered);
     }
 
     @Redirect(method = "renderSignBackground", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/render/TexturedRenderLayers;getSignTextureId(Lnet/minecraft/block/WoodType;)Lnet/minecraft/client/util/SpriteIdentifier;"))
     public SpriteIdentifier useCanvasSignSprite(WoodType woodType) {
-        if (blockEntity.getCachedState().getBlock() instanceof ICanvasSign canvasSign) {
+        if (((AbstractSignEditScreenAccessorMixin)this).getBlockEntity().getCachedState().getBlock() instanceof ICanvasSign canvasSign) {
             return CanvasSignBlockEntityRenderer.getCanvasSignSpriteTexture(canvasSign.getBackgroundColor());
         }
 

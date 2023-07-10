@@ -91,7 +91,7 @@ public class BasketBlockEntity extends LootableContainerBlockEntity implements H
         } else if (stack1.getCount() > stack1.getMaxCount()) {
             return false;
         } else {
-            return ItemStack.areNbtEqual(stack1, stack2);
+            return ItemStack.canCombine(stack1, stack2);
         }
     }
 

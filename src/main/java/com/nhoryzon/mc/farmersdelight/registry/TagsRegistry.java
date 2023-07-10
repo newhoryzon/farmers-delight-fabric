@@ -25,7 +25,7 @@ public class TagsRegistry {
     public static final TagKey<Block> COMPOST_ACTIVATORS = create("compost_activators", RegistryKeys.BLOCK);
     public static final TagKey<Block> UNAFFECTED_BY_RICH_SOIL = create("unaffected_by_rich_soil", RegistryKeys.BLOCK);
     public static final TagKey<Block> MUSHROOM_COLONY_GROWABLE_ON = create("mushroom_colony_growable_on", RegistryKeys.BLOCK);
-    public static final TagKey<Block> KNIVES_CUTTABLE = create("knives_cuttable", RegistryKeys.BLOCK);
+    public static final TagKey<Block> MINABLE_KNIFE = create("mineable/knife", RegistryKeys.BLOCK);
     public static final TagKey<Block> DROPS_CAKE_SLICE = create("drops_cake_slice", RegistryKeys.BLOCK);
 
     public static final TagKey<Item> WILD_CROPS_ITEM = create("wild_crops", RegistryKeys.ITEM);

@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -54,7 +54,7 @@ public class SkilletBlock extends BlockWithEntity {
     protected static final VoxelShape SHAPE_WITH_TRAY = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
 
     public SkilletBlock() {
-        super(FabricBlockSettings.of(Material.METAL).strength(.5f, 6.f).sounds(BlockSoundGroup.LANTERN));
+        super(FabricBlockSettings.create().mapColor(MapColor.IRON_GRAY).strength(.5f, 6.f).sounds(BlockSoundGroup.LANTERN));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORT, false));
     }
 

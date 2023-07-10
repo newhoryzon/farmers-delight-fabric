@@ -23,7 +23,7 @@ public class NourishmentEffect extends StatusEffect {
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         if  (!entity.getEntityWorld().isClient() && entity instanceof PlayerEntity player) {
             HungerManager hungerManager = player.getHungerManager();
-            boolean isPlayerHealingWithHunger = player.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
+            boolean isPlayerHealingWithHunger = player.getWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
                     && player.canFoodHeal() && hungerManager.getFoodLevel() >= 18;
 
             if (!isPlayerHealingWithHunger) {

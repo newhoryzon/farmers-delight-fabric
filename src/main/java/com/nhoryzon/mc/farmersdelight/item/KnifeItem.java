@@ -5,7 +5,6 @@ import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CarvedPumpkinBlock;
-import net.minecraft.block.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
@@ -33,24 +32,12 @@ public class KnifeItem extends MiningToolItem {
             Enchantments.BANE_OF_ARTHROPODS, Enchantments.KNOCKBACK, Enchantments.FIRE_ASPECT, Enchantments.LOOTING,
             Enchantments.MENDING, EnchantmentsRegistry.BACKSTABBING.get());
 
-    private static final Set<Material> EFFECTIVE_ON_MATERIAL = Set.of(Material.WOOL, Material.CARPET, Material.CAKE, Material.COBWEB);
-
     public KnifeItem(ToolMaterial material) {
-        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, new ModItemSettings());
+        super(.5f, -1.8f, material, TagsRegistry.MINABLE_KNIFE, new ModItemSettings());
     }
 
     public KnifeItem(ToolMaterial material, Item.Settings settings) {
-        super(.5f, -1.8f, material, TagsRegistry.KNIVES_CUTTABLE, settings);
-    }
-
-    @Override
-    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-        Material material = state.getMaterial();
-        if (state.isIn(TagsRegistry.KNIVES_CUTTABLE) || EFFECTIVE_ON_MATERIAL.contains(material)) {
-            return this.miningSpeed;
-        } else {
-            return super.getMiningSpeedMultiplier(stack, state);
-        }
+        super(.5f, -1.8f, material, TagsRegistry.MINABLE_KNIFE, settings);
     }
 
     @Override

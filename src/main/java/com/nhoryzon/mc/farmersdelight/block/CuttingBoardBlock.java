@@ -9,7 +9,6 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
@@ -68,7 +67,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     }
 
     public CuttingBoardBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).hardness(2.f).resistance(2.f).sounds(BlockSoundGroup.WOOD));
+        super(FabricBlockSettings.copy(Blocks.OAK_PLANKS).hardness(2.f).resistance(2.f).sounds(BlockSoundGroup.WOOD));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
     }
 
@@ -98,7 +97,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     }
 
     @Override
-    public boolean canMobSpawnInside() {
+    public boolean canMobSpawnInside(BlockState state) {
         return true;
     }
 

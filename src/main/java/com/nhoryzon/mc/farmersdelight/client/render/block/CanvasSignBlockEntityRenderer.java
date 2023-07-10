@@ -4,11 +4,12 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.signs.ICanvasSign;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SignBlock;
-import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -24,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
@@ -44,8 +46,8 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     public static final Map<DyeColor, SpriteIdentifier> DYED_CANVAS_SIGN_SPRITES = Arrays.stream(DyeColor.values()).collect(
             Collectors.toMap(Function.identity(), CanvasSignBlockEntityRenderer::createSignSpriteIdentifier));
 
-    public static final float TEXT_LINE_HEIGHT = 10;
-    public static final float TEXT_VERTICAL_OFFSET = 19;
+    public static final Vec3d TEXT_OFFSET = new Vec3d(0.d, .33333334f, .046666667f);
+
     private static final int RENDER_DISTANCE = MathHelper.square(16);
 
     private final SignModel signModel;
@@ -62,40 +64,100 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     public void render(SignBlockEntity signBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider,
             int packedLight, int packedOverlay) {
         BlockState blockState = signBlockEntity.getCachedState();
-        matrixStack.push();
-        float h;
-        if (blockState.getBlock() instanceof SignBlock) {
-            matrixStack.translate(0.5, 0.5, 0.5);
-            h = -((float)(blockState.get(SignBlock.ROTATION) * 360) / 16.0F);
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(h));
-            signModel.stick.visible = true;
-        } else {
-            matrixStack.translate(0.5, 0.5, 0.5);
-            h = -(blockState.get(WallSignBlock.FACING)).asRotation();
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(h));
-            matrixStack.translate(0.0, -0.3125, -0.4375);
-            signModel.stick.visible = false;
-        }
+        if (blockState.getBlock() instanceof AbstractSignBlock signBlock) {
+            SignBlockEntityRenderer.SignModel model = signModel;
+            model.stick.visible = signBlock instanceof SignBlock;
 
-        matrixStack.push();
-        float rootScale = 0.6666667F;
-        matrixStack.scale(rootScale, -rootScale, -rootScale);
-        DyeColor dye = null;
-        if (blockState.getBlock() instanceof ICanvasSign canvasSign) {
-            dye = canvasSign.getBackgroundColor();
+            DyeColor dye = null;
+            if (signBlock instanceof ICanvasSign canvasSign) {
+                dye = canvasSign.getBackgroundColor();
+            }
+
+            renderSignWithText(signBlockEntity, matrixStack, vertexConsumerProvider, packedLight, packedOverlay, blockState, signBlock, dye,
+                    model);
         }
+    }
+
+    protected void renderSignWithText(SignBlockEntity signBlockEntity, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider,
+            int packedLight, int packedOverlay, BlockState blockState, AbstractSignBlock signBlock, DyeColor dye, SignModel model) {
+        matrixStack.push();
+        translateSign(matrixStack, -signBlock.getRotationDegrees(blockState), blockState);
+        renderSign(matrixStack, vertexConsumerProvider, packedLight, packedOverlay, dye, model);
+        renderSignText(signBlockEntity.getPos(), signBlockEntity.getFrontText(), matrixStack, vertexConsumerProvider, packedLight,
+                signBlockEntity.getTextLineHeight(), signBlockEntity.getMaxTextWidth(), true);
+        renderSignText(signBlockEntity.getPos(), signBlockEntity.getBackText(), matrixStack, vertexConsumerProvider, packedLight,
+                signBlockEntity.getTextLineHeight(), signBlockEntity.getMaxTextWidth(), false);
+        matrixStack.pop();
+    }
+
+    protected void translateSign(MatrixStack matrixStack, float angle, BlockState blockState) {
+        matrixStack.translate(.5f, .75f * getSignScale(), .5f);
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(angle));
+        if (!(blockState.getBlock() instanceof SignBlock)) {
+            matrixStack.translate(0.0, -0.3125, -0.4375);
+        }
+    }
+
+    protected void renderSign(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int packedLight, int packedOverlay,
+            DyeColor dye, SignModel model) {
+        matrixStack.push();
+        float rootScale = getSignScale();
+        matrixStack.scale(rootScale, -rootScale, -rootScale);
         SpriteIdentifier spriteIdentifier = getCanvasSignSpriteTexture(dye);
         Objects.requireNonNull(signModel);
-        VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumerProvider, signModel::getLayer);
+        VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumerProvider, model::getLayer);
         signModel.root.render(matrixStack, vertexConsumer, packedLight, packedOverlay);
         matrixStack.pop();
+    }
+
+    protected void renderSignText(BlockPos pos, SignText text, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider,
+            int packedLight, int textLineHeight, int maxTextWidth, boolean isFrontText) {
+        matrixStack.push();
+        translateSignText(matrixStack, isFrontText, getTextOffset());
+
+        OrderedText[] orderedTexts = text.getOrderedMessages(MinecraftClient.getInstance().shouldFilterText(), (line) -> {
+            List<OrderedText> list = this.textRenderer.wrapLines(line, maxTextWidth);
+            return list.isEmpty() ? OrderedText.EMPTY : list.get(0);
+        });
+
+        int darkColor;
+        int baseColor;
+        boolean hasOutline;
+        int light;
+        if (text.isGlowing()) {
+            darkColor = getColor(text, true);
+            baseColor = text.getColor().getSignColor();
+            hasOutline = shouldRenderOutline(pos, baseColor);
+            light = 15728880;
+        } else {
+            darkColor = getColor(text, false);
+            baseColor = darkColor;
+            hasOutline = false;
+            light = packedLight;
+        }
+
+        int verticalOffset = 2 * textLineHeight + getCustomVerticalOffset();
+
+        for(int p = 0; p < 4; ++p) {
+            OrderedText orderedText = orderedTexts[p];
+            float x = (float)(-this.textRenderer.getWidth(orderedText) / 2);
+            float y = (float)p * textLineHeight - verticalOffset;
+            if (hasOutline) {
+                this.textRenderer.drawWithOutline(orderedText, x, y, baseColor, darkColor, matrixStack.peek().getPositionMatrix(),
+                        vertexConsumerProvider, light);
+            } else {
+                this.textRenderer.draw(orderedText, x, y, baseColor, false, matrixStack.peek().getPositionMatrix(),
+                        vertexConsumerProvider, TextRenderer.TextLayerType.NORMAL, 0, light);
+            }
+        }
+
+        matrixStack.pop();
+    }
+
+    /*
         float textScale = 0.010416667F;
         matrixStack.translate(0.0, 0.3333333432674408, 0.046666666865348816);
         matrixStack.scale(textScale, -textScale, textScale);
-        OrderedText[] orderedTexts = signBlockEntity.updateSign(MinecraftClient.getInstance().shouldFilterText(), (text) -> {
-            List<OrderedText> list = this.textRenderer.wrapLines(text, 90);
-            return list.isEmpty() ? OrderedText.EMPTY : list.get(0);
-        });
 
         int darkColor;
         int baseColor;
@@ -113,23 +175,21 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
             light = packedLight;
         }
 
-        for(int p = 0; p < 4; ++p) {
-            OrderedText orderedText = orderedTexts[p];
-            float x = (float)(-this.textRenderer.getWidth(orderedText) / 2);
-            float y = (float)p * TEXT_LINE_HEIGHT - TEXT_VERTICAL_OFFSET;
-            if (hasOutline) {
-                this.textRenderer.drawWithOutline(orderedText, x, y, baseColor, darkColor, matrixStack.peek().getPositionMatrix(),
-                        vertexConsumerProvider, light);
-            } else {
-                this.textRenderer.draw(orderedText, x, y, baseColor, false, matrixStack.peek().getPositionMatrix(),
-                        vertexConsumerProvider, TextRenderer.TextLayerType.NORMAL, 0, light);
-            }
+
+    }
+    */
+
+    private void translateSignText(MatrixStack matrixStack, boolean isFrontText, Vec3d pos) {
+        if (!isFrontText) {
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.f));
         }
 
-        matrixStack.pop();
+        float textScale = .015625f * getTextScale();
+        matrixStack.translate(pos.x, pos.y, pos.z);
+        matrixStack.scale(textScale, -textScale, textScale);
     }
 
-    private static boolean shouldRender(SignBlockEntity sign, int textColor) {
+    private static boolean shouldRenderOutline(BlockPos pos, int textColor) {
         if (textColor == DyeColor.BLACK.getSignColor()) {
             return true;
         } else {
@@ -139,18 +199,30 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
                 return true;
             } else {
                 Entity entity = minecraftClient.getCameraEntity();
-                return entity != null && entity.squaredDistanceTo(Vec3d.ofCenter(sign.getPos())) < (double)RENDER_DISTANCE;
+                return entity != null && entity.squaredDistanceTo(Vec3d.ofCenter(pos)) < (double)RENDER_DISTANCE;
             }
         }
     }
 
-    private static int getColor(SignBlockEntity sign, boolean isOutlineVisible) {
-        int textColor = sign.getTextColor().getSignColor();
-        double brightness = isOutlineVisible ? .4d : .6d;
-        int red = (int)((double)ColorHelper.Argb.getRed(textColor) * brightness);
-        int green = (int)((double)ColorHelper.Argb.getGreen(textColor) * brightness);
-        int blue = (int)((double)ColorHelper.Argb.getBlue(textColor) * brightness);
-        return textColor == DyeColor.BLACK.getSignColor() && sign.isGlowingText() ? -988212 : ColorHelper.Argb.getArgb(0, blue, green, red);
+    private static int getColor(SignText signText, boolean isOutlineVisible) {
+        int textColor = signText.getColor().getSignColor();
+        if (textColor == DyeColor.BLACK.getSignColor() && signText.isGlowing()) {
+            return -988212;
+        } else {
+            double brightness = isOutlineVisible ? .4d : .6d;
+            int red = (int)((double)ColorHelper.Argb.getRed(textColor) * brightness);
+            int green = (int)((double)ColorHelper.Argb.getGreen(textColor) * brightness);
+            int blue = (int)((double)ColorHelper.Argb.getBlue(textColor) * brightness);
+            return ColorHelper.Argb.getArgb(0, red, green, blue);
+        }
+    }
+
+    public Vec3d getTextOffset() {
+        return TEXT_OFFSET;
+    }
+
+    public int getCustomVerticalOffset() {
+        return -1;
     }
 
     public static SpriteIdentifier getCanvasSignSpriteTexture(DyeColor dyeColor) {

@@ -70,7 +70,7 @@ public abstract class LivingEntityFeedItem extends ConsumableItem {
             }
 
             if (effectInstance.getDuration() > 20) {
-                effectDescription.append(" (").append(StatusEffectUtil.durationToString(effectInstance, 1.f)).append(")");
+                effectDescription.append(" (").append(StatusEffectUtil.getDurationText(effectInstance, 1.f)).append(")");
             }
 
             tooltip.add(effectDescription.formatted(effect.getCategory().getFormatting()));

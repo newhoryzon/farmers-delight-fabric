@@ -32,7 +32,8 @@
   ],
   "client": [
     "CanvasSignEditScreenMixin",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "accessors.AbstractSignEditScreenAccessorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

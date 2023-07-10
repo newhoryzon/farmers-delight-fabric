@@ -6,9 +6,9 @@ import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -34,27 +34,29 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
         this.titleX = 28;
+        this.playerInventoryTitleX = 8;
+        this.playerInventoryTitleY = backgroundHeight - 94;
     }
 
     @Override
-    public void render(MatrixStack ms, final int mouseX, final int mouseY, float partialTicks) {
-        renderBackground(ms);
-        super.render(ms, mouseX, mouseY, partialTicks);
-        renderHeatIndicatorTooltip(ms, mouseX, mouseY);
-        drawMouseoverTooltip(ms, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
+        renderHeatIndicatorTooltip(context, mouseX, mouseY);
+        drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
-    private void renderHeatIndicatorTooltip(MatrixStack ms, int mouseX, int mouseY) {
+    private void renderHeatIndicatorTooltip(DrawContext context, int mouseX, int mouseY) {
         if (isPointWithinBounds(HEAT_ICON.getX(), HEAT_ICON.getY(), HEAT_ICON.getWidth(), HEAT_ICON.getHeight(), mouseX, mouseY)) {
             List<Text> tooltip = new ArrayList<>();
             String key = "container.cooking_pot." + (handler.isHeated() ? "heated" : "not_heated");
             tooltip.add(FarmersDelightMod.i18n(key));
-            renderTooltip(ms, tooltip, mouseX, mouseY);
+            context.drawTooltip(textRenderer, tooltip, mouseX, mouseY);
         }
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack ms, int mouseX, int mouseY) {
+    protected void drawMouseoverTooltip(DrawContext context, int mouseX, int mouseY) {
         if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null && this.focusedSlot.hasStack()) {
             if (focusedSlot.id == CookingPotBlockEntity.MEAL_DISPLAY_SLOT) {
                 List<Text> tooltip = new ArrayList<>();
@@ -73,38 +75,33 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
 
                 tooltip.add(FarmersDelightMod.i18n("container.cooking_pot.served_on", container).formatted(Formatting.GRAY));
 
-                renderTooltip(ms, tooltip, mouseX, mouseY);
+                context.drawTooltip(textRenderer, tooltip, mouseX, mouseY);
             } else {
-                renderTooltip(ms, focusedSlot.getStack(), mouseX, mouseY);
+                context.drawItemTooltip(textRenderer, focusedSlot.getStack(), mouseX, mouseY);
             }
         }
     }
 
     @Override
-    protected void drawForeground(MatrixStack ms, int mouseX, int mouseY) {
-        super.drawForeground(ms, mouseX, mouseY);
-        textRenderer.draw(ms, playerInventoryTitle, 8.f, backgroundHeight - 94.f, 4210752);
-    }
-
-    @Override
-    protected void drawBackground(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {
         // Render UI background
         RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
         if (client == null) {
             return;
         }
 
-        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
-        drawTexture(ms, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        context.drawTexture(BACKGROUND_TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
         // Render heat indicator
         if (handler.isHeated()) {
-            drawTexture(ms, x + HEAT_ICON.getX(), y + HEAT_ICON.getY(), 176, 0, HEAT_ICON.getWidth(), HEAT_ICON.getHeight());
+            context.drawTexture(BACKGROUND_TEXTURE,
+                    x + HEAT_ICON.getX(), y + HEAT_ICON.getY(), 176, 0, HEAT_ICON.getWidth(), HEAT_ICON.getHeight());
         }
 
         // Render progress arrow
         int l = handler.getCookProgressionScaled();
-        drawTexture(ms, x + PROGRESS_ARROW.getX(), y + PROGRESS_ARROW.getY(), 176, 15, l + 1, PROGRESS_ARROW.getHeight());
+        context.drawTexture(BACKGROUND_TEXTURE,
+                x + PROGRESS_ARROW.getX(), y + PROGRESS_ARROW.getY(), 176, 15, l + 1, PROGRESS_ARROW.getHeight());
     }
 
 }

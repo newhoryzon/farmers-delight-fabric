@@ -9,7 +9,6 @@ import com.nhoryzon.mc.farmersdelight.client.render.block.CuttingBoardBlockEntit
 import com.nhoryzon.mc.farmersdelight.client.render.block.SkilletBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.render.block.StoveBlockEntityRenderer;
 import com.nhoryzon.mc.farmersdelight.client.screen.CookingPotScreen;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.slot.CookingPotBowlSlot;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
@@ -25,17 +24,13 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 @Environment(value= EnvType.CLIENT)
 public class FarmersDelightModClient implements ClientModInitializer {
@@ -64,7 +59,7 @@ public class FarmersDelightModClient implements ClientModInitializer {
 			if (FarmersDelightMod.CONFIG.isRabbitStewJumpBoost() && stack.isOf(Items.RABBIT_STEW)) {
 				StatusEffect effect = StatusEffects.JUMP_BOOST;
 				lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-								StatusEffectUtil.durationToString(
+								StatusEffectUtil.getDurationText(
 										new StatusEffectInstance(effect, Configuration.DURATION_RABBIT_STEW_JUMP), 1))
 						.formatted(effect.getCategory().getFormatting()));
 			}
@@ -72,7 +67,7 @@ public class FarmersDelightModClient implements ClientModInitializer {
 			if (FarmersDelightMod.CONFIG.isVanillaSoupExtraEffects() && stack.isIn(TagsRegistry.COMFORT_FOODS)) {
 				StatusEffect effect = EffectsRegistry.COMFORT.get();
 				lines.add(Text.translatable("potion.withDuration", Text.translatable(effect.getTranslationKey()),
-								StatusEffectUtil.durationToString(
+								StatusEffectUtil.getDurationText(
 										new StatusEffectInstance(effect, Configuration.DURATION_VANILLA_SOUP), 1))
 						.formatted(effect.getCategory().getFormatting()));
 			}

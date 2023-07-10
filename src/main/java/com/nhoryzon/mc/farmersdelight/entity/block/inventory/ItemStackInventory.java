@@ -22,7 +22,7 @@ public interface ItemStackInventory extends Inventory {
     }
 
     static boolean canBeStacked(ItemStack left, ItemStack right) {
-        if (left.isEmpty() || !left.isItemEqual(right) || left.hasNbt() != right.hasNbt()) {
+        if (left.isEmpty() || !ItemStack.areItemsEqual(left, right) || left.hasNbt() != right.hasNbt()) {
             return false;
         }
 

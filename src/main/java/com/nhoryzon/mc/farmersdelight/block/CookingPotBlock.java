@@ -16,7 +16,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.InventoryProvider;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
@@ -77,7 +77,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     protected static final VoxelShape SHAPE_WITH_TRAY = VoxelShapes.union(SHAPE, Block.createCuboidShape(.0d, -1.d, .0d, 16.d, .0d, 16.d));
 
     public CookingPotBlock() {
-        super(FabricBlockSettings.of(Material.METAL).hardness(.5f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
+        super(FabricBlockSettings.create().mapColor(MapColor.IRON_GRAY).hardness(.5f).resistance(6.f).sounds(BlockSoundGroup.LANTERN));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(SUPPORT, CookingPotSupport.NONE).with(WATERLOGGED, false));
     }
 

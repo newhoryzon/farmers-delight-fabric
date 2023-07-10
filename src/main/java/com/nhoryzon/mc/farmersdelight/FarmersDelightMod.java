@@ -46,6 +46,8 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -85,10 +87,7 @@ public class FarmersDelightMod implements ModInitializer {
 
     public static Configuration CONFIG = new Configuration();
 
-    public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "main"))
-            .displayName(Text.translatable("itemGroup.farmersdelight.main"))
-            .icon(() -> new ItemStack(ItemsRegistry.STOVE.get()))
-            .build();
+    public static final RegistryKey<ItemGroup> ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(MOD_ID, "main"));
 
     public static MutableText i18n(String key, Object... args) {
         return Text.translatable(MOD_ID + "." + key, args);
@@ -96,6 +95,10 @@ public class FarmersDelightMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Registry.register(Registries.ITEM_GROUP, ITEM_GROUP, FabricItemGroup.builder()
+                .displayName(Text.translatable("itemGroup.farmersdelight.main"))
+                .icon(() -> new ItemStack(ItemsRegistry.STOVE.get()))
+                .build());
         initConfiguration();
 
         BlocksRegistry.registerAll();

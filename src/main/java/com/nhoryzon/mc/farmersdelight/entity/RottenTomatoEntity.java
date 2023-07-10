@@ -39,7 +39,7 @@ public class RottenTomatoEntity extends ThrownItemEntity {
         ItemStack entityStack = new ItemStack(this.getDefaultItem());
         if (status == 3) {
             for (int i = 0; i < 12; ++i) {
-                this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, entityStack),
+                this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, entityStack),
                         this.getX(), this.getY(), this.getZ(),
                         ((double) this.random.nextFloat() * 2.0D - 1.0D) * 0.1F,
                         ((double) this.random.nextFloat() * 2.0D - 1.0D) * 0.1F + 0.1F,
@@ -59,8 +59,8 @@ public class RottenTomatoEntity extends ThrownItemEntity {
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
-        if (!world.isClient) {
-            world.sendEntityStatus(this, (byte) 3);
+        if (!getWorld().isClient) {
+            getWorld().sendEntityStatus(this, (byte) 3);
             playSound(SoundsRegistry.ENTITY_ROTTEN_TOMATO_HIT.get(), 1.f, (random.nextFloat() - random.nextFloat()) * 2.f + 1.f);
             discard();
         }
