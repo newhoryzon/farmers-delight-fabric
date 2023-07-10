@@ -39,7 +39,8 @@ public class WallCanvasSignBlock extends WallSignBlock implements ICanvasSign {
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.getBlockEntity(pos) instanceof CanvasSignBlockEntity blockEntity && state.getBlock() instanceof ICanvasSign canvasSign) {
             if (canvasSign.isDarkBackground()) {
-                blockEntity.setTextColor(DyeColor.WHITE);
+                blockEntity.setText(blockEntity.getFrontText().withColor(DyeColor.WHITE), true);
+                blockEntity.setText(blockEntity.getBackText().withColor(DyeColor.WHITE), false);
             }
         }
 

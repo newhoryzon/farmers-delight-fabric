@@ -209,7 +209,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
                     return Optional.of((CookingPotRecipe) recipe);
                 }
 
-                if (recipe.getOutput(world.getRegistryManager()).isItemEqual(getMeal())) {
+                if (ItemStack.areItemsEqual(recipe.getOutput(world.getRegistryManager()), getMeal())) {
                     return Optional.empty();
                 }
             }
@@ -256,7 +256,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
                 ItemStack currentOutput = getStack(MEAL_DISPLAY_SLOT);
                 if (currentOutput.isEmpty()) {
                     return true;
-                } else if (!currentOutput.isItemEqual(recipeOutput)) {
+                } else if (!ItemStack.areItemsEqual(currentOutput, recipeOutput)) {
                     return false;
                 } else if (currentOutput.getCount() + recipeOutput.getCount() <= getMaxCountPerStack()) {
                     return true;
@@ -318,7 +318,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
     }
 
     public void clearUsedRecipes(PlayerEntity player) {
-        grantStoredRecipeExperience(player.world, player.getPos());
+        grantStoredRecipeExperience(player.getWorld(), player.getPos());
         experienceTracker.clear();
     }
 
@@ -448,9 +448,9 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
             return false;
         }
         if (!mealContainer.isEmpty()) {
-            return mealContainer.isItemEqual(containerItem);
+            return ItemStack.areItemsEqual(mealContainer, containerItem);
         } else {
-            return new ItemStack(getMeal().getItem().getRecipeRemainder()).isItemEqual(containerItem);
+            return containerItem.isOf(getMeal().getItem().getRecipeRemainder());
         }
     }
 

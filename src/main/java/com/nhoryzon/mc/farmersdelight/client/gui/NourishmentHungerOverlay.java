@@ -7,8 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,15 +29,15 @@ public class NourishmentHungerOverlay {
         INSTANCE = new NourishmentHungerOverlay();
     }
 
-    public void onRender(MatrixStack matrixStack) {
+    public void onRender(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
         boolean isMounted = mc.player != null && mc.player.getVehicle() instanceof LivingEntity;
         if (!isMounted && !mc.options.hudHidden) {
-            renderNourishmentOverlay(matrixStack);
+            renderNourishmentOverlay(context);
         }
     }
 
-    private void renderNourishmentOverlay(MatrixStack matrixStack) {
+    private void renderNourishmentOverlay(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
         if (player == null) {
@@ -49,15 +48,15 @@ public class NourishmentHungerOverlay {
         int top = mc.getWindow().getScaledHeight() - foodIconsOffset;
         int left = mc.getWindow().getScaledWidth() / 2 + 91;
 
-        boolean isPlayerHealingWithSaturation = player.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
+        boolean isPlayerHealingWithSaturation = player.getWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
                 && player.canFoodHeal() && stats.getFoodLevel() >= 18;
 
         if (player.getStatusEffect(EffectsRegistry.NOURISHMENT.get()) != null) {
-            drawNourishmentOverlay(stats, mc, matrixStack, left, top, isPlayerHealingWithSaturation);
+            drawNourishmentOverlay(stats, mc, context, left, top, isPlayerHealingWithSaturation);
         }
     }
 
-    private void drawNourishmentOverlay(HungerManager stats, MinecraftClient mc, MatrixStack matrixStack, int left, int top, boolean naturalHealing) {
+    private void drawNourishmentOverlay(HungerManager stats, MinecraftClient mc, DrawContext context, int left, int top, boolean naturalHealing) {
         float saturation = stats.getSaturationLevel();
         int foodLevel = stats.getFoodLevel();
         int ticks = mc.inGameHud.getTicks();
@@ -65,7 +64,6 @@ public class NourishmentHungerOverlay {
         rand.setSeed(ticks * 312871L);
 
         RenderSystem.enableBlend();
-        RenderSystem.setShaderTexture(0, MOD_ICONS_TEXTURE);
 
         for (int j = 0; j < 10; ++j) {
             int x = left - j * 8 - 9;
@@ -80,20 +78,19 @@ public class NourishmentHungerOverlay {
             }
 
             // Background texture
-            mc.inGameHud.drawTexture(matrixStack, x, y, 0, 0, 9, 9);
+            context.drawTexture(MOD_ICONS_TEXTURE, x, y, 0, 0, 9, 9);
 
             float effectiveHungerOfBar = (stats.getFoodLevel()) / 2.0F - j;
             int naturalHealingOffset = naturalHealing ? 18 : 0;
 
             // Gilded hunger icons
             if (effectiveHungerOfBar >= 1)
-                mc.inGameHud.drawTexture(matrixStack, x, y, 18 + naturalHealingOffset, 0, 9, 9);
+                context.drawTexture(MOD_ICONS_TEXTURE, x, y, 18 + naturalHealingOffset, 0, 9, 9);
             else if (effectiveHungerOfBar >= .5)
-                mc.inGameHud.drawTexture(matrixStack, x, y, 9 + naturalHealingOffset, 0, 9, 9);
+                context.drawTexture(MOD_ICONS_TEXTURE, x, y, 9 + naturalHealingOffset, 0, 9, 9);
         }
 
         RenderSystem.disableBlend();
-        RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE);
     }
 
 }

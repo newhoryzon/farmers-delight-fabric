@@ -45,9 +45,9 @@ public class CookingPotResultSlot extends Slot {
 
     @Override
     protected void onCrafted(ItemStack stack) {
-        stack.onCraft(player.world, player, removeCount);
+        stack.onCraft(player.getWorld(), player, removeCount);
 
-        if (!player.world.isClient()) {
+        if (!player.getWorld().isClient()) {
             blockEntity.clearUsedRecipes(player);
         }
 

@@ -32,7 +32,7 @@ public class TatamiMatBlock extends HorizontalFacingBlock {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d);
 
     public TatamiMatBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(.3f).resistance(.3f));
+        super(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).hardness(.3f).resistance(.3f).pistonBehavior(PistonBehavior.DESTROY));
         setDefaultState(getStateManager().getDefaultState().with(PART, BedPart.FOOT));
     }
 
@@ -99,11 +99,6 @@ public class TatamiMatBlock extends HorizontalFacingBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return !world.isAir(pos.down());
-    }
-
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.DESTROY;
     }
 
     @Override

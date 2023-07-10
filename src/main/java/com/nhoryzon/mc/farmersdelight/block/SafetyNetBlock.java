@@ -3,7 +3,7 @@ package com.nhoryzon.mc.farmersdelight.block;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.Entity;
@@ -30,7 +30,7 @@ public class SafetyNetBlock extends Block implements Waterloggable {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(.0d, 8.d, .0d, 16.d, 9.d, 16.d);
 
     public SafetyNetBlock() {
-        super(FabricBlockSettings.of(Material.CARPET).hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
+        super(FabricBlockSettings.copy(Blocks.BROWN_CARPET).hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
         setDefaultState(getStateManager().getDefaultState().with(WATERLOGGED, false));
     }
 

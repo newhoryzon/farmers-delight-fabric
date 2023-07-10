@@ -7,7 +7,6 @@ import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -28,13 +27,12 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.tick.OrderedTick;
 
 public class RopeBlock extends PaneBlock {
     private static final BooleanProperty TIED_TO_BELL = BooleanProperty.of("tied_to_bell");
 
     public RopeBlock() {
-        super(FabricBlockSettings.of(Material.CARPET).noCollision().nonOpaque().hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
+        super(FabricBlockSettings.copy(Blocks.BROWN_CARPET).noCollision().nonOpaque().hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
         setDefaultState(getStateManager().getDefaultState()
                 .with(NORTH, false)
                 .with(SOUTH, false)

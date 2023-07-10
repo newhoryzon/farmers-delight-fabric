@@ -7,8 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -33,15 +32,15 @@ public class ComfortHealthOverlay {
         INSTANCE = new ComfortHealthOverlay();
     }
 
-    public void onRender(MatrixStack matrixStack) {
+    public void onRender(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
         boolean isMounted = mc.player != null && mc.player.getVehicle() instanceof LivingEntity;
         if (!isMounted && !mc.options.hudHidden) {
-            renderComfortOverlay(matrixStack);
+            renderComfortOverlay(context);
         }
     }
 
-    private void renderComfortOverlay(MatrixStack matrixStack) {
+    private void renderComfortOverlay(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
         if (player == null) {
@@ -56,11 +55,11 @@ public class ComfortHealthOverlay {
                 && !player.hasStatusEffect(StatusEffects.REGENERATION);
 
         if (player.getStatusEffect(EffectsRegistry.COMFORT.get()) != null && isPlayerEligibleForComfort) {
-            drawComfortOverlay(player, mc, matrixStack, left, top);
+            drawComfortOverlay(player, mc, context, left, top);
         }
     }
 
-    private void drawComfortOverlay(PlayerEntity player, MinecraftClient mc, MatrixStack matrixStack, int left, int top) {
+    private void drawComfortOverlay(PlayerEntity player, MinecraftClient mc, DrawContext context, int left, int top) {
         int ticks = mc.inGameHud.getTicks();
         Random rand = new Random();
         rand.setSeed(ticks * 312871L);
@@ -98,16 +97,15 @@ public class ComfortHealthOverlay {
                 if (i == regen) y -= 2;
 
                 if (column == comfortSheen / 2) {
-                    mc.inGameHud.drawTexture(matrixStack, x, y, 0, 9, textureWidth[comfortHeartFrame], 9);
+                    context.drawTexture(MOD_ICONS_TEXTURE, x, y, 0, 9, textureWidth[comfortHeartFrame], 9);
                 }
                 if (column == (comfortSheen / 2) - 1 && comfortHeartFrame == 0) {
-                    mc.inGameHud.drawTexture(matrixStack, x + 5, y, 5, 9, 4, 9);
+                    context.drawTexture(MOD_ICONS_TEXTURE, x + 5, y, 5, 9, 4, 9);
                 }
             }
         }
 
         RenderSystem.disableBlend();
-        RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE);
     }
 
 }

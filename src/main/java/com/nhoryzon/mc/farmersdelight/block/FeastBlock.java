@@ -74,7 +74,7 @@ public class FeastBlock extends Block {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.down()).getMaterial().isSolid();
+        return world.getBlockState(pos.down()).isSolid();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class FeastBlock extends Block {
         ItemStack heldItem = player.getStackInHand(hand);
 
         if (servings > 0) {
-            if (!serving.getItem().hasRecipeRemainder() || heldItem.isItemEqual(new ItemStack(serving.getItem().getRecipeRemainder()))) {
+            if (!serving.getItem().hasRecipeRemainder() || heldItem.isOf(serving.getItem().getRecipeRemainder())) {
                 world.setBlockState(pos, state.with(getServingsProperty(), servings - 1), BlockStateUtils.DEFAULT);
                 if (!player.getAbilities().creativeMode && serving.getItem().hasRecipeRemainder()) {
                     heldItem.decrement(1);

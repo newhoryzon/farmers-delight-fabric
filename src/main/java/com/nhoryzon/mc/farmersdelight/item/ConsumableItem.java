@@ -136,7 +136,7 @@ public class ConsumableItem extends Item {
                 }
 
                 if (instance.getDuration() > 20) {
-                    iformattabletextcomponent = Text.translatable("potion.withDuration", iformattabletextcomponent, StatusEffectUtil.durationToString(instance, durationFactor));
+                    iformattabletextcomponent = Text.translatable("potion.withDuration", iformattabletextcomponent, StatusEffectUtil.getDurationText(instance, durationFactor));
                 }
 
                 lores.add(iformattabletextcomponent.formatted(effect.getCategory().getFormatting()));

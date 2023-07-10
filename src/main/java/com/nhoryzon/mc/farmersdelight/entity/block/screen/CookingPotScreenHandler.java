@@ -87,7 +87,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
     private static CookingPotBlockEntity getBlockEntity(final PlayerInventory playerInventory, final PacketByteBuf data) {
         Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final BlockEntity tileAtPos = playerInventory.player.world.getBlockEntity(data.readBlockPos());
+        final BlockEntity tileAtPos = playerInventory.player.getWorld().getBlockEntity(data.readBlockPos());
 
         if (tileAtPos instanceof CookingPotBlockEntity cookingPotBlockEntity) {
             return cookingPotBlockEntity;
