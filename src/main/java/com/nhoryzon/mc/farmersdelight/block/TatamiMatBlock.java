@@ -49,7 +49,7 @@ public class TatamiMatBlock extends HorizontalFacingBlock {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        Direction facing = context.getPlayerFacing();
+        Direction facing = context.getHorizontalPlayerFacing();
         BlockPos pos = context.getBlockPos();
         BlockPos pairPos = pos.offset(facing);
 

@@ -7,11 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.WallSignBlock;
+import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.SignType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ public class WallCanvasSignBlock extends WallSignBlock implements ICanvasSign {
     private final DyeColor backgroundColor;
 
     public WallCanvasSignBlock(Block dropLike, DyeColor backgroundColor) {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_SIGN).dropsLike(dropLike), SignType.SPRUCE);
+        super(FabricBlockSettings.copyOf(Blocks.OAK_SIGN).dropsLike(dropLike), WoodType.SPRUCE);
         this.backgroundColor = backgroundColor;
     }
 

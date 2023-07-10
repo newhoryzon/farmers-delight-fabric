@@ -17,8 +17,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
@@ -100,7 +100,7 @@ public class SkilletBlockEntity extends SyncedBlockEntity implements ItemStackIn
             SimpleInventory wrapper = new SimpleInventory(cookingStack);
             Optional<CampfireCookingRecipe> recipe = getMatchingRecipe(wrapper);
             if (recipe.isPresent()) {
-                ItemStack resultStack = recipe.get().craft(wrapper);
+                ItemStack resultStack = recipe.get().craft(wrapper, world.getRegistryManager());
                 Direction direction = getCachedState().get(SkilletBlock.FACING).rotateYClockwise();
                 ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + .3, pos.getZ() + .5, resultStack.copy());
                 entity.setVelocity(direction.getOffsetX() *.08f, .25f, direction.getOffsetZ() * .08f);

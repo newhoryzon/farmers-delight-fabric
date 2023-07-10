@@ -71,7 +71,7 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
             ingredient.write(buf);
         }
 
-        buf.writeItemStack(recipe.getOutput());
+        buf.writeItemStack(recipe.getOutput(null));
         buf.writeItemStack(recipe.getContainer());
         buf.writeFloat(recipe.getExperience());
         buf.writeVarInt(recipe.getCookTime());

@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FacingBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.BlockMirror;
@@ -24,7 +23,7 @@ public class RiceBaleBlock extends FacingBlock {
 
     @Override
     public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
-        entity.handleFallDamage(fallDistance, .2f, DamageSource.FALL);
+        entity.handleFallDamage(fallDistance, .2f, world.getDamageSources().fall());
     }
 
     @Override

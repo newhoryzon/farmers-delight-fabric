@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SignBlock;
 import net.minecraft.block.WallSignBlock;
+import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -17,14 +18,13 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.SignType;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -54,7 +54,7 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     public CanvasSignBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         super(context);
 
-        signModel = new SignModel(context.getLayerModelPart(EntityModelLayers.createSign(SignType.SPRUCE)));
+        signModel = new SignModel(context.getLayerModelPart(EntityModelLayers.createSign(WoodType.SPRUCE)));
         textRenderer = context.getTextRenderer();
     }
 
@@ -122,7 +122,7 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
                         vertexConsumerProvider, light);
             } else {
                 this.textRenderer.draw(orderedText, x, y, baseColor, false, matrixStack.peek().getPositionMatrix(),
-                        vertexConsumerProvider, false, 0, light);
+                        vertexConsumerProvider, TextRenderer.TextLayerType.NORMAL, 0, light);
             }
         }
 
@@ -147,10 +147,10 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     private static int getColor(SignBlockEntity sign, boolean isOutlineVisible) {
         int textColor = sign.getTextColor().getSignColor();
         double brightness = isOutlineVisible ? .4d : .6d;
-        int red = (int)((double) NativeImage.getRed(textColor) * brightness);
-        int green = (int)((double)NativeImage.getGreen(textColor) * brightness);
-        int blue = (int)((double)NativeImage.getBlue(textColor) * brightness);
-        return textColor == DyeColor.BLACK.getSignColor() && sign.isGlowingText() ? -988212 : NativeImage.packColor(0, blue, green, red);
+        int red = (int)((double)ColorHelper.Argb.getRed(textColor) * brightness);
+        int green = (int)((double)ColorHelper.Argb.getGreen(textColor) * brightness);
+        int blue = (int)((double)ColorHelper.Argb.getBlue(textColor) * brightness);
+        return textColor == DyeColor.BLACK.getSignColor() && sign.isGlowingText() ? -988212 : ColorHelper.Argb.getArgb(0, blue, green, red);
     }
 
     public static SpriteIdentifier getCanvasSignSpriteTexture(DyeColor dyeColor) {

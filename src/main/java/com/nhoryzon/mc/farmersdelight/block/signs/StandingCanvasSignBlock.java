@@ -6,11 +6,11 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SignBlock;
+import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.SignType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ public class StandingCanvasSignBlock extends SignBlock implements ICanvasSign {
     private final DyeColor backgroundColor;
 
     public StandingCanvasSignBlock(DyeColor backgroundColor) {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), SignType.SPRUCE);
+        super(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), WoodType.SPRUCE);
         this.backgroundColor = backgroundColor;
     }
 

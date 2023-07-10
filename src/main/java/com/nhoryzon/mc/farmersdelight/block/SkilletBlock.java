@@ -132,7 +132,7 @@ public class SkilletBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState().with(FACING, context.getPlayerFacing()).with(SUPPORT, getTrayState(context.getWorld(), context.getBlockPos()));
+        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing()).with(SUPPORT, getTrayState(context.getWorld(), context.getBlockPos()));
     }
 
     @Override

@@ -8,6 +8,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.random.Random;
@@ -48,7 +49,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack craft(Inventory inv) {
+    public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
         return resultList.get(0).stack().copy();
     }
 
@@ -58,7 +59,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return resultList.get(0).stack();
     }
 

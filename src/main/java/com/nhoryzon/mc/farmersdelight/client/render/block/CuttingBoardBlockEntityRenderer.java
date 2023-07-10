@@ -9,7 +9,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.Item;
@@ -46,8 +46,8 @@ public class CuttingBoardBlockEntityRenderer implements BlockEntityRenderer<Cutt
                 renderItemLayingDown(matrices, direction);
             }
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, light, overlay, matrices,
-                    vertexConsumers, intPos);
+            itemRenderer.renderItem(itemStack, ModelTransformationMode.FIXED, light, overlay, matrices,
+                    vertexConsumers, entity.getWorld(), intPos);
             matrices.pop();
         }
 

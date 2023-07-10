@@ -6,7 +6,6 @@ import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,7 +52,7 @@ public class RottenTomatoEntity extends ThrownItemEntity {
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity();
-        entity.damage(DamageSource.thrownProjectile(this, getOwner()), 0);
+        entity.damage(getDamageSources().thrown(this, getOwner()), 0);
         playSound(SoundsRegistry.ENTITY_ROTTEN_TOMATO_HIT.get(), 1.f, (random.nextFloat() - random.nextFloat()) * 2.f + 1.f);
     }
 

@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.entity.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.CookingPotBlock;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.CookingPotInventory;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackInventory;
 import com.nhoryzon.mc.farmersdelight.entity.block.inventory.RecipeWrapper;
 import com.nhoryzon.mc.farmersdelight.entity.block.screen.CookingPotScreenHandler;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.RecipeManagerAccessorMixin;
@@ -210,7 +209,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
                     return Optional.of((CookingPotRecipe) recipe);
                 }
 
-                if (recipe.getOutput().isItemEqual(getMeal())) {
+                if (recipe.getOutput(world.getRegistryManager()).isItemEqual(getMeal())) {
                     return Optional.empty();
                 }
             }
@@ -250,7 +249,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
 
     protected boolean canCook(Recipe<?> recipeIn) {
         if (hasInput() && recipeIn != null) {
-            ItemStack recipeOutput = recipeIn.getOutput();
+            ItemStack recipeOutput = recipeIn.getOutput(world.getRegistryManager());
             if (recipeOutput.isEmpty()) {
                 return false;
             } else {
@@ -281,7 +280,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
 
         cookTime = 0;
         mealContainer = recipe.getContainer();
-        ItemStack recipeOutput = recipe.getOutput();
+        ItemStack recipeOutput = recipe.getOutput(world.getRegistryManager());
         ItemStack currentOutput = getStack(MEAL_DISPLAY_SLOT);
         if (currentOutput.isEmpty()) {
             setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());

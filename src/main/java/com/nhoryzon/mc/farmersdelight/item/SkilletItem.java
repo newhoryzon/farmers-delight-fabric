@@ -166,7 +166,7 @@ public class SkilletItem extends BlockItem {
             Optional<CampfireCookingRecipe> recipe = getCookingRecipe(cookingStack, world);
 
             recipe.ifPresent(campfireCookingRecipe -> {
-                ItemStack resultStack = campfireCookingRecipe.craft(new SimpleInventory());
+                ItemStack resultStack = campfireCookingRecipe.craft(new SimpleInventory(), world.getRegistryManager());
                 if (!player.getInventory().insertStack(resultStack)) {
                     player.dropItem(resultStack, false);
                 }
