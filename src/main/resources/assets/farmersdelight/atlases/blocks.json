@@ -1,0 +1,5 @@
+{
+  "sources": [
+    { "type": "single", "resource": "item", "sprite": "empty_container_slot_bowl" }
+  ]
+}

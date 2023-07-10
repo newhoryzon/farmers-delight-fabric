@@ -102,7 +102,7 @@ public class CookingPotScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMove(PlayerEntity playerIn, int index) {
         if (index > slots.size() - 1) {
             return ItemStack.EMPTY;
         }

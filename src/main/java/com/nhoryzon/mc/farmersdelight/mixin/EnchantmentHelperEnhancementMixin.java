@@ -16,11 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(EnchantmentHelper.class)
-public class EnchantmentHelperEnhancementMixin {
-
-    private EnchantmentHelperEnhancementMixin() {
-        // Not instantiable class
-    }
+public abstract class EnchantmentHelperEnhancementMixin {
 
     @Inject(method = "getPossibleEntries", at = @At("RETURN"))
     private static void getPossibleEntriesEnhanced(int power, ItemStack stack, boolean treasureAllowed,

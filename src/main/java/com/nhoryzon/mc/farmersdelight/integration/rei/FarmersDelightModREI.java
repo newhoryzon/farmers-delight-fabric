@@ -25,9 +25,9 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryEntryList;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
 
 import java.util.stream.Collectors;
 
@@ -64,7 +64,8 @@ public class FarmersDelightModREI implements REIClientPlugin {
         registry.add(new DecompositionRecipeDisplay(
                 EntryIngredients.of(BlocksRegistry.ORGANIC_COMPOST.get()),
                 EntryIngredients.of(BlocksRegistry.RICH_SOIL.get()),
-                EntryIngredients.ofItems(Registry.BLOCK.getEntryList(TagsRegistry.COMPOST_ACTIVATORS).stream().flatMap(RegistryEntryList::stream).map(RegistryEntry::value).map(Block::asItem).collect(Collectors.toList()))));
+                EntryIngredients.ofItems(Registries.BLOCK.getEntryList(TagsRegistry.COMPOST_ACTIVATORS).stream()
+                        .flatMap(RegistryEntryList::stream).map(RegistryEntry::value).map(Block::asItem).collect(Collectors.toList()))));
     }
 
     @Override

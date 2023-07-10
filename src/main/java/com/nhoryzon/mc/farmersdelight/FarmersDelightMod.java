@@ -8,15 +8,29 @@ import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
 import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.StructurePoolAccessorMixin;
-import com.nhoryzon.mc.farmersdelight.registry.*;
+import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.BiomeFeaturesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.ConfiguredFeaturesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.EntityTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.LootFunctionsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.PlacementModifiersRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
@@ -32,6 +46,9 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.pool.SinglePoolElement;
 import net.minecraft.structure.pool.StructurePool;
@@ -41,9 +58,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Position;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
@@ -71,8 +85,10 @@ public class FarmersDelightMod implements ModInitializer {
 
     public static Configuration CONFIG = new Configuration();
 
-    public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "main"),
-            () -> new ItemStack(ItemsRegistry.STOVE.get()));
+    public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "main"))
+            .displayName(Text.translatable("itemGroup.farmersdelight.main"))
+            .icon(() -> new ItemStack(ItemsRegistry.STOVE.get()))
+            .build();
 
     public static MutableText i18n(String key, Object... args) {
         return Text.translatable(MOD_ID + "." + key, args);
@@ -94,6 +110,8 @@ public class FarmersDelightMod implements ModInitializer {
         ParticleTypesRegistry.registerAll();
         EnchantmentsRegistry.registerAll();
         ConfiguredFeaturesRegistry.registerAll();
+        BiomeFeaturesRegistry.registerAll();
+        PlacementModifiersRegistry.registerAll();
         EntityTypesRegistry.registerAll();
 
         registerBiomeModifications();
@@ -132,12 +150,11 @@ public class FarmersDelightMod implements ModInitializer {
     }
 
     protected void addToStructurePool(MinecraftServer server, Identifier poolIdentifier, Identifier nbtIdentifier, int weight) {
-        RegistryEntry<StructureProcessorList> emptyProcessorList = server.getRegistryManager().get(Registry.STRUCTURE_PROCESSOR_LIST_KEY)
-                .entryOf(RegistryKey.of(Registry.STRUCTURE_PROCESSOR_LIST_KEY, new Identifier("minecraft", "empty")));
+        RegistryEntry.Reference<StructureProcessorList> emptyProcessorList = server.getRegistryManager().get(RegistryKeys.PROCESSOR_LIST)
+                .entryOf(RegistryKey.of(RegistryKeys.PROCESSOR_LIST, new Identifier("minecraft", "empty")));
 
-        server.getRegistryManager().get(Registry.STRUCTURE_POOL_KEY).stream()
-                .filter(structurePoolReference -> structurePoolReference.getId().equals(poolIdentifier))
-                .findFirst().ifPresentOrElse(structurePool -> {
+        server.getRegistryManager().get(RegistryKeys.STRUCTURE_POOL_ELEMENT).getOrEmpty(poolIdentifier)
+                .ifPresentOrElse(structurePool -> {
                     SinglePoolElement compostPilePool = StructurePoolElement.ofProcessedSingle(nbtIdentifier.toString(), emptyProcessorList)
                             .apply(StructurePool.Projection.RIGID);
                     List<Pair<StructurePoolElement, Integer>> elementCounts = new ArrayList<>(((StructurePoolAccessorMixin) structurePool).getElementCounts());

@@ -7,8 +7,9 @@ import com.nhoryzon.mc.farmersdelight.loot.function.SmokerCookFunctionSerializer
 import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.function.Supplier;
 
@@ -31,7 +32,7 @@ public enum LootFunctionsRegistry {
 
     public static void registerAll() {
         for (LootFunctionsRegistry value : values()) {
-            Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.type());
+            Registry.register(Registries.LOOT_FUNCTION_TYPE, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.type());
         }
     }
 

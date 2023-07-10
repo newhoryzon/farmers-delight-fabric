@@ -2,9 +2,9 @@ package com.nhoryzon.mc.farmersdelight.mixin;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.SimpleDefaultedRegistry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DefaultedRegistry;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * @deprecated Will be removed in the next minor release that aim the next minor Minecraft version (1.20).
  */
 @Deprecated(forRemoval = true, since = "1.4.0")
-@Mixin(DefaultedRegistry.class)
+@Mixin(SimpleDefaultedRegistry.class)
 public abstract class MigrationBlockRegistryMixin {
 
     private static final Map<String, Supplier<String>> MIGRATION_BLOCK = Map.of(
@@ -32,9 +32,9 @@ public abstract class MigrationBlockRegistryMixin {
             "farmersdelight:rice_upper_crop", BlocksRegistry.RICE_PANICLE::getId
     );
 
-    @ModifyVariable(method = "get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", at = @At(value = "HEAD"), argsOnly = true)
+    @ModifyVariable(method = "get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", at = @At("HEAD"), argsOnly = true)
     private Identifier migrateGet(Identifier value) {
-        if ((Object)this == Registry.BLOCK) {
+        if (this == Registries.BLOCK) {
             String fullId = value.toString();
             if (MIGRATION_BLOCK.containsKey(fullId)) {
                 String newFullId = MIGRATION_BLOCK.get(fullId).get();

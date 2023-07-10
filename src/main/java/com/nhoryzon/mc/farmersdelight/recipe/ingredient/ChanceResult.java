@@ -11,10 +11,10 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 
 /**
  * Credits to the Create team for the implementation of results with chances!
@@ -44,7 +44,7 @@ public record ChanceResult(ItemStack stack, float chance) {
     public JsonElement serialize() {
         JsonObject json = new JsonObject();
 
-        Identifier identifier = Registry.ITEM.getId(stack.getItem());
+        Identifier identifier = Registries.ITEM.getId(stack.getItem());
         json.addProperty("item", identifier.toString());
 
         int count = stack.getCount();
@@ -70,7 +70,7 @@ public record ChanceResult(ItemStack stack, float chance) {
         String itemId = JsonHelper.getString(json, "item");
         int count = JsonHelper.getInt(json, "count", 1);
         float chance = JsonHelper.getFloat(json, "chance", 1);
-        ItemStack itemstack = new ItemStack(Registry.ITEM.get(new Identifier(itemId)), count);
+        ItemStack itemstack = new ItemStack(Registries.ITEM.get(new Identifier(itemId)), count);
 
         if (JsonHelper.hasPrimitive(json, "nbt")) {
             try {

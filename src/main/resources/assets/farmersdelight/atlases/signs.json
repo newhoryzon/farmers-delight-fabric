@@ -1,0 +1,21 @@
+{
+  "sources": [
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_black" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_blue" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_brown" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_cyan" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_gray" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_green" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_light_blue" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_light_gray" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_lime" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_magenta" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_orange" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_pink" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_purple" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_red" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_white" },
+    { "type": "single", "resource": "entity.signs", "sprite": "canvas_yellow" }
+  ]
+}

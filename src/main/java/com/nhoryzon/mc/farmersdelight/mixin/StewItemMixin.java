@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StewItem.class)
-public class StewItemMixin extends Item {
+public abstract class StewItemMixin extends Item {
+
 	public StewItemMixin(Settings settings) {
 		super(settings);
 	}
@@ -33,4 +34,5 @@ public class StewItemMixin extends Item {
 			cir.setReturnValue(new ItemStack(Items.BOWL));
 		}
 	}
+
 }

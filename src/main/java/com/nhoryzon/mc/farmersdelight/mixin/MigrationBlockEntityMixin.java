@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  */
 @Deprecated(forRemoval = true, since = "1.4.0")
 @Mixin(BlockEntity.class)
-public class MigrationBlockEntityMixin {
+public abstract class MigrationBlockEntityMixin {
 
     private static final Map<String, Supplier<String>> MIGRATION_BLOCK_ENTITY = Map.of(
             "farmersdelight:pantry", BlockEntityTypesRegistry.CABINET::getId

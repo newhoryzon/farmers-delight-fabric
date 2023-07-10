@@ -26,8 +26,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,12 +67,12 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
         if (blockState.getBlock() instanceof SignBlock) {
             matrixStack.translate(0.5, 0.5, 0.5);
             h = -((float)(blockState.get(SignBlock.ROTATION) * 360) / 16.0F);
-            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(h));
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(h));
             signModel.stick.visible = true;
         } else {
             matrixStack.translate(0.5, 0.5, 0.5);
             h = -(blockState.get(WallSignBlock.FACING)).asRotation();
-            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(h));
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(h));
             matrixStack.translate(0.0, -0.3125, -0.4375);
             signModel.stick.visible = false;
         }

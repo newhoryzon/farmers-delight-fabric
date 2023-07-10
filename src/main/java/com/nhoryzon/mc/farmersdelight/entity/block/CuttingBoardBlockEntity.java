@@ -28,6 +28,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -38,7 +39,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -176,7 +176,7 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
     }
 
     public void playProcessingSound(String soundEventID, Item tool, Item boardItem) {
-        SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(soundEventID));
+        SoundEvent sound = Registries.SOUND_EVENT.get(new Identifier(soundEventID));
 
         if (sound != null) {
             playSound(sound, 1.f, 1.f);

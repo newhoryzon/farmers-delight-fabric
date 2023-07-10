@@ -4,8 +4,9 @@ import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.effect.ComfortEffect;
 import com.nhoryzon.mc.farmersdelight.effect.NourishmentEffect;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public enum EffectsRegistry {
     NOURISHMENT("nourishment", new NourishmentEffect()),
@@ -21,7 +22,7 @@ public enum EffectsRegistry {
 
     public static void registerAll() {
         for (EffectsRegistry value : values()) {
-            Registry.register(Registry.STATUS_EFFECT, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.effect);
+            Registry.register(Registries.STATUS_EFFECT, new Identifier(FarmersDelightMod.MOD_ID, value.pathName), value.effect);
         }
     }
 

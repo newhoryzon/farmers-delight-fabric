@@ -24,7 +24,6 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
@@ -60,16 +59,6 @@ public class FarmersDelightModClient implements ClientModInitializer {
 
 		// Screen register
 		HandledScreens.register(ExtendedScreenTypesRegistry.COOKING_POT.get(), CookingPotScreen::new);
-
-		// Standalone textures register
-		ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
-				(atlasTexture, registry) -> registry.register(CookingPotBowlSlot.EMPTY_CONTAINER_SLOT_BOWL));
-
-		ClientSpriteRegistryCallback.event(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE).register(
-				(atlasTexture, registry) -> registry.register(CanvasSignBlockEntityRenderer.BLANK_CANVAS_SIGN_SPRITE.getTextureId()));
-		CanvasSignBlockEntityRenderer.DYED_CANVAS_SIGN_SPRITES.forEach((dyeColor, spriteIdentifier) ->
-			ClientSpriteRegistryCallback.event(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE).register(
-					(atlasTexture, registry) -> registry.register(spriteIdentifier.getTextureId())));
 
 		ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
 			if (FarmersDelightMod.CONFIG.isRabbitStewJumpBoost() && stack.isOf(Items.RABBIT_STEW)) {

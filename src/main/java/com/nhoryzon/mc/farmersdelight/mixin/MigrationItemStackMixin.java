@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 @Deprecated(forRemoval = true, since = "1.4.0")
 @Mixin(ItemStack.class)
-public class MigrationItemStackMixin {
+public abstract class MigrationItemStackMixin {
 
     private static final Map<String, Supplier<String>> MIGRATION_ITEM = Map.of(
             "farmersdelight:oak_pantry", ItemsRegistry.OAK_CABINET::getId,
