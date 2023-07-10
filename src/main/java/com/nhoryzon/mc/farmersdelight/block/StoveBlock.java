@@ -1,15 +1,14 @@
 package com.nhoryzon.mc.farmersdelight.block;
 
+import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.entity.block.StoveBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.DamageSourcesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.util.BlockStateUtils;
 import com.nhoryzon.mc.farmersdelight.util.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -31,6 +30,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -40,6 +42,7 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -139,7 +142,7 @@ public class StoveBlock extends BlockWithEntity {
         ItemStack stackHand = player.getStackInHand(hand);
         Item usedItem = stackHand.getItem();
 
-        if (!(stackHand.isIn(ConventionalItemTags.SHOVELS)) && usedItem != Items.WATER_BUCKET) {
+        if (!(stackHand.isIn(ItemTags.SHOVELS)) && usedItem != Items.WATER_BUCKET) {
             return ActionResult.PASS;
         }
 
@@ -160,7 +163,7 @@ public class StoveBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()).with(LIT, true);
+        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite()).with(LIT, true);
     }
 
     @Override
@@ -168,7 +171,8 @@ public class StoveBlock extends BlockWithEntity {
         boolean isLit = world.getBlockState(pos).get(LIT);
         if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity livingEntity &&
                 !EnchantmentHelper.hasFrostWalker(livingEntity)) {
-            entity.damage(DamageSourcesRegistry.STOVE_BLOCK, 1.f);
+            entity.damage(world.getDamageSources().create(RegistryKey.of(RegistryKeys.DAMAGE_TYPE,
+                    new Identifier(FarmersDelightMod.MOD_ID, "stove"))), 1.f);
         }
 
         super.onSteppedOn(world, pos, state, entity);

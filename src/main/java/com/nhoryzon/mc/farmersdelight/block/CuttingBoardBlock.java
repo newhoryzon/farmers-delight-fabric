@@ -93,7 +93,7 @@ public class CuttingBoardBlock extends BlockWithEntity implements Waterloggable 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        return getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()).with(WATERLOGGED,
+        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED,
                 fluidState.getFluid() == Fluids.WATER);
     }
 

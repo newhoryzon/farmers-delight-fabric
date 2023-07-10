@@ -8,6 +8,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -62,7 +63,7 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack craft(Inventory inv) {
+    public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
         return output.copy();
     }
 
@@ -72,7 +73,7 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return output;
     }
 

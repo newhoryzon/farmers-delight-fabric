@@ -31,7 +31,7 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
     }
 
     public WildPatchBlock(OffsetType offsetType) {
-        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.CROP).offsetType(offsetType));
+        super(FabricBlockSettings.copyOf(Blocks.TALL_GRASS).sounds(BlockSoundGroup.CROP).offset(offsetType));
     }
 
     /* FORGE : canGrow */

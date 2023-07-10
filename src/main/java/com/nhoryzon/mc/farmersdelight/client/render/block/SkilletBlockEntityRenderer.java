@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -53,8 +53,8 @@ public class SkilletBlockEntityRenderer implements BlockEntityRenderer<SkilletBl
                 matrices.scale(.5f, .5f, .5f);
 
                 if (entity.getWorld() != null) {
-                    MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay,
-                            matrices, vertexConsumers, posLong);
+                    MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformationMode.FIXED, light, overlay,
+                            matrices, vertexConsumers, entity.getWorld(), posLong);
                 }
                 matrices.pop();
             }

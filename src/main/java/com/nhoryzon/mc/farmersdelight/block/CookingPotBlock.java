@@ -3,7 +3,6 @@ package com.nhoryzon.mc.farmersdelight.block;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.state.CookingPotSupport;
 import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.inventory.ItemStackInventory;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
@@ -117,7 +116,7 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
         FluidState fluidState = world.getFluidState(blockPos);
 
         return getDefaultState()
-                .with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FACING, context.getHorizontalPlayerFacing().getOpposite())
                 .with(SUPPORT, context.getSide() == Direction.DOWN ? CookingPotSupport.HANDLE : getTrayState(world, blockPos))
                 .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
     }

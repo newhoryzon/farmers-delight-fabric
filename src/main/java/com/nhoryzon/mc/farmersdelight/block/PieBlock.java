@@ -53,7 +53,7 @@ public class PieBlock extends Block {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState().with(FACING, context.getPlayerFacing());
+        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing());
     }
 
     @Override

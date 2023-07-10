@@ -153,7 +153,7 @@ public class FarmersDelightMod implements ModInitializer {
         RegistryEntry.Reference<StructureProcessorList> emptyProcessorList = server.getRegistryManager().get(RegistryKeys.PROCESSOR_LIST)
                 .entryOf(RegistryKey.of(RegistryKeys.PROCESSOR_LIST, new Identifier("minecraft", "empty")));
 
-        server.getRegistryManager().get(RegistryKeys.STRUCTURE_POOL_ELEMENT).getOrEmpty(poolIdentifier)
+        server.getRegistryManager().get(RegistryKeys.TEMPLATE_POOL).getOrEmpty(poolIdentifier)
                 .ifPresentOrElse(structurePool -> {
                     SinglePoolElement compostPilePool = StructurePoolElement.ofProcessedSingle(nbtIdentifier.toString(), emptyProcessorList)
                             .apply(StructurePool.Projection.RIGID);

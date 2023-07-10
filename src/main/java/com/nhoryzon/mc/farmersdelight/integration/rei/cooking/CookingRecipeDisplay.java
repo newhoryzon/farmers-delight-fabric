@@ -22,7 +22,8 @@ public class CookingRecipeDisplay extends BasicDisplay {
     private final int cookTime;
 
     public CookingRecipeDisplay(CookingPotRecipe recipe) {
-        super(EntryIngredients.ofIngredients(recipe.getIngredients()), Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
+        super(EntryIngredients.ofIngredients(recipe.getIngredients()),
+                Collections.singletonList(EntryIngredients.of(recipe.getOutput(null))),
                 Optional.ofNullable(recipe.getId()));
         containerOutput = EntryIngredients.of(recipe.getContainer());
         cookTime = recipe.getCookTime();
