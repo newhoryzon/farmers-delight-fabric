@@ -21,6 +21,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.FlintAndSteelItem;
@@ -54,6 +55,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class StoveBlock extends BlockWithEntity {
+
+    private static final RegistryKey<DamageType> STOVE_BURN = RegistryKey.of(RegistryKeys.DAMAGE_TYPE,
+            new Identifier(FarmersDelightMod.MOD_ID, "stove_burn"));
 
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = Properties.LIT;
@@ -171,8 +175,7 @@ public class StoveBlock extends BlockWithEntity {
         boolean isLit = world.getBlockState(pos).get(LIT);
         if (isLit && !entity.isFireImmune() && entity instanceof LivingEntity livingEntity &&
                 !EnchantmentHelper.hasFrostWalker(livingEntity)) {
-            entity.damage(world.getDamageSources().create(RegistryKey.of(RegistryKeys.DAMAGE_TYPE,
-                    new Identifier(FarmersDelightMod.MOD_ID, "stove"))), 1.f);
+            entity.damage(world.getDamageSources().create(STOVE_BURN), 1.f);
         }
 
         super.onSteppedOn(world, pos, state, entity);
