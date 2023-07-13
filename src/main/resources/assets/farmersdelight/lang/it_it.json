@@ -10,6 +10,7 @@
   "block.farmersdelight.jungle_cabinet": "Dispensa della giungla",
   "block.farmersdelight.acacia_cabinet": "Dispensa di acacia",
   "block.farmersdelight.dark_oak_cabinet": "Dispensa di quercia scura",
+  "block.farmersdelight.mangrove_cabinet": "Dispensa di mangrovia",
   "block.farmersdelight.crimson_cabinet": "Dispensa cremisi",
   "block.farmersdelight.warped_cabinet": "Dispensa distorta",
   "block.farmersdelight.rope": "Corda",
@@ -48,7 +49,8 @@
   "block.farmersdelight.green_canvas_sign": "Cartello di tela verde",
   "block.farmersdelight.red_canvas_sign": "Cartello di tela rosso",
   "block.farmersdelight.black_canvas_sign": "Cartello di tela nero",
-  
+
+  "block.farmersdelight.budding_tomatoes": "Pomodoro In Germoglio",
   "block.farmersdelight.tomatoes": "Pomodori",
   "block.farmersdelight.cabbages": "Cavoli",
   "block.farmersdelight.onions": "Cipolle",
@@ -57,6 +59,7 @@
   "block.farmersdelight.brown_mushroom_colony": "Colonia di funghi marroni",
   "block.farmersdelight.red_mushroom_colony": "Colonia di funghi rossi",
 
+  "block.farmersdelight.sandy_shrub": "Arbusto delle sabbie",
   "block.farmersdelight.wild_cabbages": "Cavolo selvatico",
   "block.farmersdelight.wild_tomatoes": "Viti di pomodoro",
   "block.farmersdelight.wild_onions": "Cipolle selvatiche",
@@ -76,7 +79,8 @@
   "item.farmersdelight.cabbage_seeds": "Semi di cavolo",
   "item.farmersdelight.tomato_seeds": "Semi di pomodoro",
   "item.farmersdelight.rice_panicle": "Pannocchia di riso",
-
+  "item.farmersdelight.rotten_tomato": "Pomodoro Marcio",
+  
   "item.farmersdelight.straw": "Paglia",
   "item.farmersdelight.canvas": "Tela",
   "item.farmersdelight.tree_bark": "Corteccia d'albero",
@@ -115,6 +119,7 @@
   "item.farmersdelight.sweet_berry_cookie": "Biscotto di bacche dolci",
   "item.farmersdelight.honey_cookie": "Biscotto di miele",
   "item.farmersdelight.melon_popsicle": "Ghiacciolo di anguria",
+  "item.farmersdelight.glow_berry_custard": "Crema pasticcera ai frutti di bosco",
 
   "item.farmersdelight.earthworm": "Lombrico",
 
@@ -133,6 +138,10 @@
   "item.farmersdelight.dumplings": "Ravioli cinesi",
   "item.farmersdelight.stuffed_potato": "Patata ripiena",
   "item.farmersdelight.cabbage_rolls": "Involtini di cavolo",
+  "item.farmersdelight.salmon_roll": "Rotolo di salmone",
+  "item.farmersdelight.cod_roll": "Rotolo Cod",
+  "item.farmersdelight.kelp_roll": "Rotolo di alghe",
+  "item.farmersdelight.kelp_roll_slice": "Fetta Di Rotolo Di Alghe",
 
   "item.farmersdelight.cooked_rice": "Riso cotto",
   "item.farmersdelight.mixed_salad": "Insalata mista",
@@ -145,6 +154,7 @@
   "item.farmersdelight.pumpkin_soup": "Zuppa di zucca",
   "item.farmersdelight.baked_cod_stew": "Stufato di merluzzo cotto",
   "item.farmersdelight.noodle_soup": "Zuppa di noodles",
+  "item.farmersdelight.bone_broth": "Brodo d'osso",
 
   "item.farmersdelight.bacon_and_eggs": "Bacon e Uova",
   "item.farmersdelight.pasta_with_meatballs": "Spaghetti con polpette",
@@ -155,6 +165,7 @@
   "item.farmersdelight.ratatouille": "Ratatouille",
   "item.farmersdelight.squid_ink_pasta": "Spaghetti al nero di seppia",
   "item.farmersdelight.grilled_salmon": "Salmone grigliato",
+  "item.farmersdelight.mushroom_rice": "Riso ai funghi",
 
   "block.farmersdelight.roast_chicken_block": "Pollo arrosto",
   "item.farmersdelight.roast_chicken": "Piatto di pollo arrosto",
@@ -164,6 +175,7 @@
   "item.farmersdelight.honey_glazed_ham": "Piatto di prosciutto glassato al miele",
   "block.farmersdelight.shepherds_pie_block": "Pasticcio di patate",
   "item.farmersdelight.shepherds_pie": "Piatto di pasticcio di patate",
+  "block.farmersdelight.rice_roll_medley_block": "Involtino di riso misto",
 
   "item.farmersdelight.dog_food": "Cibo per cani",
   "item.farmersdelight.horse_feed": "Mangime per cavalli",
@@ -177,8 +189,9 @@
   "enchantment.farmersdelight.backstabbing": "Pugnalata alla schiena",
   "enchantment.farmersdelight.backstabbing.desc": "Amplifica i danni quando colpisci il bersaglio da dietro.",
 
-  "itemGroup.farmersdelight.main": "Farmer's Delight",
+  "itemGroup.farmersdelight.main": "Delizia del contadino",
 
+  "farmersdelight.container.recipe_book.cookable": "Libro di cucina",
   "farmersdelight.container.cooking_pot": "Pentola",
   "farmersdelight.container.cooking_pot.served_on": "Servito su: %s",
   "farmersdelight.container.cooking_pot.not_heated": "Ha bisogno di calore sotto",
@@ -187,32 +200,42 @@
   "farmersdelight.container.cabinet": "Dispensa",
 
   "farmersdelight.tooltip.cooking_pot.empty": "Vuoto",
-  "farmersdelight.tooltip.cooking_pot.single_serving": "Tiene 1 porzione di:",
-  "farmersdelight.tooltip.cooking_pot.many_servings": "Tiene %s porzioni di:",
+  "farmersdelight.tooltip.cooking_pot.single_serving": "servendo 1 porzione di:",
+  "farmersdelight.tooltip.cooking_pot.many_servings": "servendo %s porzioni di:",
   "farmersdelight.tooltip.dog_food.when_feeding": "Quando alimentato a un lupo domestico:",
   "farmersdelight.tooltip.horse_feed.when_feeding": "Quando alimentato a un domestico cavalcabile:",
   "farmersdelight.tooltip.milk_bottle": "Cancella 1 effetto di stato",
   "farmersdelight.tooltip.hot_cocoa": "Cancella 1 effetto di stato dannoso",
   "farmersdelight.tooltip.melon_juice": "Recupera istantaneamente un po' di salute",
 
-  "farmersdelight.advancement.root": "Farmer's Delight",
+  "farmersdelight.advancement.root": "Delizia del contadino",
   "farmersdelight.advancement.root.desc": "Un mondo di sapori ti aspetta!",
-  "farmersdelight.advancement.craft_knife": "Caccia e raccogli",
+
+   "farmersdelight.advancement.craft_knife": "Caccia e raccogli",
   "farmersdelight.advancement.craft_knife.desc": "Costruisci un coltello per raccogliere più beni da piante e animali",
-  "farmersdelight.advancement.plant_rice": "Immergi le tue radici",
-  "farmersdelight.advancement.plant_rice.desc": "Pianta dei chicchi di riso in una pozzanghera",
-  "farmersdelight.advancement.plant_all_crops": "Rotazione delle colture",
-  "farmersdelight.advancement.plant_all_crops.desc": "Coltiva tutti i frutti, verdure, funghi o radici che riesci a trovare!",
-  "farmersdelight.advancement.get_ham": "Macellaio selvatico",
-  "farmersdelight.advancement.get_ham.desc": "Usa un coltello per estrarre tagli di carne maggiori dai maiali",
-  "farmersdelight.advancement.harvest_straw": "Afferrando le paglie",
+  "farmersdelight.advancement.harvest_straw": "Raccolgi la paglia",
   "farmersdelight.advancement.harvest_straw.desc": "Raccogli piante erbacee e colture con un coltello per ottenere della paglia",
+  "farmersdelight.advancement.place_organic_compost": "Compostaggio avanzato",
+  "farmersdelight.advancement.place_organic_compost.desc": "Metti del compost organico. Si composta meglio con sole, acqua e funghi!",
   "farmersdelight.advancement.get_rich_soil": "Cibo per piante",
   "farmersdelight.advancement.get_rich_soil.desc": "Fai decomporre un composto organico fino a quando diventa terra ricca. I funghi potrebbero aiutare!",
-  "farmersdelight.advancement.get_mushroom_colony": "Un fungo tra di noi",
-  "farmersdelight.advancement.get_mushroom_colony.desc": "Pianta dei funghi sulla terra ricca al buio, guarda una colonia prendere forma, e poi distruggili con cesoie!",
+  "farmersdelight.advancement.get_ham": "Prendi il prosciutto",
+  "farmersdelight.advancement.get_ham.desc": "Usa un coltello per estrarre tagli di carne maggiori dai maiali",
   "farmersdelight.advancement.obtain_netherite_knife": "Se non riesci a sopportare il calore...",
   "farmersdelight.advancement.obtain_netherite_knife.desc": "Spendi un intero lingotto di netherite per potenziare il tuo coltello! Oppure esci dalla cucina.",
+
+  "farmersdelight.advancement.get_fd_seed": "Raccolti della natura",
+  "farmersdelight.advancement.get_fd_seed.desc": "Quattro nuovi raccolti possono essere trovati in natura, in molti climi... o forse in una cassa da qualche parte.",
+  "farmersdelight.advancement.plant_rice": "Immergi le tue radici",
+  "farmersdelight.advancement.plant_rice.desc": "Pianta i chicchi di riso in una pozza d'acqua poco profonda",
+  "farmersdelight.advancement.harvest_ropelogged_tomato": "Rampicante",
+  "farmersdelight.advancement.harvest_ropelogged_tomato.desc": "Appendi una corda sopra un raccolto di pomodori per farlo crescere più alto",
+  "farmersdelight.advancement.hit_raider_with_rotten_tomato": "Boom! Preso!",
+  "farmersdelight.advancement.hit_raider_with_rotten_tomato.desc": "Lancia un pomodoro marcio a uno di questi fastidiosi predoni!",
+  "farmersdelight.advancement.get_mushroom_colony": "Un fungo tra di noi",
+  "farmersdelight.advancement.get_mushroom_colony.desc": "Pianta dei funghi sulla terra ricca al buio, guarda una colonia prendere forma, e poi distruggili con cesoie!",
+  "farmersdelight.advancement.plant_all_crops": "Rotazione delle colture",
+  "farmersdelight.advancement.plant_all_crops.desc": "Coltiva tutti i frutti, verdure, funghi o radici che riesci a trovare!",
 
   "farmersdelight.advancement.place_campfire": "Falò acceso",
   "farmersdelight.advancement.place_campfire.desc": "Piazza un fuoco da campo per tenerti caldo durante la notte",
@@ -242,7 +265,11 @@
   "farmersdelight.subtitles.stove.crackle": "Fornello crepita",
   "farmersdelight.subtitles.skillet.sizzle": "Padella sfrigola",
   "farmersdelight.subtitles.skillet.add_food": "Padella sibila",
+  "farmersdelight.subtitles.cabinet.open": "Dispensa aperta",
+  "farmersdelight.subtitles.cabinet.close": "Dispensa chiusa",
   "farmersdelight.subtitles.tomato.pick": "Pomodori scoppiano",
+  "farmersdelight.subtitles.rotten_tomato.throw": "Il pomodoro marcio vola",
+  "farmersdelight.subtitles.rotten_tomato.hit": "Schizzi di pomodoro marcio",
 
   "farmersdelight.block.feast.use_container": "Hai bisogno di %s per mangiare questo.",
   "farmersdelight.block.rice.invalid_placement": "Questa coltura non sopravvivrà bene fuori dall'acqua poco profonda.",
@@ -251,6 +278,9 @@
   "farmersdelight.block.skillet.invalid_item": "Questo non si può cucinare...",
   "farmersdelight.item.skillet.how_to_cook": "Usa l'altra mano per tenere gli ingredienti!",
 
+  "death.attack.farmersdelight.stove": "%1$s era grigliato alla perfezione",
+  "death.attack.farmersdelight.stove.player": "%1$s è stato gettato sulla griglia dallo chef %2$s",
+  
   "farmersdelight.rei.cooking": "Cottura",
   "farmersdelight.rei.cutting": "Tagliere",
   "farmersdelight.rei.chance": "%1$s%% di possibilità",
