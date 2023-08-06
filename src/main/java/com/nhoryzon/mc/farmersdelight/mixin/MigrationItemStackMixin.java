@@ -28,7 +28,9 @@ public abstract class MigrationItemStackMixin {
             "farmersdelight:jungle_pantry", ItemsRegistry.JUNGLE_CABINET::getId,
             "farmersdelight:dark_oak_pantry", ItemsRegistry.DARK_OAK_CABINET::getId,
             "farmersdelight:spruce_pantry", ItemsRegistry.SPRUCE_CABINET::getId,
-            "farmersdelight:warped_pantry", ItemsRegistry.WARPED_CABINET::getId
+            "farmersdelight:warped_pantry", ItemsRegistry.WARPED_CABINET::getId,
+            "farmersdelight:cherry_pantry", ItemsRegistry.CHERRY_CABINET::getId,
+            "farmersdelight:bamboo_pantry", ItemsRegistry.BAMBOO_CABINET::getId
     );
 
     @Inject(method = "fromNbt", at = @At("HEAD"))
