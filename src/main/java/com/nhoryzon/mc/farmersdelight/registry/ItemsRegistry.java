@@ -80,6 +80,9 @@ public enum ItemsRegistry {
     MANGROVE_CABINET("mangrove_cabinet", () -> new ModBlockItem(BlocksRegistry.MANGROVE_CABINET.get()), 300),
     CRIMSON_CABINET("crimson_cabinet", () -> new ModBlockItem(BlocksRegistry.CRIMSON_CABINET.get())),
     WARPED_CABINET("warped_cabinet", () -> new ModBlockItem(BlocksRegistry.WARPED_CABINET.get())),
+    CHERRY_CABINET("cherry_cabinet", () -> new ModBlockItem(BlocksRegistry.CHERRY_CABINET.get()), 300),
+    BAMBOO_CABINET("bamboo_cabinet", () -> new ModBlockItem(BlocksRegistry.BAMBOO_CABINET.get()), 300),
+
     CANVAS_RUG("canvas_rug", () -> new ModBlockItem(BlocksRegistry.CANVAS_RUG.get()), 200),
     TATAMI("tatami", () -> new ModBlockItem(BlocksRegistry.TATAMI.get()), 400),
     FULL_TATAMI_MAT("full_tatami_mat", () -> new ModBlockItem(BlocksRegistry.FULL_TATAMI_MAT.get()), 200),
