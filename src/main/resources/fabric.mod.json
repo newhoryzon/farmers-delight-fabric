@@ -28,6 +28,9 @@
     ],
     "rei_client": [
       "com.nhoryzon.mc.farmersdelight.integration.rei.FarmersDelightModREI"
+    ],
+    "modmenu": [
+      "com.nhoryzon.mc.farmersdelight.integration.modmenu.FarmersDelightModMenu"
     ]
   },
   "mixins": [
