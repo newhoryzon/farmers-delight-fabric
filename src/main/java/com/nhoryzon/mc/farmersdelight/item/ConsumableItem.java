@@ -64,7 +64,7 @@ public class ConsumableItem extends Item {
             affectConsumer(stack, world, user);
         }
 
-        ItemStack container = new ItemStack(stack.getItem().getRecipeRemainder());
+        ItemStack container = stack.getRecipeRemainder();
 
         if (stack.isFood()) {
             super.finishUsing(stack, world, user);
