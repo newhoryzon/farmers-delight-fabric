@@ -83,6 +83,8 @@ public enum BlocksRegistry {
     MANGROVE_CABINET("mangrove_cabinet", CabinetBlock::new),
     CRIMSON_CABINET("crimson_cabinet", CabinetBlock::new),
     WARPED_CABINET("warped_cabinet", CabinetBlock::new),
+    CHERRY_CABINET("cherry_cabinet", CabinetBlock::new),
+    BAMBOO_CABINET("bamboo_cabinet", CabinetBlock::new),
     CANVAS_RUG("canvas_rug", CanvasRugBlock::new, true),
     TATAMI("tatami", TatamiBlock::new),
     FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, true),
