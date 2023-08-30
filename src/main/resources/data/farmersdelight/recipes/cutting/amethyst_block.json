@@ -7,7 +7,7 @@
   ],
   "tool": {
     "type": "farmersdelight:tool",
-    "tag": "c:tools/pickaxes"
+    "tag": "c:pickaxes"
   },
   "result": [
     {
