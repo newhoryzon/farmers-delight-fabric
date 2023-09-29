@@ -30,6 +30,7 @@ public class TagsRegistry {
 
     public static final TagKey<Item> WILD_CROPS_ITEM = create("wild_crops", RegistryKeys.ITEM);
     public static final TagKey<Item> STRAW_HARVESTERS = create("straw_harvesters", RegistryKeys.ITEM);
+    public static final TagKey<Item> STEW_ITEMS = create("stew_items", RegistryKeys.ITEM);
     public static final TagKey<Item> COMFORT_FOODS = create("comfort_foods", RegistryKeys.ITEM);
     public static final TagKey<Item> WOLF_PREY = create("wolf_prey", RegistryKeys.ITEM);
     public static final TagKey<Item> CABBAGE_ROLL_INGREDIENTS = create("cabbage_roll_ingredients", RegistryKeys.ITEM);

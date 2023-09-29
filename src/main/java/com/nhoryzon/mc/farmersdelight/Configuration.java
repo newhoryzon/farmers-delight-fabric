@@ -43,7 +43,6 @@ public final class Configuration {
     /* Stack size */
 
     private boolean enableStackableSoupSize = true;
-    private List<String> soupItemList = Arrays.asList("minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew");
     private boolean overrideAllSoupItems = false;
 
     /* World */
@@ -214,14 +213,6 @@ public final class Configuration {
 
     public void setEnableStackableSoupSize(boolean pEnableStackableSoupSize) {
         enableStackableSoupSize = pEnableStackableSoupSize;
-    }
-
-    public List<String> getSoupItemList() {
-        return soupItemList;
-    }
-
-    public void setSoupItemList(List<String> pSoupItemList) {
-        soupItemList = pSoupItemList;
     }
 
     public boolean isOverrideAllSoupItems() {
