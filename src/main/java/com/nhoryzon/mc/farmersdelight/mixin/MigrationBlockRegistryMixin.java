@@ -34,7 +34,7 @@ public abstract class MigrationBlockRegistryMixin {
 
     @ModifyVariable(method = "get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", at = @At("HEAD"), argsOnly = true)
     private Identifier migrateGet(Identifier value) {
-        if (this == Registries.BLOCK) {
+        if ((Object)this == Registry.BLOCK && value != null) {
             String fullId = value.toString();
             if (MIGRATION_BLOCK.containsKey(fullId)) {
                 String newFullId = MIGRATION_BLOCK.get(fullId).get();
