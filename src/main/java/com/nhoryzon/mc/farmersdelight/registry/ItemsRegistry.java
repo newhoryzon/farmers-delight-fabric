@@ -20,12 +20,7 @@ import com.nhoryzon.mc.farmersdelight.item.SkilletItem;
 import com.nhoryzon.mc.farmersdelight.item.enumeration.Foods;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.item.AliasedBlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SignItem;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -78,6 +73,8 @@ public enum ItemsRegistry {
     ACACIA_CABINET("acacia_cabinet", () -> new ModBlockItem(BlocksRegistry.ACACIA_CABINET.get()), 300),
     DARK_OAK_CABINET("dark_oak_cabinet", () -> new ModBlockItem(BlocksRegistry.DARK_OAK_CABINET.get()), 300),
     MANGROVE_CABINET("mangrove_cabinet", () -> new ModBlockItem(BlocksRegistry.MANGROVE_CABINET.get()), 300),
+    CHERRY_CABINET("cherry_cabinet", () -> new ModBlockItem(BlocksRegistry.CHERRY_CABINET.get()), 300),
+    BAMBOO_CABINET("bamboo_cabinet", () -> new ModBlockItem(BlocksRegistry.BAMBOO_CABINET.get()), 300),
     CRIMSON_CABINET("crimson_cabinet", () -> new ModBlockItem(BlocksRegistry.CRIMSON_CABINET.get())),
     WARPED_CABINET("warped_cabinet", () -> new ModBlockItem(BlocksRegistry.WARPED_CABINET.get())),
     CANVAS_RUG("canvas_rug", () -> new ModBlockItem(BlocksRegistry.CANVAS_RUG.get()), 200),
@@ -87,39 +84,106 @@ public enum ItemsRegistry {
 
     CANVAS_SIGN("canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.CANVAS_SIGN.get(), BlocksRegistry.CANVAS_WALL_SIGN.get())),
+    HANGING_CANVAS_SIGN("hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     WHITE_CANVAS_SIGN("white_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.WHITE_CANVAS_SIGN.get(), BlocksRegistry.WHITE_CANVAS_WALL_SIGN.get())),
+    WHITE_HANGING_CANVAS_SIGN("white_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.WHITE_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.WHITE_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     ORANGE_CANVAS_SIGN("orange_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.ORANGE_CANVAS_SIGN.get(), BlocksRegistry.ORANGE_CANVAS_WALL_SIGN.get())),
+    ORANGE_HANGING_CANVAS_SIGN("orange_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.ORANGE_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.ORANGE_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     MAGENTA_CANVAS_SIGN("magenta_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.MAGENTA_CANVAS_SIGN.get(), BlocksRegistry.MAGENTA_CANVAS_WALL_SIGN.get())),
+    MAGENTA_HANGING_CANVAS_SIGN("magenta_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.MAGENTA_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.MAGENTA_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     LIGHT_BLUE_CANVAS_SIGN("light_blue_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.LIGHT_BLUE_CANVAS_SIGN.get(), BlocksRegistry.LIGHT_BLUE_CANVAS_WALL_SIGN.get())),
+    LIGHT_BLUE_HANGING_CANVAS_SIGN("light_blue_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.LIGHT_BLUE_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.LIGHT_BLUE_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     YELLOW_CANVAS_SIGN("yellow_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.YELLOW_CANVAS_SIGN.get(), BlocksRegistry.YELLOW_CANVAS_WALL_SIGN.get())),
+    YELLOW_HANGING_CANVAS_SIGN("yellow_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.YELLOW_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.YELLOW_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     LIME_CANVAS_SIGN("lime_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.LIME_CANVAS_SIGN.get(), BlocksRegistry.LIME_CANVAS_WALL_SIGN.get())),
+    LIME_HANGING_CANVAS_SIGN("lime_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.LIME_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.LIME_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     PINK_CANVAS_SIGN("pink_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.PINK_CANVAS_SIGN.get(), BlocksRegistry.PINK_CANVAS_WALL_SIGN.get())),
+    PINK_HANGING_CANVAS_SIGN("pink_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.PINK_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.PINK_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     GRAY_CANVAS_SIGN("gray_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.GRAY_CANVAS_SIGN.get(), BlocksRegistry.GRAY_CANVAS_WALL_SIGN.get())),
+    GRAY_HANGING_CANVAS_SIGN("gray_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.GRAY_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.GRAY_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     LIGHT_GRAY_CANVAS_SIGN("light_gray_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.LIGHT_GRAY_CANVAS_SIGN.get(), BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN.get())),
+    LIGHT_GRAY_HANGING_CANVAS_SIGN("light_gray_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.LIGHT_GRAY_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.LIGHT_GRAY_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     CYAN_CANVAS_SIGN("cyan_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.CYAN_CANVAS_SIGN.get(), BlocksRegistry.CYAN_CANVAS_WALL_SIGN.get())),
+    CYAN_HANGING_CANVAS_SIGN("cyan_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.CYAN_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.CYAN_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     PURPLE_CANVAS_SIGN("purple_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.PURPLE_CANVAS_SIGN.get(), BlocksRegistry.PURPLE_CANVAS_WALL_SIGN.get())),
+    PURPLE_HANGING_CANVAS_SIGN("purple_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.PURPLE_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.PURPLE_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     BLUE_CANVAS_SIGN("blue_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.BLUE_CANVAS_SIGN.get(), BlocksRegistry.BLUE_CANVAS_WALL_SIGN.get())),
+    BLUE_HANGING_CANVAS_SIGN("blue_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.BLUE_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.BLUE_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     BROWN_CANVAS_SIGN("brown_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.BROWN_CANVAS_SIGN.get(), BlocksRegistry.BROWN_CANVAS_WALL_SIGN.get())),
+    BROWN_HANGING_CANVAS_SIGN("brown_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.BROWN_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.BROWN_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     GREEN_CANVAS_SIGN("green_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.GREEN_CANVAS_SIGN.get(), BlocksRegistry.GREEN_CANVAS_WALL_SIGN.get())),
+    GREEN_HANGING_CANVAS_SIGN("green_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.GREEN_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.GREEN_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     RED_CANVAS_SIGN("red_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.RED_CANVAS_SIGN.get(), BlocksRegistry.RED_CANVAS_WALL_SIGN.get())),
+    RED_HANGING_CANVAS_SIGN("red_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.RED_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.RED_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     BLACK_CANVAS_SIGN("black_canvas_sign", () -> new SignItem(base(),
             BlocksRegistry.BLACK_CANVAS_SIGN.get(), BlocksRegistry.BLACK_CANVAS_WALL_SIGN.get())),
-
+    BLACK_HANGING_CANVAS_SIGN("black_hanging_canvas_sign", () -> new HangingSignItem(
+            BlocksRegistry.BLACK_HANGING_CANVAS_SIGN.get(),
+            BlocksRegistry.BLACK_WALL_HANGING_CANVAS_SIGN.get(), base())
+    ),
     ORGANIC_COMPOST("organic_compost", () -> new ModBlockItem(BlocksRegistry.ORGANIC_COMPOST.get())),
     RICH_SOIL("rich_soil", () -> new ModBlockItem(BlocksRegistry.RICH_SOIL.get())),
     RICH_SOIL_FARMLAND("rich_soil_farmland", () -> new ModBlockItem(BlocksRegistry.RICH_SOIL_FARMLAND.get())),

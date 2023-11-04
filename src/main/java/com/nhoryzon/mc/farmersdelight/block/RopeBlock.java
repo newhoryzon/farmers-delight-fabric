@@ -30,6 +30,7 @@ import net.minecraft.world.WorldAccess;
 
 public class RopeBlock extends PaneBlock {
     private static final BooleanProperty TIED_TO_BELL = BooleanProperty.of("tied_to_bell");
+    protected static final VoxelShape LOWER_SUPPORT = Block.createCuboidShape(7, 0, 7, 9, 1, 9);
 
     public RopeBlock() {
         super(FabricBlockSettings.copy(Blocks.BROWN_CARPET).noCollision().nonOpaque().hardness(.2f).resistance(.2f).sounds(BlockSoundGroup.WOOL));
@@ -106,6 +107,11 @@ public class RopeBlock extends PaneBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.empty();
+    }
+
+    @Override
+    public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+        return LOWER_SUPPORT;
     }
 
     @Override

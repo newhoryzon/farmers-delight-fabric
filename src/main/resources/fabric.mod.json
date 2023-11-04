@@ -36,6 +36,7 @@
   "mixins": [
     "farmersdelight.mixins.json"
   ],
+  "accessWidener": "farmersdelight.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": ">=0.83.0+1.20",

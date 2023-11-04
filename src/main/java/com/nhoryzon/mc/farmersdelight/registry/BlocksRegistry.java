@@ -34,8 +34,10 @@ import com.nhoryzon.mc.farmersdelight.block.TomatoVineBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildCropBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildPatchBlock;
 import com.nhoryzon.mc.farmersdelight.block.WildRiceCropBlock;
+import com.nhoryzon.mc.farmersdelight.block.signs.HangingCanvasSignBlock;
 import com.nhoryzon.mc.farmersdelight.block.signs.StandingCanvasSignBlock;
 import com.nhoryzon.mc.farmersdelight.block.signs.WallCanvasSignBlock;
+import com.nhoryzon.mc.farmersdelight.block.signs.WallHangingCanvasSignBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -74,15 +76,17 @@ public enum BlocksRegistry {
 
     ROPE("rope", RopeBlock::new, true),
     SAFETY_NET("safety_net", SafetyNetBlock::new, true),
-    OAK_CABINET("oak_cabinet", CabinetBlock::new),
-    BIRCH_CABINET("birch_cabinet", CabinetBlock::new),
-    SPRUCE_CABINET("spruce_cabinet", CabinetBlock::new),
-    JUNGLE_CABINET("jungle_cabinet", CabinetBlock::new),
-    ACACIA_CABINET("acacia_cabinet", CabinetBlock::new),
-    DARK_OAK_CABINET("dark_oak_cabinet", CabinetBlock::new),
-    MANGROVE_CABINET("mangrove_cabinet", CabinetBlock::new),
-    CRIMSON_CABINET("crimson_cabinet", CabinetBlock::new),
-    WARPED_CABINET("warped_cabinet", CabinetBlock::new),
+    OAK_CABINET("oak_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    BIRCH_CABINET("birch_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    SPRUCE_CABINET("spruce_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    JUNGLE_CABINET("jungle_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    ACACIA_CABINET("acacia_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    DARK_OAK_CABINET("dark_oak_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    MANGROVE_CABINET("mangrove_cabinet", () -> new CabinetBlock(BlockSoundGroup.WOOD)),
+    CHERRY_CABINET("cherry_cabinet", () -> new CabinetBlock(BlockSoundGroup.CHERRY_WOOD)),
+    BAMBOO_CABINET("bamboo_cabinet", () -> new CabinetBlock(BlockSoundGroup.BAMBOO_WOOD)),
+    CRIMSON_CABINET("crimson_cabinet", () -> new CabinetBlock(BlockSoundGroup.NETHER_WOOD)),
+    WARPED_CABINET("warped_cabinet", () -> new CabinetBlock(BlockSoundGroup.NETHER_WOOD)),
     CANVAS_RUG("canvas_rug", CanvasRugBlock::new, true),
     TATAMI("tatami", TatamiBlock::new),
     FULL_TATAMI_MAT("full_tatami_mat", TatamiMatBlock::new, true),
@@ -123,6 +127,42 @@ public enum BlocksRegistry {
     GREEN_CANVAS_WALL_SIGN("green_canvas_wall_sign", () -> new WallCanvasSignBlock(GREEN_CANVAS_SIGN.get(), DyeColor.GREEN)),
     RED_CANVAS_WALL_SIGN("red_canvas_wall_sign", () -> new WallCanvasSignBlock(RED_CANVAS_SIGN.get(), DyeColor.RED)),
     BLACK_CANVAS_WALL_SIGN("black_canvas_wall_sign", () -> new WallCanvasSignBlock(BLACK_CANVAS_SIGN.get(), DyeColor.BLACK)),
+
+    HANGING_CANVAS_SIGN("hanging_canvas_sign", () -> new HangingCanvasSignBlock(null)),
+    WHITE_HANGING_CANVAS_SIGN("white_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.WHITE)),
+    MAGENTA_HANGING_CANVAS_SIGN("magenta_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.MAGENTA)),
+    ORANGE_HANGING_CANVAS_SIGN("orange_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.ORANGE)),
+    LIGHT_BLUE_HANGING_CANVAS_SIGN("light_blue_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.LIGHT_BLUE)),
+    YELLOW_HANGING_CANVAS_SIGN("yellow_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.YELLOW)),
+    LIME_HANGING_CANVAS_SIGN("lime_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.LIME)),
+    PINK_HANGING_CANVAS_SIGN("pink_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.PINK)),
+    GRAY_HANGING_CANVAS_SIGN("gray_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.GRAY)),
+    LIGHT_GRAY_HANGING_CANVAS_SIGN("light_gray_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.LIGHT_GRAY)),
+    CYAN_HANGING_CANVAS_SIGN("cyan_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.CYAN)),
+    PURPLE_HANGING_CANVAS_SIGN("purple_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.PURPLE)),
+    BLUE_HANGING_CANVAS_SIGN("blue_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.BLUE)),
+    BROWN_HANGING_CANVAS_SIGN("brown_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.BROWN)),
+    GREEN_HANGING_CANVAS_SIGN("green_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.GREEN)),
+    RED_HANGING_CANVAS_SIGN("red_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.RED)),
+    BLACK_HANGING_CANVAS_SIGN("black_hanging_canvas_sign", () -> new HangingCanvasSignBlock(DyeColor.BLACK)),
+
+    WALL_HANGING_CANVAS_SIGN("wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(null)),
+    WHITE_WALL_HANGING_CANVAS_SIGN("white_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.WHITE)),
+    MAGENTA_WALL_HANGING_CANVAS_SIGN("magenta_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.MAGENTA)),
+    ORANGE_WALL_HANGING_CANVAS_SIGN("orange_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.ORANGE)),
+    LIGHT_BLUE_WALL_HANGING_CANVAS_SIGN("light_blue_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.LIGHT_BLUE)),
+    YELLOW_WALL_HANGING_CANVAS_SIGN("yellow_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.YELLOW)),
+    LIME_WALL_HANGING_CANVAS_SIGN("lime_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.LIME)),
+    PINK_WALL_HANGING_CANVAS_SIGN("pink_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.PINK)),
+    GRAY_WALL_HANGING_CANVAS_SIGN("gray_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.GRAY)),
+    LIGHT_GRAY_WALL_HANGING_CANVAS_SIGN("light_gray_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.LIGHT_GRAY)),
+    CYAN_WALL_HANGING_CANVAS_SIGN("cyan_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.CYAN)),
+    PURPLE_WALL_HANGING_CANVAS_SIGN("purple_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.PURPLE)),
+    BLUE_WALL_HANGING_CANVAS_SIGN("blue_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.BLUE)),
+    BROWN_WALL_HANGING_CANVAS_SIGN("brown_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.BROWN)),
+    GREEN_WALL_HANGING_CANVAS_SIGN("green_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.GREEN)),
+    RED_WALL_HANGING_CANVAS_SIGN("red_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.RED)),
+    BLACK_WALL_HANGING_CANVAS_SIGN("black_wall_hanging_canvas_sign", () -> new WallHangingCanvasSignBlock(DyeColor.BLACK)),
 
     BROWN_MUSHROOM_COLONY("brown_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.BROWN_MUSHROOM), Items.BROWN_MUSHROOM), true),
     RED_MUSHROOM_COLONY("red_mushroom_colony", () -> new MushroomColonyBlock(FabricBlockSettings.copyOf(Blocks.RED_MUSHROOM), Items.RED_MUSHROOM), true),

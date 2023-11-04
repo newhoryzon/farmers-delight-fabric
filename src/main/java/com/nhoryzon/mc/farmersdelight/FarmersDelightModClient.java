@@ -4,10 +4,7 @@ import com.nhoryzon.mc.farmersdelight.client.gui.ComfortHealthOverlay;
 import com.nhoryzon.mc.farmersdelight.client.gui.NourishmentHungerOverlay;
 import com.nhoryzon.mc.farmersdelight.client.particle.StarParticle;
 import com.nhoryzon.mc.farmersdelight.client.particle.SteamParticle;
-import com.nhoryzon.mc.farmersdelight.client.render.block.CanvasSignBlockEntityRenderer;
-import com.nhoryzon.mc.farmersdelight.client.render.block.CuttingBoardBlockEntityRenderer;
-import com.nhoryzon.mc.farmersdelight.client.render.block.SkilletBlockEntityRenderer;
-import com.nhoryzon.mc.farmersdelight.client.render.block.StoveBlockEntityRenderer;
+import com.nhoryzon.mc.farmersdelight.client.render.block.*;
 import com.nhoryzon.mc.farmersdelight.client.screen.CookingPotScreen;
 import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
@@ -24,6 +21,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -42,10 +40,13 @@ public class FarmersDelightModClient implements ClientModInitializer {
 		ComfortHealthOverlay.init();
 
 		// BlockEntityRenderer register
-		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.CUTTING_BOARD.get(), CuttingBoardBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.CANVAS_SIGN.get(), CanvasSignBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityTypesRegistry.CUTTING_BOARD.get(), CuttingBoardBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityTypesRegistry.CANVAS_SIGN.get(), CanvasSignBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityTypesRegistry.HANGING_CANVAS_SIGN.get(), HangingCanvasSignBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntityRenderer::new);
+
+		// EntityRendererRegistry register
 		EntityRendererRegistry.register(EntityTypesRegistry.ROTTEN_TOMATO, FlyingItemEntityRenderer::new);
 
 		// Particle register

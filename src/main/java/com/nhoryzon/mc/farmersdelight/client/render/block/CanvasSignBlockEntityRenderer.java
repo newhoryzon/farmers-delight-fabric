@@ -12,6 +12,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.VertexConsumer;
@@ -79,7 +80,7 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     }
 
     protected void renderSignWithText(SignBlockEntity signBlockEntity, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider,
-            int packedLight, int packedOverlay, BlockState blockState, AbstractSignBlock signBlock, DyeColor dye, SignModel model) {
+            int packedLight, int packedOverlay, BlockState blockState, AbstractSignBlock signBlock, DyeColor dye, Model model) {
         matrixStack.push();
         translateSign(matrixStack, -signBlock.getRotationDegrees(blockState), blockState);
         renderSign(matrixStack, vertexConsumerProvider, packedLight, packedOverlay, dye, model);
@@ -99,7 +100,7 @@ public class CanvasSignBlockEntityRenderer extends SignBlockEntityRenderer {
     }
 
     protected void renderSign(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int packedLight, int packedOverlay,
-            DyeColor dye, SignModel model) {
+            DyeColor dye, Model model) {
         matrixStack.push();
         float rootScale = getSignScale();
         matrixStack.scale(rootScale, -rootScale, -rootScale);

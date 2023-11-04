@@ -8,24 +8,11 @@ import com.nhoryzon.mc.farmersdelight.event.KnivesEventListener;
 import com.nhoryzon.mc.farmersdelight.event.LivingEntityFeedItemEventListener;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.ParrotsTamingIngredientsAccessorMixin;
 import com.nhoryzon.mc.farmersdelight.mixin.accessors.StructurePoolAccessorMixin;
-import com.nhoryzon.mc.farmersdelight.registry.AdvancementsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.BiomeFeaturesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.BlockEntityTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ConfiguredFeaturesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.EffectsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.EnchantmentsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.EntityTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ExtendedScreenTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.LootFunctionsRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ParticleTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.PlacementModifiersRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.RecipeTypesRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.SoundsRegistry;
+import com.nhoryzon.mc.farmersdelight.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -39,6 +26,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.ai.goal.TemptGoal;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -46,6 +39,7 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.LootTableEntry;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -150,6 +144,34 @@ public class FarmersDelightMod implements ModInitializer {
                 addToStructurePool(server, villageHousePoolId, compostPileId, villageType.getSecond());
             }));
         }
+
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            if (entity instanceof PathAwareEntity mob) {
+                if (mob.getType().isIn(TagsRegistry.HORSE_FEED_TEMPTED)) {
+                    int priority = getTemptingPriority(mob);
+
+                    if (priority >= 0) {
+                        mob.goalSelector.add(priority, new TemptGoal(mob, 1.25d, Ingredient.ofItems(ItemsRegistry.HORSE_FEED.get()), false));
+                    }
+                }
+                if (mob instanceof RabbitEntity rabbit) {
+                    int priority = getTemptingPriority(rabbit);
+
+                    if (priority >= 0) {
+                        mob.goalSelector.add(priority, new TemptGoal(rabbit, 1.0d, Ingredient.ofItems(ItemsRegistry.CABBAGE.get(), ItemsRegistry.CABBAGE_LEAF.get()), false));
+                    }
+                }
+            }
+        });
+    }
+
+    private int getTemptingPriority(PathAwareEntity mob) {
+        return mob.goalSelector.getGoals()
+                .stream()
+                .filter(goal -> goal.getGoal() instanceof TemptGoal)
+                .findFirst()
+                .map(PrioritizedGoal::getPriority)
+                .orElse(-1);
     }
 
     protected void addToStructurePool(MinecraftServer server, Identifier poolIdentifier, Identifier nbtIdentifier, int weight) {

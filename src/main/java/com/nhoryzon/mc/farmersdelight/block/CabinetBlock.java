@@ -14,6 +14,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -34,8 +35,8 @@ public class CabinetBlock extends InventoryBlockWithEntity {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = Properties.OPEN;
 
-    public CabinetBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.BARREL));
+    public CabinetBlock(BlockSoundGroup soundGroup) {
+        super(FabricBlockSettings.copyOf(Blocks.BARREL).sounds(soundGroup));
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
     }
 

@@ -46,5 +46,6 @@
     [
       "harvest_ropelogged_tomato"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

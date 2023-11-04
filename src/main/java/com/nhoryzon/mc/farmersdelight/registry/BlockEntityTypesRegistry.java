@@ -1,20 +1,13 @@
 package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
-import com.nhoryzon.mc.farmersdelight.entity.block.BasketBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.CanvasSignBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.CuttingBoardBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.CabinetBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.SkilletBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.StoveBlockEntity;
+import com.nhoryzon.mc.farmersdelight.entity.block.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -39,7 +32,43 @@ public enum BlockEntityTypesRegistry {
             BlocksRegistry.CYAN_CANVAS_WALL_SIGN, BlocksRegistry.GRAY_CANVAS_WALL_SIGN, BlocksRegistry.GREEN_CANVAS_WALL_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN,
             BlocksRegistry.LIGHT_BLUE_CANVAS_WALL_SIGN, BlocksRegistry.LIGHT_GRAY_CANVAS_WALL_SIGN, BlocksRegistry.LIME_CANVAS_WALL_SIGN, BlocksRegistry.MAGENTA_CANVAS_WALL_SIGN,
             BlocksRegistry.ORANGE_CANVAS_WALL_SIGN, BlocksRegistry.PINK_CANVAS_WALL_SIGN, BlocksRegistry.PURPLE_CANVAS_WALL_SIGN, BlocksRegistry.RED_CANVAS_WALL_SIGN,
-            BlocksRegistry.WHITE_CANVAS_WALL_SIGN, BlocksRegistry.YELLOW_CANVAS_WALL_SIGN);
+            BlocksRegistry.WHITE_CANVAS_WALL_SIGN, BlocksRegistry.YELLOW_CANVAS_WALL_SIGN),
+    HANGING_CANVAS_SIGN("hanging_canvas_sign", HangingCanvasSignBlockEntity.class, HangingCanvasSignBlockEntity::new,
+            BlocksRegistry.HANGING_CANVAS_SIGN,
+            BlocksRegistry.BLACK_HANGING_CANVAS_SIGN,
+            BlocksRegistry.BLUE_HANGING_CANVAS_SIGN,
+            BlocksRegistry.BROWN_HANGING_CANVAS_SIGN,
+            BlocksRegistry.CYAN_HANGING_CANVAS_SIGN,
+            BlocksRegistry.GRAY_HANGING_CANVAS_SIGN,
+            BlocksRegistry.GREEN_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIGHT_GRAY_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIGHT_BLUE_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIME_HANGING_CANVAS_SIGN,
+            BlocksRegistry.MAGENTA_HANGING_CANVAS_SIGN,
+            BlocksRegistry.ORANGE_HANGING_CANVAS_SIGN,
+            BlocksRegistry.PINK_HANGING_CANVAS_SIGN,
+            BlocksRegistry.PURPLE_HANGING_CANVAS_SIGN,
+            BlocksRegistry.RED_HANGING_CANVAS_SIGN,
+            BlocksRegistry.WHITE_HANGING_CANVAS_SIGN,
+            BlocksRegistry.YELLOW_HANGING_CANVAS_SIGN,
+            BlocksRegistry.WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.BLACK_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.BLUE_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.BROWN_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.CYAN_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.GRAY_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.GREEN_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIGHT_GRAY_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIGHT_BLUE_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.LIME_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.MAGENTA_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.ORANGE_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.PINK_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.PURPLE_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.RED_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.WHITE_WALL_HANGING_CANVAS_SIGN,
+            BlocksRegistry.YELLOW_WALL_HANGING_CANVAS_SIGN
+    );
 
     private final String pathName;
     private final Class<? extends BlockEntity> blockEntityClass;

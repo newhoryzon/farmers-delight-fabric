@@ -1,6 +1,7 @@
 package com.nhoryzon.mc.farmersdelight.registry;
 
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.impl.tag.convention.TagRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -15,6 +16,7 @@ import net.minecraft.util.Identifier;
 public class TagsRegistry {
 
     public static final TagKey<Item> KNIVES = TagRegistration.ITEM_TAG_REGISTRATION.registerCommon("tools/knives");
+
 
     public static final TagKey<Block> WILD_CROPS = create("wild_crops", RegistryKeys.BLOCK);
     public static final TagKey<Block> ROPES = create("ropes", RegistryKeys.BLOCK);
@@ -37,6 +39,7 @@ public class TagsRegistry {
 
     public static final TagKey<EntityType<?>> DOG_FOOD_USERS = create("dog_food_users", RegistryKeys.ENTITY_TYPE);
     public static final TagKey<EntityType<?>> HORSE_FEED_USERS = create("horse_feed_users", RegistryKeys.ENTITY_TYPE);
+    public static final TagKey<EntityType<?>> HORSE_FEED_TEMPTED = create("horse_feed_tempted", RegistryKeys.ENTITY_TYPE);
 
     private static <E> TagKey<E> create(String pathName, RegistryKey<? extends Registry<E>> registry) {
         return TagKey.of(registry, new Identifier(FarmersDelightMod.MOD_ID, pathName));
