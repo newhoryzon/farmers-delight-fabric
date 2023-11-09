@@ -21,6 +21,7 @@
     "MigrationItemStackMixin",
     "PigEntityBreedingMixin",
     "PlantBlockOnRichSoilMixin",
+    "PitcherCropBlockOnRichSoilFarmLandMixin",
     "PlayerEntityAttackWithSkilletMixin",
     "StemBlockOnRichSoilFarmlandMixin",
     "StewItemMixin",
