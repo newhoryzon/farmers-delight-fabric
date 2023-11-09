@@ -27,6 +27,7 @@ public class TagsRegistry {
     public static final TagKey<Block> MUSHROOM_COLONY_GROWABLE_ON = create("mushroom_colony_growable_on", RegistryKeys.BLOCK);
     public static final TagKey<Block> MINABLE_KNIFE = create("mineable/knife", RegistryKeys.BLOCK);
     public static final TagKey<Block> DROPS_CAKE_SLICE = create("drops_cake_slice", RegistryKeys.BLOCK);
+    public static final TagKey<Block> FARMLAND = create("c", "farmland", RegistryKeys.BLOCK);
 
     public static final TagKey<Item> WILD_CROPS_ITEM = create("wild_crops", RegistryKeys.ITEM);
     public static final TagKey<Item> STRAW_HARVESTERS = create("straw_harvesters", RegistryKeys.ITEM);
@@ -40,6 +41,9 @@ public class TagsRegistry {
 
     private static <E> TagKey<E> create(String pathName, RegistryKey<? extends Registry<E>> registry) {
         return TagKey.of(registry, new Identifier(FarmersDelightMod.MOD_ID, pathName));
+    }
+    private static <E> TagKey<E> create(String modPath, String pathName, RegistryKey<? extends Registry<E>> registry) {
+        return TagKey.of(registry, new Identifier(modPath, pathName));
     }
 
     private TagsRegistry() throws InstantiationException {
