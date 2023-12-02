@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.ItemTags;
@@ -76,7 +77,7 @@ public class StoveBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntity::tick);
+        return validateTicker(type, BlockEntityTypesRegistry.STOVE.get(), StoveBlockEntity::tick);
     }
 
     @Override
@@ -99,14 +100,14 @@ public class StoveBlock extends BlockWithEntity {
 
     protected ActionResult onUseByPlayerHand(StoveBlockEntity stoveBlockEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
-        Optional<CampfireCookingRecipe> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
+        Optional<RecipeEntry<CampfireCookingRecipe>> optional = stoveBlockEntity.findMatchingRecipe(itemStack);
 
         if (optional.isEmpty()) {
             return tryExtinguishByPlayerHand(state, world, pos, player, hand);
         }
 
         if (!world.isClient() && !stoveBlockEntity.isStoveBlockedAbove() && stoveBlockEntity.addItem(
-                player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
             player.incrementStat(Stats.INTERACT_WITH_CAMPFIRE);
 
             return ActionResult.SUCCESS;

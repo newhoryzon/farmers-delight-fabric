@@ -91,9 +91,9 @@ public class CookingPotBlock extends BlockWithEntity implements InventoryProvide
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient()) {
-            return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::animationTick);
+            return validateTicker(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::animationTick);
         } else {
-            return checkType(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::cookingTick);
+            return validateTicker(type, BlockEntityTypesRegistry.COOKING_POT.get(), CookingPotBlockEntity::cookingTick);
         }
     }
 

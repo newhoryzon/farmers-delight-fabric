@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeModifierCreator;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.effect.StatusEffect;
@@ -122,11 +123,10 @@ public class ConsumableItem extends Item {
                 StatusEffectInstance instance = effectPair.getFirst();
                 MutableText iformattabletextcomponent = Text.translatable(instance.getTranslationKey());
                 StatusEffect effect = instance.getEffectType();
-                Map<EntityAttribute, EntityAttributeModifier> attributeMap = effect.getAttributeModifiers();
+                Map<EntityAttribute, AttributeModifierCreator> attributeMap = effect.getAttributeModifiers();
                 if (!attributeMap.isEmpty()) {
-                    for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : attributeMap.entrySet()) {
-                        EntityAttributeModifier rawModifier = entry.getValue();
-                        EntityAttributeModifier modifier = new EntityAttributeModifier(rawModifier.getName(), effect.adjustModifierAmount(instance.getAmplifier(), rawModifier), rawModifier.getOperation());
+                    for (Map.Entry<EntityAttribute, AttributeModifierCreator> entry : attributeMap.entrySet()) {
+                        EntityAttributeModifier modifier = entry.getValue().createAttributeModifier(instance.getAmplifier());
                         attributeList.add(new Pair<>(entry.getKey(), modifier));
                     }
                 }

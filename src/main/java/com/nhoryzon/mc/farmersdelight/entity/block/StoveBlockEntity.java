@@ -18,6 +18,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
@@ -124,7 +125,7 @@ public class StoveBlockEntity extends BlockEntity implements Clearable {
         return nbtCompound;
     }
 
-    public Optional<CampfireCookingRecipe> findMatchingRecipe(ItemStack itemStack) {
+    public Optional<RecipeEntry<CampfireCookingRecipe>> findMatchingRecipe(ItemStack itemStack) {
         return world == null || inventory.stream().noneMatch(ItemStack::isEmpty) ? Optional.empty()
                 : world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(itemStack), world);
     }
@@ -192,7 +193,7 @@ public class StoveBlockEntity extends BlockEntity implements Clearable {
                     if (world != null) {
                         Inventory cookInventory = new SimpleInventory(itemstack);
                         ItemStack result = world.getRecipeManager().getAllMatches(RecipeType.CAMPFIRE_COOKING, cookInventory, world).stream()
-                                .map(recipe -> recipe.craft(cookInventory, world.getRegistryManager())).findAny().orElse(itemstack);
+                                .map(recipe -> recipe.value().craft(cookInventory, world.getRegistryManager())).findAny().orElse(itemstack);
                         if (!result.isEmpty()) {
                             ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + 1., pos.getZ() + .5, result.copy());
                             entity.setVelocity(MathUtils.RAND.nextGaussian() * .01f, .1f,

@@ -80,7 +80,7 @@ public class RichSoilFarmlandBlock extends FarmlandBlock {
             // If all else fails, and it's a plant, give it a growth boost now and then!
             if (aboveBlock instanceof Fertilizable growable
                     && MathUtils.RAND.nextFloat() <= FarmersDelightMod.CONFIG.getRichSoilBoostChance()
-                    && growable.isFertilizable(world, pos.up(), aboveState, false)) {
+                    && growable.isFertilizable(world, pos.up(), aboveState)) {
                 growable.grow(world, world.getRandom(), pos.up(), aboveState);
                 if (!world.isClient()) {
                     world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);

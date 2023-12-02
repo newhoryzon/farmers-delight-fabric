@@ -36,7 +36,7 @@ public class WildPatchBlock extends PlantBlock implements Fertilizable {
 
     /* FORGE : canGrow */
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         return true;
     }
 

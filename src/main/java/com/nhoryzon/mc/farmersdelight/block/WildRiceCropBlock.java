@@ -45,7 +45,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
     }
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         return true;
     }
 
@@ -128,7 +128,7 @@ public class WildRiceCropBlock extends TallPlantBlock implements Waterloggable, 
     }
 
     @Override
-    public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canFillWithFluid(@Nullable PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
         return state.get(HALF) == DoubleBlockHalf.LOWER;
     }
 

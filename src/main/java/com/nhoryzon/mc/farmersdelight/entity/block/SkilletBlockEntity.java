@@ -23,6 +23,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
@@ -98,9 +99,9 @@ public class SkilletBlockEntity extends SyncedBlockEntity implements ItemStackIn
         ++cookTime;
         if (cookTime >= cookTimeTotal) {
             SimpleInventory wrapper = new SimpleInventory(cookingStack);
-            Optional<CampfireCookingRecipe> recipe = getMatchingRecipe(wrapper);
+            Optional<RecipeEntry<CampfireCookingRecipe>> recipe = getMatchingRecipe(wrapper);
             if (recipe.isPresent()) {
-                ItemStack resultStack = recipe.get().craft(wrapper, world.getRegistryManager());
+                ItemStack resultStack = recipe.get().value().craft(wrapper, world.getRegistryManager());
                 Direction direction = getCachedState().get(SkilletBlock.FACING).rotateYClockwise();
                 ItemEntity entity = new ItemEntity(world, pos.getX() + .5, pos.getY() + .3, pos.getZ() + .5, resultStack.copy());
                 entity.setVelocity(direction.getOffsetX() *.08f, .25f, direction.getOffsetZ() * .08f);
@@ -123,23 +124,21 @@ public class SkilletBlockEntity extends SyncedBlockEntity implements ItemStackIn
         return false;
     }
 
-    private Optional<CampfireCookingRecipe> getMatchingRecipe(Inventory inventory) {
+    private Optional<RecipeEntry<CampfireCookingRecipe>> getMatchingRecipe(Inventory inventory) {
         if (world == null) {
             return Optional.empty();
         }
 
         if (lastRecipeID != null) {
-            Recipe<Inventory> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
+            RecipeEntry<CampfireCookingRecipe> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
                     .getAllForType(RecipeType.CAMPFIRE_COOKING)
                     .get(lastRecipeID);
-            if (recipe instanceof CampfireCookingRecipe campfireRecipe && recipe.matches(inventory, world)) {
-                return Optional.of(campfireRecipe);
-            }
+            return Optional.of(recipe);
         }
 
-        Optional<CampfireCookingRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world);
+        Optional<RecipeEntry<CampfireCookingRecipe>> recipe = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world);
         if (recipe.isPresent()) {
-            lastRecipeID = recipe.get().getId();
+            lastRecipeID = recipe.get().id();
 
             return recipe;
         }
@@ -201,13 +200,13 @@ public class SkilletBlockEntity extends SyncedBlockEntity implements ItemStackIn
     }
 
     public ItemStack addItemToCook(ItemStack addedStack, PlayerEntity player) {
-        Optional<CampfireCookingRecipe> recipe = getMatchingRecipe(new SimpleInventory(addedStack));
+        Optional<RecipeEntry<CampfireCookingRecipe>> recipe = getMatchingRecipe(new SimpleInventory(addedStack));
         if (recipe.isPresent()) {
-            cookTimeTotal = SkilletBlock.getSkilletCookingTime(recipe.get().getCookTime(), fireAspectLevel);
+            cookTimeTotal = SkilletBlock.getSkilletCookingTime(recipe.get().value().getCookingTime(), fireAspectLevel);
             boolean wasEmpty = getStoredStack().isEmpty();
             ItemStack remainderStack = insertStack(0, addedStack.copy(), false);
             if (!ItemStack.areEqual(remainderStack, addedStack)) {
-                lastRecipeID = recipe.get().getId();
+                lastRecipeID = recipe.get().id();
                 cookTime = 0;
                 if (wasEmpty && world != null && isHeated(world, pos)) {
                     world.playSound(null, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f,

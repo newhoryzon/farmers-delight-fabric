@@ -126,7 +126,7 @@ public class ChanceArrayIngredient extends AbstractList<EntryStack<?>> implement
     public NbtList save() {
         NbtList listTag = new NbtList();
         for (EntryStack<?> stack : array) {
-            listTag.add(stack.save());
+            listTag.add(stack.saveStack());
         }
 
         return listTag;

@@ -1,65 +1,50 @@
 package com.nhoryzon.mc.farmersdelight.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeCodecs;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.dynamic.Codecs;
 
 public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRecipe> {
-    private static DefaultedList<Ingredient> readIngredients(JsonArray ingredientArray) {
-        DefaultedList<Ingredient> ingredientList = DefaultedList.of();
 
-        for (int i = 0; i < ingredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
-            if (!ingredient.isEmpty()) {
-                ingredientList.add(ingredient);
-            }
-        }
+    private static final Codec<CookingPotRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            Codecs.createStrictOptionalFieldCodec(Codec.STRING, "group", "").forGetter(CookingPotRecipe::getGroup),
+            Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("ingredients").xmap(ingredients -> {
+                DefaultedList<Ingredient> nonNullList = DefaultedList.of();
+                nonNullList.addAll(ingredients);
+                return nonNullList;
+            }, ingredients -> ingredients).forGetter(CookingPotRecipe::getIngredients),
+            RecipeCodecs.CRAFTING_RESULT.fieldOf("result").forGetter(r -> r.getResult(null)),
+            Codecs.createStrictOptionalFieldCodec(RecipeCodecs.CRAFTING_RESULT, "container", ItemStack.EMPTY).forGetter(CookingPotRecipe::getContainer),
+            Codecs.createStrictOptionalFieldCodec(Codec.FLOAT, "experience", 0.0F).forGetter(CookingPotRecipe::getExperience),
+            Codecs.createStrictOptionalFieldCodec(Codec.INT, "cookingtime", 200).forGetter(CookingPotRecipe::getCookTime)
+    ).apply(inst, CookingPotRecipe::new));
 
-        return ingredientList;
+    @Override
+    public Codec<CookingPotRecipe> codec() {
+        return CODEC;
     }
 
     @Override
-    public CookingPotRecipe read(Identifier id, JsonObject json) {
-        final String groupIn = JsonHelper.getString(json, "group", "");
-        final DefaultedList<Ingredient> inputItemsIn = readIngredients(JsonHelper.getArray(json, "ingredients"));
-        if (inputItemsIn.size() > CookingPotRecipe.INPUT_SLOTS) {
-            throw new JsonParseException("Too many ingredients for cooking recipe! The max is " + CookingPotRecipe.INPUT_SLOTS);
-        } else {
-            final JsonObject jsonResult = JsonHelper.getObject(json, "result");
-            final ItemStack outputIn = new ItemStack(JsonHelper.getItem(jsonResult, "item"), JsonHelper.getInt(jsonResult, "count", 1));
-            ItemStack container = ItemStack.EMPTY;
-            if (JsonHelper.hasElement(json, "container")) {
-                final JsonObject jsonContainer = JsonHelper.getObject(json, "container");
-                container = new ItemStack(JsonHelper.getItem(jsonContainer, "item"), JsonHelper.getInt(jsonContainer, "count", 1));
-            }
-            final float experienceIn = JsonHelper.getFloat(json, "experience", .0f);
-            final int cookTimeIn = JsonHelper.getInt(json, "cookingtime", 200);
+    public CookingPotRecipe read(PacketByteBuf buf) {
+        String groupIn = buf.readString();
+        int i = buf.readVarInt();
+        DefaultedList<Ingredient> inputItemsIn = DefaultedList.ofSize(i, Ingredient.EMPTY);
 
-            return new CookingPotRecipe(id, groupIn, inputItemsIn, outputIn, container, experienceIn, cookTimeIn);
+        for (int j = 0; j < inputItemsIn.size(); ++j) {
+            inputItemsIn.set(j, Ingredient.fromPacket(buf));
         }
-    }
-
-    @Override
-    public CookingPotRecipe read(Identifier id, PacketByteBuf buf) {
-        String groupIn = buf.readString(32767);
-
-        int ingredientSize = buf.readVarInt();
-        DefaultedList<Ingredient> ingredientList = DefaultedList.ofSize(ingredientSize, Ingredient.EMPTY);
-        ingredientList.replaceAll(ignored -> Ingredient.fromPacket(buf));
 
         ItemStack outputIn = buf.readItemStack();
         ItemStack container = buf.readItemStack();
         float experienceIn = buf.readFloat();
         int cookTimeIn = buf.readVarInt();
-
-        return new CookingPotRecipe(id, groupIn, ingredientList, outputIn, container, experienceIn, cookTimeIn);
+        return new CookingPotRecipe(groupIn, inputItemsIn, outputIn, container, experienceIn, cookTimeIn);
     }
 
     @Override
@@ -71,7 +56,7 @@ public class CookingPotRecipeSerializer implements RecipeSerializer<CookingPotRe
             ingredient.write(buf);
         }
 
-        buf.writeItemStack(recipe.getOutput(null));
+        buf.writeItemStack(recipe.getResult(null));
         buf.writeItemStack(recipe.getContainer());
         buf.writeFloat(recipe.getExperience());
         buf.writeVarInt(recipe.getCookTime());
