@@ -19,7 +19,6 @@ import java.util.List;
 public class CookingPotRecipe implements Recipe<Inventory> {
     public static final int INPUT_SLOTS = 6;
 
-    private final Identifier id;
     private final String group;
     private final DefaultedList<Ingredient> ingredientList;
     private final ItemStack output;
@@ -27,9 +26,8 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     private final float experience;
     private final int cookTime;
 
-    public CookingPotRecipe(Identifier id, String group, DefaultedList<Ingredient> ingredientList, ItemStack output, ItemStack container,
+    public CookingPotRecipe(String group, DefaultedList<Ingredient> ingredientList, ItemStack output, ItemStack container,
             float experience, int cookTime) {
-        this.id = id;
         this.group = group;
         this.ingredientList = ingredientList;
         this.output = output;
@@ -73,13 +71,8 @@ public class CookingPotRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return output;
-    }
-
-    @Override
-    public Identifier getId() {
-        return id;
     }
 
     @Override

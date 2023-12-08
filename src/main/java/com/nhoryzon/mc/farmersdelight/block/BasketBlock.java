@@ -85,7 +85,7 @@ public class BasketBlock extends InventoryBlockWithEntity implements Waterloggab
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntityTypesRegistry.BASKET.get(), BasketBlockEntity::tick);
+        return validateTicker(type, BlockEntityTypesRegistry.BASKET.get(), BasketBlockEntity::tick);
     }
 
     @Override

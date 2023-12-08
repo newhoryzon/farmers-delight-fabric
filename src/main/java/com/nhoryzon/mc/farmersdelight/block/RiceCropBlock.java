@@ -11,6 +11,7 @@ import net.minecraft.block.Fertilizable;
 import net.minecraft.block.FluidFillable;
 import net.minecraft.block.PlantBlock;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -55,7 +56,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     }
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         BlockState upperState = world.getBlockState(pos.up());
         if (upperState.getBlock() instanceof RiceUpperCropBlock riceUpperCropBlock) {
             return !riceUpperCropBlock.isMature(upperState);
@@ -78,7 +79,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
             BlockState top = world.getBlockState(pos.up());
             if (top.getBlock() == BlocksRegistry.RICE_PANICLE.get()) {
                 Fertilizable growable = (Fertilizable) world.getBlockState(pos.up()).getBlock();
-                if (growable.isFertilizable(world, pos.up(), top, false)) {
+                if (growable.isFertilizable(world, pos.up(), top)) {
                     growable.grow(world, world.getRandom(), pos.up(), top);
                 }
             } else {
@@ -93,7 +94,7 @@ public class RiceCropBlock extends PlantBlock implements Fertilizable, FluidFill
     }
 
     @Override
-    public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canFillWithFluid(@Nullable PlayerEntity player, BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
         return false;
     }
 

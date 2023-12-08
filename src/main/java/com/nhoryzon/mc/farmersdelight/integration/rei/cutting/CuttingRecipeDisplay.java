@@ -10,6 +10,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.recipe.RecipeEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,11 @@ public class CuttingRecipeDisplay extends BasicDisplay {
     protected final List<ChanceArrayIngredient> chanceOutputs;
     protected final List<EntryIngredient> mandatoryOutputs;
 
-    public CuttingRecipeDisplay(CuttingBoardRecipe recipe) {
-        super(EntryIngredients.ofIngredients(recipe.getIngredients()), recipe.getResultList().stream().map(EntryIngredients::of).toList());
-        mandatoryOutputs = recipe.getMandatoryResult().stream().map(EntryIngredients::of).toList();
-        chanceOutputs = recipe.getVariableResult().stream().map(ChanceArrayIngredient::new).toList();
-        toolInput = EntryIngredients.ofIngredient(recipe.getTool());
+    public CuttingRecipeDisplay(RecipeEntry<CuttingBoardRecipe> recipe) {
+        super(EntryIngredients.ofIngredients(recipe.value().getIngredients()), recipe.value().getResultList().stream().map(EntryIngredients::of).toList());
+        mandatoryOutputs = recipe.value().getMandatoryResult().stream().map(EntryIngredients::of).toList();
+        chanceOutputs = recipe.value().getVariableResult().stream().map(ChanceArrayIngredient::new).toList();
+        toolInput = EntryIngredients.ofIngredient(recipe.value().getTool());
     }
 
     @Override

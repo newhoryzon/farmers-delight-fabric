@@ -68,7 +68,7 @@ public class RichSoilBlock extends Block {
             if (!tryConvertToColonies(world, pos, aboveBlock) && (aboveBlock instanceof Fertilizable growable
                     && FarmersDelightMod.CONFIG.getRichSoilBoostChance() > 0.0
                     && MathUtils.RAND.nextFloat() <= FarmersDelightMod.CONFIG.getRichSoilBoostChance()
-                    && growable.isFertilizable(world, pos.up(), aboveState, false))) {
+                    && growable.isFertilizable(world, pos.up(), aboveState))) {
                 growable.grow(world, world.getRandom(), pos.up(), aboveState);
                 world.syncWorldEvent(WorldEventUtils.BONEMEAL_PARTICLES, pos.up(), 0);
             }

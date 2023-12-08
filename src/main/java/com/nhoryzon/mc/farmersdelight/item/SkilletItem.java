@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -107,12 +108,12 @@ public class SkilletItem extends BlockItem {
                 return TypedActionResult.pass(skilletStack);
             }
 
-            Optional<CampfireCookingRecipe> recipe = getCookingRecipe(cookingStack, world);
+            Optional<RecipeEntry<CampfireCookingRecipe>> recipe = getCookingRecipe(cookingStack, world);
             if (recipe.isPresent()) {
                 ItemStack cookingStackCopy = cookingStack.copy();
                 ItemStack cookingStackUnit = cookingStackCopy.split(1);
                 skilletStack.getOrCreateNbt().put(TAG_KEY_SKILLET_COOKING, cookingStackUnit.writeNbt(new NbtCompound()));
-                skilletStack.getOrCreateNbt().putInt(TAG_KEY_SKILLET_COOK_TIME_HANDHELD, recipe.get().getCookTime());
+                skilletStack.getOrCreateNbt().putInt(TAG_KEY_SKILLET_COOK_TIME_HANDHELD, recipe.get().value().getCookingTime());
                 player.setCurrentHand(hand);
                 player.setStackInHand(otherHand, cookingStackCopy);
 
@@ -163,10 +164,10 @@ public class SkilletItem extends BlockItem {
         NbtCompound tag = stack.getOrCreateNbt();
         if (tag.contains(TAG_KEY_SKILLET_COOKING)) {
             ItemStack cookingStack = ItemStack.fromNbt(tag.getCompound(TAG_KEY_SKILLET_COOKING));
-            Optional<CampfireCookingRecipe> recipe = getCookingRecipe(cookingStack, world);
+            Optional<RecipeEntry<CampfireCookingRecipe>> recipe = getCookingRecipe(cookingStack, world);
 
             recipe.ifPresent(campfireCookingRecipe -> {
-                ItemStack resultStack = campfireCookingRecipe.craft(new SimpleInventory(), world.getRegistryManager());
+                ItemStack resultStack = campfireCookingRecipe.value().craft(new SimpleInventory(), world.getRegistryManager());
                 if (!player.getInventory().insertStack(resultStack)) {
                     player.dropItem(resultStack, false);
                 }
@@ -182,7 +183,7 @@ public class SkilletItem extends BlockItem {
         return stack;
     }
 
-    public static Optional<CampfireCookingRecipe> getCookingRecipe(ItemStack stack, World world) {
+    public static Optional<RecipeEntry<CampfireCookingRecipe>> getCookingRecipe(ItemStack stack, World world) {
         if (stack.isEmpty()) {
             return Optional.empty();
         }

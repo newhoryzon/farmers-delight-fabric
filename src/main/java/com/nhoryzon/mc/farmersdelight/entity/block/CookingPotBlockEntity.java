@@ -26,6 +26,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -163,8 +164,8 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
         boolean dirty = false;
 
         if (isHeated && cookingPot.hasInput()) {
-            Optional<CookingPotRecipe> recipe = cookingPot.getMatchingRecipe(new RecipeWrapper(cookingPot));
-            if (recipe.isPresent() && cookingPot.canCook(recipe.get())) {
+            Optional<RecipeEntry<CookingPotRecipe>> recipe = cookingPot.getMatchingRecipe(new RecipeWrapper(cookingPot));
+            if (recipe.isPresent() && cookingPot.canCook(recipe.get().value())) {
                 dirty = cookingPot.processCooking(recipe.get());
             } else {
                 cookingPot.cookTime = 0;
@@ -195,30 +196,30 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
         return customName;
     }
 
-    private Optional<CookingPotRecipe> getMatchingRecipe(RecipeWrapper inventory) {
+    private Optional<RecipeEntry<CookingPotRecipe>> getMatchingRecipe(RecipeWrapper inventory) {
         if (world == null) {
             return Optional.empty();
         }
 
         if (lastRecipeID != null) {
-            Recipe<Inventory> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
+            RecipeEntry<Recipe<Inventory>> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
                     .getAllForType(RecipeTypesRegistry.COOKING_RECIPE_SERIALIZER.type())
                     .get(lastRecipeID);
-            if (recipe instanceof CookingPotRecipe) {
-                if (recipe.matches(inventory, world)) {
-                    return Optional.of((CookingPotRecipe) recipe);
+            if (recipe.value() instanceof CookingPotRecipe) {
+                if (recipe.value().matches(inventory, world)) {
+                    return Optional.of(new RecipeEntry<>(recipe.id(), (CookingPotRecipe)recipe.value()));
                 }
 
-                if (ItemStack.areItemsEqual(recipe.getOutput(world.getRegistryManager()), getMeal())) {
+                if (ItemStack.areItemsEqual(recipe.value().getResult(world.getRegistryManager()), getMeal())) {
                     return Optional.empty();
                 }
             }
         }
 
         if (checkNewRecipe) {
-            Optional<CookingPotRecipe> recipe = world.getRecipeManager().getFirstMatch(RecipeTypesRegistry.COOKING_RECIPE_SERIALIZER.type(), inventory, world);
+            Optional<RecipeEntry<CookingPotRecipe>> recipe = world.getRecipeManager().getFirstMatch(RecipeTypesRegistry.COOKING_RECIPE_SERIALIZER.type(), inventory, world);
             if (recipe.isPresent()) {
-                lastRecipeID = recipe.get().getId();
+                lastRecipeID = recipe.get().id();
 
                 return recipe;
             }
@@ -249,7 +250,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
 
     protected boolean canCook(Recipe<?> recipeIn) {
         if (hasInput() && recipeIn != null) {
-            ItemStack recipeOutput = recipeIn.getOutput(world.getRegistryManager());
+            ItemStack recipeOutput = recipeIn.getResult(world.getRegistryManager());
             if (recipeOutput.isEmpty()) {
                 return false;
             } else {
@@ -269,18 +270,18 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
         }
     }
 
-    private boolean processCooking(CookingPotRecipe recipe) {
+    private boolean processCooking(RecipeEntry<CookingPotRecipe> recipe) {
         if (world == null || recipe == null) return false;
 
         ++cookTime;
-        cookTimeTotal = recipe.getCookTime();
+        cookTimeTotal = recipe.value().getCookTime();
         if (cookTime < cookTimeTotal) {
             return false;
         }
 
         cookTime = 0;
-        mealContainer = recipe.getContainer();
-        ItemStack recipeOutput = recipe.getOutput(world.getRegistryManager());
+        mealContainer = recipe.value().getContainer();
+        ItemStack recipeOutput = recipe.value().getResult(world.getRegistryManager());
         ItemStack currentOutput = getStack(MEAL_DISPLAY_SLOT);
         if (currentOutput.isEmpty()) {
             setStack(MEAL_DISPLAY_SLOT, recipeOutput.copy());
@@ -310,9 +311,9 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
         return true;
     }
 
-    public void trackRecipeExperience(@Nullable Recipe<?> recipe) {
+    public void trackRecipeExperience(@Nullable RecipeEntry<CookingPotRecipe> recipe) {
         if (recipe != null) {
-            Identifier recipeID = recipe.getId();
+            Identifier recipeID = recipe.id();
             experienceTracker.addTo(recipeID, 1);
         }
     }
@@ -324,7 +325,7 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
 
     public void grantStoredRecipeExperience(World world, Vec3d pos) {
         for (Object2IntMap.Entry<Identifier> entry : experienceTracker.object2IntEntrySet()) {
-            world.getRecipeManager().get(entry.getKey()).ifPresent(recipe -> splitAndSpawnExperience(world, pos, entry.getIntValue(), ((CookingPotRecipe) recipe).getExperience()));
+            world.getRecipeManager().get(entry.getKey()).ifPresent(recipe -> splitAndSpawnExperience(world, pos, entry.getIntValue(), ((CookingPotRecipe) recipe.value()).getExperience()));
         }
     }
 

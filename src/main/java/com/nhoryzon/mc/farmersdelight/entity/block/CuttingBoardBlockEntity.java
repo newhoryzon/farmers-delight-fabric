@@ -28,6 +28,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
@@ -110,10 +111,10 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
             return false;
         }
 
-        Optional<CuttingBoardRecipe> matchingRecipe = getMatchingRecipe(new RecipeWrapper(this), tool, player);
+        Optional<RecipeEntry<CuttingBoardRecipe>> matchingRecipe = getMatchingRecipe(new RecipeWrapper(this), tool, player);
 
         matchingRecipe.ifPresent(recipe -> {
-            List<ItemStack> results = recipe.getRolledResults(world.getRandom(), EnchantmentHelper.getLevel(Enchantments.FORTUNE, tool));
+            List<ItemStack> results = recipe.value().getRolledResults(world.getRandom(), EnchantmentHelper.getLevel(Enchantments.FORTUNE, tool));
             for (ItemStack result : results) {
                 Direction direction = getCachedState().get(CuttingBoardBlock.FACING).rotateYCounterclockwise();
                 ItemEntity entity = new ItemEntity(world,
@@ -130,7 +131,7 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
                     tool.setCount(0);
                 }
             }
-            playProcessingSound(recipe.getSoundEvent(), tool.getItem(), getStoredItem().getItem());
+            playProcessingSound(recipe.value().getSoundEvent(), tool.getItem(), getStoredItem().getItem());
             removeItem();
             if (player instanceof ServerPlayerEntity serverPlayer) {
                 ((CuttingBoardTrigger) AdvancementsRegistry.CUTTING_BOARD.get()).trigger(serverPlayer);
@@ -140,21 +141,21 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
         return matchingRecipe.isPresent();
     }
 
-    private Optional<CuttingBoardRecipe> getMatchingRecipe(RecipeWrapper recipeWrapper, ItemStack toolStack, @Nullable PlayerEntity player) {
+    private Optional<RecipeEntry<CuttingBoardRecipe>> getMatchingRecipe(RecipeWrapper recipeWrapper, ItemStack toolStack, @Nullable PlayerEntity player) {
         if (world == null) {
             return Optional.empty();
         }
 
         if (lastRecipeID != null) {
-            Recipe<Inventory> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
+            RecipeEntry<Recipe<Inventory>> recipe = ((RecipeManagerAccessorMixin) world.getRecipeManager())
                     .getAllForType(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type())
                     .get(lastRecipeID);
-            if (recipe instanceof CuttingBoardRecipe && recipe.matches(recipeWrapper, world) && ((CuttingBoardRecipe) recipe).getTool().test(toolStack)) {
-                return Optional.of((CuttingBoardRecipe) recipe);
+            if (recipe.value() instanceof CuttingBoardRecipe && recipe.value().matches(recipeWrapper, world) && ((CuttingBoardRecipe) recipe.value()).getTool().test(toolStack)) {
+                return Optional.of(new RecipeEntry<>(recipe.id(), (CuttingBoardRecipe)recipe.value()));
             }
         }
 
-        List<CuttingBoardRecipe> recipeList = world.getRecipeManager().getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), recipeWrapper, world);
+        List<RecipeEntry<CuttingBoardRecipe>> recipeList = world.getRecipeManager().getAllMatches(RecipeTypesRegistry.CUTTING_RECIPE_SERIALIZER.type(), recipeWrapper, world);
         if (recipeList.isEmpty()) {
             if (player != null) {
                 player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_item"), true);
@@ -162,7 +163,7 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
             return Optional.empty();
         }
 
-        Optional<CuttingBoardRecipe> recipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.getTool().test(toolStack)).findFirst();
+        Optional<RecipeEntry<CuttingBoardRecipe>> recipe = recipeList.stream().filter(cuttingRecipe -> cuttingRecipe.value().getTool().test(toolStack)).findFirst();
         if (recipe.isEmpty()) {
             if (player != null) {
                 player.sendMessage(FarmersDelightMod.i18n("block.cutting_board.invalid_tool"), true);
@@ -170,16 +171,14 @@ public class CuttingBoardBlockEntity extends SyncedBlockEntity implements ItemSt
 
             return Optional.empty();
         }
-        lastRecipeID = recipe.get().getId();
+        lastRecipeID = recipe.get().id();
 
         return recipe;
     }
 
-    public void playProcessingSound(String soundEventID, Item tool, Item boardItem) {
-        SoundEvent sound = Registries.SOUND_EVENT.get(new Identifier(soundEventID));
-
-        if (sound != null) {
-            playSound(sound, 1.f, 1.f);
+    public void playProcessingSound(Optional<SoundEvent> soundEventID, Item tool, Item boardItem) {
+        if (soundEventID.isPresent()) {
+            playSound(soundEventID.get(), 1.f, 1.f);
         } else if (tool instanceof ShearsItem) {
             playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.f, 1.f);
         } else if (tool.getDefaultStack().isIn(TagsRegistry.KNIVES)) {

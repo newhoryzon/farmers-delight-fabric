@@ -9,18 +9,15 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.Instance> {
-    private static final Identifier ID = new Identifier(FarmersDelightMod.MOD_ID, "use_cutting_board");
+    public static final Identifier ID = new Identifier(FarmersDelightMod.MOD_ID, "use_cutting_board");
 
     @Override
-    protected Instance conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate,
+    protected Instance conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate,
             AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new CuttingBoardTrigger.Instance(playerPredicate);
-    }
-
-    @Override
-    public Identifier getId() {
-        return ID;
     }
 
     public void trigger(ServerPlayerEntity player) {
@@ -29,8 +26,8 @@ public class CuttingBoardTrigger extends AbstractCriterion<CuttingBoardTrigger.I
 
     public static class Instance extends AbstractCriterionConditions {
 
-        public Instance(LootContextPredicate playerPredicate) {
-            super(ID, playerPredicate);
+        public Instance(Optional<LootContextPredicate> playerPredicate) {
+            super(playerPredicate);
         }
 
         public boolean test() {

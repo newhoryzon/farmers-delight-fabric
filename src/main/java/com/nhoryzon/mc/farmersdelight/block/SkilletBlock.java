@@ -68,9 +68,9 @@ public class SkilletBlock extends BlockWithEntity {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient()) {
-            return checkType(type, BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntity::animationTick);
+            return validateTicker(type, BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntity::animationTick);
         } else {
-            return checkType(type, BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntity::cookingTick);
+            return validateTicker(type, BlockEntityTypesRegistry.SKILLET.get(), SkilletBlockEntity::cookingTick);
         }
     }
 

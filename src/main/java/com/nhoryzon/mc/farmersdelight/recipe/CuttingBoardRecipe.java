@@ -9,6 +9,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.random.Random;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CuttingBoardRecipe implements Recipe<Inventory> {
@@ -23,15 +25,13 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     public static final int MAX_INPUT_COUNT = 1;
     public static final int MAX_RESULT_COUNT = 4;
 
-    private final Identifier id;
     private final String group;
     private final Ingredient input;
     private final Ingredient tool;
     private final DefaultedList<ChanceResult> resultList;
-    private final String soundEvent;
+    private final Optional<SoundEvent> soundEvent;
 
-    public CuttingBoardRecipe(Identifier id, String group, Ingredient input, Ingredient tool, DefaultedList<ChanceResult> resultList, String soundEvent) {
-        this.id = id;
+    public CuttingBoardRecipe(String group, Ingredient input, Ingredient tool, DefaultedList<ChanceResult> resultList, Optional<SoundEvent> soundEvent) {
         this.group = group;
         this.input = input;
         this.tool = tool;
@@ -59,13 +59,8 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return resultList.get(0).stack();
-    }
-
-    @Override
-    public Identifier getId() {
-        return id;
     }
 
     @Override
@@ -136,7 +131,7 @@ public class CuttingBoardRecipe implements Recipe<Inventory> {
         return tool;
     }
 
-    public String getSoundEvent() {
+    public Optional<SoundEvent> getSoundEvent() {
         return soundEvent;
     }
 

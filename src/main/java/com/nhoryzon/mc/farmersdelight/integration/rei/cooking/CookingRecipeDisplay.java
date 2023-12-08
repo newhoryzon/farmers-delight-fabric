@@ -9,6 +9,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.recipe.RecipeEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,12 +22,12 @@ public class CookingRecipeDisplay extends BasicDisplay {
     private final EntryIngredient containerOutput;
     private final int cookTime;
 
-    public CookingRecipeDisplay(CookingPotRecipe recipe) {
-        super(EntryIngredients.ofIngredients(recipe.getIngredients()),
-                Collections.singletonList(EntryIngredients.of(recipe.getOutput(null))),
-                Optional.ofNullable(recipe.getId()));
-        containerOutput = EntryIngredients.of(recipe.getContainer());
-        cookTime = recipe.getCookTime();
+    public CookingRecipeDisplay(RecipeEntry<CookingPotRecipe> recipe) {
+        super(EntryIngredients.ofIngredients(recipe.value().getIngredients()),
+                Collections.singletonList(EntryIngredients.of(recipe.value().getResult(null))),
+                Optional.ofNullable(recipe.id()));
+        containerOutput = EntryIngredients.of(recipe.value().getContainer());
+        cookTime = recipe.value().getCookTime();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class CuttingBoardDispenseBehavior implements DispenserBehavior {
     public final ItemStack dispense(BlockPointer pointer, ItemStack stack) {
         if (tryDispenseStackOnCuttingBoard(pointer, stack)) {
             playSound(pointer); // I added this because i completely overrode the super implementation which had the sounds.
-            spawnParticles(pointer, pointer.getBlockState().get(DispenserBlock.FACING)); // see above, same reasoning
+            spawnParticles(pointer, pointer.state().get(DispenserBlock.FACING)); // see above, same reasoning
             return stack;
         }
 
@@ -40,8 +40,8 @@ public class CuttingBoardDispenseBehavior implements DispenserBehavior {
 
     public boolean tryDispenseStackOnCuttingBoard(BlockPointer source, ItemStack stack) {
         success = false;
-        World world = source.getWorld();
-        BlockPos blockPos = source.getPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+        World world = source.world();
+        BlockPos blockPos = source.pos().offset(source.state().get(DispenserBlock.FACING));
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
@@ -59,11 +59,11 @@ public class CuttingBoardDispenseBehavior implements DispenserBehavior {
     }
 
     protected void playSound(BlockPointer pointer) {
-        pointer.getWorld().syncWorldEvent(success ? 1000 : 1001, pointer.getPos(), 0);
+        pointer.world().syncWorldEvent(success ? 1000 : 1001, pointer.pos(), 0);
     }
 
     protected void spawnParticles(BlockPointer pointer, Direction side) {
-        pointer.getWorld().syncWorldEvent(2000, pointer.getPos(), side.getId());
+        pointer.world().syncWorldEvent(2000, pointer.pos(), side.getId());
     }
 
 }
