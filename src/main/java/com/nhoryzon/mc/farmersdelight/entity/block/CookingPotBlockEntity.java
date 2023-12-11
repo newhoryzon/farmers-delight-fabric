@@ -229,6 +229,11 @@ public class CookingPotBlockEntity extends SyncedBlockEntity implements CookingP
         return Optional.empty();
     }
 
+    public boolean getMealContainerIsValid() {
+        if ((mealContainer.isEmpty() || !getMeal().getItem().hasRecipeRemainder())) return false;
+        return true;
+    }
+
     public ItemStack getMealContainer() {
         if (!mealContainer.isEmpty()) {
             return mealContainer;

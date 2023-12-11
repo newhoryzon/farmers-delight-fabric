@@ -70,10 +70,12 @@ public class CookingPotScreen extends HandledScreen<CookingPotScreenHandler> {
                 }
                 meal.getItem().appendTooltip(meal, handler.tileEntity.getWorld(), tooltip, TooltipContext.Default.BASIC);
 
-                ItemStack containerItem = handler.tileEntity.getMealContainer();
-                String container = !containerItem.isEmpty() ? containerItem.getItem().getName().getString() : "";
+                if (handler.tileEntity.getMealContainerIsValid()) {
+                    ItemStack containerItem = handler.tileEntity.getMealContainer();
+                    String container = !containerItem.isEmpty() ? containerItem.getItem().getName().getString() : "";
 
-                tooltip.add(FarmersDelightMod.i18n("container.cooking_pot.served_on", container).formatted(Formatting.GRAY));
+                    tooltip.add(FarmersDelightMod.i18n("container.cooking_pot.served_on", container).formatted(Formatting.GRAY));
+                }
 
                 context.drawTooltip(textRenderer, tooltip, mouseX, mouseY);
             } else {
