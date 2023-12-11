@@ -36,7 +36,7 @@ public abstract class BuddingBushBlock extends PlantBlock {
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 2.d, 16.d),
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 6.d, 16.d),
-            Block.createCuboidShape(.0d, .0d, .0d, 16.d, 1.d, 16.d),
+            Block.createCuboidShape(.0d, .0d, .0d, 16.d, 10.d, 16.d),
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 14.d, 16.d),
             Block.createCuboidShape(.0d, .0d, .0d, 16.d, 14.d, 16.d)};
 
