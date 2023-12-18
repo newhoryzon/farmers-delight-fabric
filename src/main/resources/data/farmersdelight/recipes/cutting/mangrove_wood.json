@@ -16,6 +16,6 @@
   "sound": "minecraft:item.axe.strip",
   "tool": {
     "type": "farmersdelight:tool",
-    "tag": "c:tools/axes"
+    "tag": "c:axes"
   }
 }
