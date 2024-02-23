@@ -37,7 +37,11 @@ public class CabinetBlock extends InventoryBlockWithEntity {
 
     public CabinetBlock(BlockSoundGroup soundGroup) {
         super(FabricBlockSettings.copyOf(Blocks.BARREL).sounds(soundGroup));
-        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
+        this.setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
+    }
+
+    public CabinetBlock() {
+        this(BlockSoundGroup.WOOD);
     }
 
     @Nullable

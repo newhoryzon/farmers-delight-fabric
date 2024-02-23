@@ -60,6 +60,7 @@ public class DogFoodItem extends LivingEntityFeedItem {
             return wolf.isAlive() && wolf.isTamed();
         }
 
+
         return false;
     }
 
